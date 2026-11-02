@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import WallDivider from '../components/WallDivider'
 import JejuMapView from '../components/JejuMapView'
 import { LocateBar, distanceLabel } from '../components/ui'
 import { fetchWeather } from '../api/client'
@@ -40,7 +41,9 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="row g-3 mt-2">
+      <WallDivider label="세 갈래 이야기" />
+
+      <section className="row g-3">
         {KIND_KEYS.map((k) => (
           <div className="col-md-4" key={k}>
             <Link to={LINKS[k]} className="stone-card kind-card" style={{ '--k': KINDS[k].color }}>
@@ -53,7 +56,11 @@ export default function Home() {
         ))}
       </section>
 
-      <section className="stone-card near mt-4">
+      <p className="legend-line">“설문대할망이 치마폭으로 흙을 날라 한라산을 쌓고, 흘린 흙이 오름 삼백예순여덟 개가 되었다.”<small>— 제주 설화 중에서</small></p>
+
+      <WallDivider label="오늘의 발걸음" />
+
+      <section className="stone-card near">
         <div className="row g-3 align-items-center">
           <div className="col-lg-5">
             <h2 className="h4 mb-1"><i className="bi bi-compass me-2" />내 위치에서 가까운 이야기</h2>

@@ -1,8 +1,9 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Offcanvas } from 'react-bootstrap'
 import { NavLink, Outlet } from 'react-router-dom'
 import { NAV_ITEMS } from '../router'
 import { useAppStore } from '../store/useAppStore'
+import { useAuthStore } from '../store/useAuthStore'
 
 function NavList({ onPick }) {
   const count = useAppStore((s) => s.saved.length)
@@ -21,8 +22,28 @@ function NavList({ onPick }) {
   )
 }
 
+function AccountLink({ onPick }) {
+  const user = useAuthStore((s) => s.user)
+  const signOut = useAuthStore((s) => s.signOut)
+  if (!user) {
+    return (
+      <NavLink to="/login" onClick={onPick} className="stone-link stone-link--account">
+        <i className="bi bi-person-circle" /><span>로그인</span>
+      </NavLink>
+    )
+  }
+  return (
+    <div className="account">
+      <span className="account__name" title={user.email}><i className="bi bi-person-check" /> {user.name}</span>
+      <button type="button" className="account__out" onClick={() => { signOut(); onPick?.() }}>로그아웃</button>
+    </div>
+  )
+}
+
 export default function RootLayout() {
   const [open, setOpen] = useState(false)
+  const init = useAuthStore((s) => s.init)
+  useEffect(() => { init() }, [init])
 
   return (
     <div className="app">
@@ -32,6 +53,7 @@ export default function RootLayout() {
           <span>耽</span><small>탐라</small>
         </NavLink>
         <NavList />
+        <div className="rail__account"><AccountLink /></div>
         <p className="rail__foot">돌·바람·이야기</p>
       </aside>
 
@@ -42,7 +64,7 @@ export default function RootLayout() {
       </header>
       <Offcanvas show={open} onHide={() => setOpen(false)} placement="end" className="offcanvas-dol">
         <Offcanvas.Header closeButton closeVariant="white"><Offcanvas.Title>탐라 이야기 수첩</Offcanvas.Title></Offcanvas.Header>
-        <Offcanvas.Body><NavList onPick={() => setOpen(false)} /></Offcanvas.Body>
+        <Offcanvas.Body><NavList onPick={() => setOpen(false)} /><div className="mt-3"><AccountLink onPick={() => setOpen(false)} /></div></Offcanvas.Body>
       </Offcanvas>
 
       <div className="content">

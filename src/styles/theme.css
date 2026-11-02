@@ -160,3 +160,139 @@ a.stone-card:hover, .myth-card:hover, .kind-card:hover { transform: translate(-3
   .detail { position: static; max-height: none; }
   .home-hero { min-height: auto; }
 }
+
+/* ───────────── 다듬기 레이어 ───────────── */
+:root {
+  --ink-soft: #5d554b;
+  --glow-orange: rgba(240, 138, 28, .22);
+  --glow-sea: rgba(30, 138, 154, .18);
+}
+::selection { background: var(--orange); color: var(--basalt); }
+html { scroll-behavior: smooth; }
+body {
+  background-image:
+    radial-gradient(900px 520px at 88% -8%, var(--glow-orange), transparent 70%),
+    radial-gradient(800px 560px at -6% 38%, var(--glow-sea), transparent 70%),
+    radial-gradient(rgba(38, 35, 31, .06) 1px, transparent 1.4px);
+  background-size: auto, auto, 22px 22px;
+  background-attachment: fixed, fixed, scroll;
+}
+::-webkit-scrollbar { width: 11px; height: 11px; }
+::-webkit-scrollbar-thumb { background: var(--basalt); border: 3px solid var(--hanji); border-radius: 99px; }
+::-webkit-scrollbar-track { background: transparent; }
+:focus-visible { outline: 3px solid var(--orange); outline-offset: 3px; border-radius: 6px; }
+
+/* 레일: 안쪽 결과 빛 */
+.rail { background-image: radial-gradient(rgba(255, 255, 255, .06) 1.4px, transparent 1.8px), linear-gradient(180deg, #2f2b26 0%, #1e1b18 100%); background-size: 14px 14px, auto; box-shadow: 6px 0 0 rgba(38, 35, 31, .12); }
+.rail__brand { box-shadow: 4px 4px 0 rgba(0, 0, 0, .35); transition: transform .3s cubic-bezier(.3, 1.6, .5, 1); }
+.rail__brand:hover { transform: rotate(4deg) scale(1.08); }
+.stone-link { border: 1.5px solid rgba(241, 232, 212, .1); }
+.stone-link:hover { transform: translateX(3px); }
+.stone-link.active { border-color: var(--basalt); }
+
+/* 카드: 위쪽 포인트 선, 종이 질감 */
+.stone-card {
+  background-image: linear-gradient(180deg, rgba(255, 255, 255, .55), rgba(255, 250, 240, 0) 38%);
+}
+.kind-card { overflow: hidden; }
+.kind-card::before {
+  content: ""; position: absolute; inset: 0 0 auto 0; height: 8px; background: var(--k);
+  border-bottom: 2px solid var(--basalt);
+}
+.kind-card { padding-top: 30px; }
+.kind-card i {
+  display: inline-grid; place-items: center; width: 54px; height: 54px; font-size: 28px; color: var(--basalt);
+  background: color-mix(in srgb, var(--k) 40%, white); border: 2px solid var(--basalt);
+  border-radius: 58% 42% 52% 48% / 46% 56% 44% 54%; transition: transform .3s cubic-bezier(.3, 1.6, .5, 1);
+}
+.kind-card:hover i { transform: rotate(-10deg) scale(1.1); }
+.myth-card::after {
+  content: ""; position: absolute; right: 14px; top: 14px; width: 12px; height: 12px; border-radius: 50%;
+  background: var(--k); border: 2px solid var(--basalt);
+}
+
+/* 제목: 스탬프 + 밑줄 장식 */
+.stamp { background: rgba(156, 90, 44, .08); box-shadow: 2px 2px 0 rgba(156, 90, 44, .35); }
+.page-head h1 { position: relative; display: inline-block; }
+.page-head h1::after {
+  content: ""; position: absolute; left: 0; right: -6px; bottom: 2px; height: 11px; z-index: -1;
+  background: var(--glow-orange); border-radius: 6px 14px 8px 12px; transform: rotate(-.8deg);
+}
+
+/* 홈 히어로 */
+.home-hero { position: relative; }
+.blob-frame { background: radial-gradient(circle at 35% 30%, #3b7f8f, #123a46); animation: floaty 7s ease-in-out infinite; }
+@keyframes floaty { 50% { transform: translateY(-8px) rotate(.4deg); } }
+.blob-frame::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none; border-radius: inherit;
+  box-shadow: inset 0 0 60px rgba(0, 0, 0, .35);
+}
+.intent { background: linear-gradient(90deg, var(--glow-orange), transparent 90%); padding-block: 8px; border-radius: 0 12px 12px 0; }
+.btn-dol { background-image: linear-gradient(180deg, #ffa83f, var(--orange)); }
+
+/* 칩, 리스트 */
+.chip.on { box-shadow: 3px 3px 0 var(--orange); }
+.near-list a { transition: transform .18s, box-shadow .18s, background .18s; }
+.near-list a:hover { background: #ffe7c2; transform: translateX(4px); box-shadow: -4px 4px 0 var(--basalt); }
+.map-frame { box-shadow: 6px 6px 0 var(--basalt); background: #123a46; }
+
+/* 등장 애니메이션 */
+.page > * { animation: rise .5s ease both; }
+.page > *:nth-child(2) { animation-delay: .06s; }
+.page > *:nth-child(3) { animation-delay: .12s; }
+.page > *:nth-child(n+4) { animation-delay: .18s; }
+.row > [class*="col"] > .stone-card, .row > [class*="col"] > a.stone-card { animation: rise .5s ease both; }
+.row > [class*="col"]:nth-child(2) > * { animation-delay: .07s; }
+.row > [class*="col"]:nth-child(3) > * { animation-delay: .14s; }
+.row > [class*="col"]:nth-child(4) > * { animation-delay: .21s; }
+@media (prefers-reduced-motion: reduce) { *, ::before, ::after { animation: none !important; transition: none !important; } }
+
+.foot { position: relative; }
+.foot::before { content: "◈ ◈ ◈"; display: block; letter-spacing: .6em; color: var(--galot); opacity: .6; margin-bottom: 6px; }
+
+/* ───────────── 주제 장식: 밭담 · 한라산 · 파도 ───────────── */
+.wall { position: relative; display: flex; flex-direction: column; align-items: center; margin: 44px 0 26px; overflow: hidden; }
+.wall__row { display: flex; justify-content: center; gap: 2px; white-space: nowrap; }
+.wall__row i {
+  flex: none; display: block; margin-top: 2px; background: linear-gradient(160deg, #4a443c, #26231f 70%);
+  border-radius: 46% 54% 42% 58% / 58% 44% 56% 42%; box-shadow: inset 2px 2px 0 rgba(255, 255, 255, .12);
+}
+.wall__label {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-1deg); padding: 4px 22px;
+  font-family: var(--serif); font-weight: 700; letter-spacing: .12em; color: var(--basalt);
+  background: var(--orange); border: 2px solid var(--basalt); border-radius: 8px 16px 9px 15px; box-shadow: 3px 3px 0 var(--basalt);
+}
+.legend-line {
+  max-width: 780px; margin: 38px auto 0; text-align: center; font-family: var(--serif); font-size: clamp(18px, 2.4vw, 24px);
+  line-height: 1.7; color: var(--galot); position: relative;
+}
+.legend-line::before { content: "耽"; position: absolute; left: 50%; top: -34px; transform: translateX(-50%); font-size: 30px; opacity: .25; }
+.legend-line small { display: block; margin-top: 6px; font-family: var(--bs-font-sans-serif); font-size: 13px; color: var(--ink-soft); }
+
+/* 한라산과 오름, 파도 실루엣을 화면 아래에 */
+.content { position: relative; }
+.content::after {
+  content: ""; position: fixed; left: 0; right: 0; bottom: 0; height: 150px; z-index: -1; pointer-events: none; opacity: .5;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 150' preserveAspectRatio='none'%3E%3Cpath d='M0 150V118c60 0 90-16 150-16s70 14 120 14 60-20 110-20 90 22 150 22 60-44 130-72c30-12 52-12 82 0 70 28 80 72 140 72s70-18 130-18 70 14 110 14 90-12 110-12v50z' fill='%2326231f' fill-opacity='.10'/%3E%3C/svg%3E") bottom / 100% 100% no-repeat,
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 40'%3E%3Cpath d='M0 20q25-16 50 0t50 0 50 0 50 0 50 0 50 0 50 0 50 0 50 0 50 0 50 0 50 0 50 0 50 0 50 0 50 0 50 0 50 0 50 0 50 0 50 0 50 0 50 0 50 0 50 0V40H0z' fill='%231e8a9a' fill-opacity='.16'/%3E%3C/svg%3E") bottom / 600px 28px repeat-x;
+}
+@media (min-width: 992px) { .content::after { left: 104px; } }
+
+/* 갈래별 카드 느낌 차이: 신화는 별무늬, 돌은 격자 */
+.kind-card:nth-child(1)::after, .col-md-4:nth-child(1) .kind-card::after { content: "✦ ✧ ✦"; position: absolute; right: 16px; top: 18px; color: var(--k); opacity: .6; letter-spacing: 4px; }
+.col-md-4:nth-child(2) .kind-card::after { content: ""; position: absolute; right: 14px; top: 18px; width: 54px; height: 24px; opacity: .35; background: repeating-linear-gradient(90deg, var(--basalt) 0 14px, transparent 14px 17px); border-radius: 8px; }
+.col-md-4:nth-child(3) .kind-card::after { content: "◆"; position: absolute; right: 18px; top: 14px; color: var(--k); font-size: 22px; opacity: .6; }
+
+/* ───────────── 로그인 · 회원가입 ───────────── */
+.auth-wrap { display: grid; place-items: center; min-height: 70vh; }
+.auth-card { width: min(440px, 100%); padding: 30px 28px; }
+.auth-note { margin: 16px 0 0; padding: 8px 12px; font-size: 13px; color: var(--ink-soft); background: rgba(30, 138, 154, .1); border-left: 4px solid var(--sea); border-radius: 0 10px 10px 0; }
+.rail__account { width: 100%; margin-top: 12px; }
+.stone-link--account { background: var(--orange); color: var(--basalt); font-weight: 700; }
+.stone-link--account:hover { background: #ffa23d; color: var(--basalt); }
+.account { display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 12px; text-align: center; word-break: keep-all; }
+.account__name { color: var(--hanji); font-weight: 700; }
+.account__out { background: none; border: 1.5px solid rgba(241, 232, 212, .4); color: var(--hanji); border-radius: 99px; padding: 1px 10px; font-size: 11px; }
+.account__out:hover { background: var(--hanji); color: var(--basalt); }
+.offcanvas-dol .account { flex-direction: row; justify-content: space-between; font-size: 14px; }

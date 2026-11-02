@@ -6,6 +6,7 @@ import Myth from './pages/Myth'
 import Stone from './pages/Stone'
 import Places from './pages/Places'
 import Notebook from './pages/Notebook'
+import Login from './pages/Login'
 import NotFound from './pages/NotFound'
 
 // 페이지 추가: ① pages/ 에 파일 ② NAV_ITEMS 한 줄 ③ routes 한 줄  (아이콘: icons.getbootstrap.com)
@@ -30,6 +31,7 @@ export const router = createBrowserRouter([
       { path: 'stone', element: <Stone /> },
       { path: 'places', element: <Places /> },
       { path: 'notebook', element: <Notebook /> },
+      { path: 'login', element: <Login /> },
     ],
   },
 ])
