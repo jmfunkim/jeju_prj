@@ -1,0 +1,28 @@
+// 장소 사진을 한국관광공사 TourAPI 에서 찾을 때 쓰는 검색어(앞에 있을수록 먼저 시도).
+// 장소 이름과 TourAPI 의 관광지 이름이 다를 수 있어서 따로 적어 둡니다. 안 맞으면 여기를 고치세요.
+export const PHOTO_QUERY = {
+  seolmundae: ['한라산', '백록담'],
+  obaek: ['영실', '오백장군'],
+  mulchang: ['물장오리'],
+  sanbang: ['산방산'],
+  seongsan: ['성산일출봉'],
+  samsung: ['삼성혈'],
+  yeongdeung: ['복덕개', '귀덕'],
+  yongduam: ['용두암'],
+  stonepark: ['제주돌문화공원', '돌문화공원'],
+  'gwandeok-harbang': ['관덕정', '돌하르방'],
+  'bukchon-bangsatap': ['북촌', '방사탑'],
+  balddam: ['밭담', '구좌 밭담'],
+  seongeup: ['성읍민속마을', '성읍'],
+  budeok: ['불턱', '하도리'],
+  mokgwana: ['제주목 관아', '제주목관아'],
+  hangpaduri: ['항파두리'],
+  peacepark: ['4·3평화공원', '제주4·3평화공원', '4.3평화공원'],
+  chusa: ['추사관', '추사 유배지'],
+  mandeok: ['김만덕', '김만덕기념관'],
+  alddreu: ['알뜨르', '알뜨르 비행장'],
+  cheonjeyeon: ['천제연폭포', '천제연'],
+  manjanggul: ['만장굴'],
+  geomun: ['거문오름'],
+  haenyeo: ['해녀박물관'],
+}

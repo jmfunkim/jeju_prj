@@ -1,7 +1,9 @@
 import { useState } from 'react'
 import { Badge, Spinner } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
+import Doli from '../components/Doli'
 import { KindBadge, LocateBar } from '../components/ui'
+import { DOLI } from '../data/world'
 import { placeById } from '../data/places'
 import { askGuide } from '../api/client'
 import { useAppStore } from '../store/useAppStore'
@@ -41,8 +43,17 @@ export default function Guide() {
       <header className="page-head">
         <p className="stamp">AI 가이드</p>
         <h1>오늘 어디 갈까요?</h1>
-        <p>시간, 날씨, 함께 가는 사람을 말해 주세요. 가이드가 코스 짜기·날씨·주변 관광정보 도구를 불러 코스를 만들어 줘요.</p>
+        <p>시간, 날씨, 함께 가는 사람을 말해 주세요. 돌이가 날씨와 거리를 살펴 코스를 만들어 줘요.</p>
       </header>
+
+      <div className="doli-card stone-card">
+        <Doli size={96} mood="happy" glow={0.8} />
+        <div>
+          <b>{DOLI.name}</b> <small>{DOLI.who}</small>
+          <p>{DOLI.intro}</p>
+          <span>{DOLI.likes.map((x) => <i key={x}>{x}</i>)}</span>
+        </div>
+      </div>
 
       <div className="guide stone-card">
         <div className="guide__chips">
@@ -56,8 +67,9 @@ export default function Guide() {
               {m.role === 'guide' ? (
                 <>
                   <div className="msg__meta">
-                    <Badge bg={m.mode === 'ai' ? 'dark' : 'secondary'}>{m.mode === 'ai' ? 'Claude 에이전트' : '기본 가이드(규칙 기반)'}</Badge>
-                    {m.tools?.length > 0 && <small>사용한 도구: {[...new Set(m.tools)].map((t) => TOOL_LABEL[t] ?? t).join(' · ')}</small>}
+                    <Doli size={34} mood="happy" glow={0.7} orange={false} className="msg__av" />
+                    <Badge bg={m.mode === 'ai' ? 'dark' : 'secondary'}>{m.mode === 'ai' ? 'AI 추천' : '빠른 추천'}</Badge>
+                    {m.tools?.length > 0 && <small>살펴본 것: {[...new Set(m.tools)].map((t) => TOOL_LABEL[t] ?? t).join(' · ')}</small>}
                   </div>
                   <p className="msg__text">{m.answer}</p>
                   {m.ids?.length > 0 && (

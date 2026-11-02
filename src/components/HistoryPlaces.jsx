@@ -33,7 +33,7 @@ export default function HistoryPlaces() {
       <div className="stone-card p-3 mb-3 d-flex flex-wrap gap-3 align-items-center">
         <LocateBar />
         <Form.Control style={{ maxWidth: 240 }} size="sm" placeholder="장소·주소 검색" value={q} onChange={(e) => { setQ(e.target.value); setShown(30) }} />
-        <span className="small text-muted">공공데이터포털 · 제주역사문화위치정보{st.data && ` · ${st.data.items.length}곳 불러옴`}</span>
+        <span className="small text-muted">출처 제주특별자치도 · 역사문화 위치정보{st.data && ` · ${st.data.items.length}곳`}</span>
       </div>
       <ApiState loading={st.loading} error={st.error} empty={!st.loading && !st.error && items.length === 0} emptyText="맞는 장소가 없어요." />
       {st.data && items.length > 0 && (

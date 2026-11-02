@@ -28,8 +28,8 @@ export default function MythArchive() {
     <section className="archive mt-5">
       <div className="d-flex flex-wrap align-items-end gap-3 mb-3">
         <div>
-          <p className="stamp mb-1">제주도청 공공데이터</p>
-          <h2 className="h3 mb-0">제주 신화 아카이브{d && <small className="text-muted"> {d.total}건</small>}</h2>
+          <p className="stamp mb-1">제주도청 자료</p>
+          <h2 className="h3 mb-0">제주 신화 자료실{d && <small className="text-muted"> {d.total}건</small>}</h2>
         </div>
         <Form.Control className="ms-auto" style={{ maxWidth: 260 }} size="sm" placeholder="제목·태그 검색 (예: 송당, 삼공)" value={q} onChange={(e) => { setQ(e.target.value); setLimit(24) }} />
       </div>
@@ -66,7 +66,7 @@ export default function MythArchive() {
           </div>
         </>
       )}
-      <p className="small text-muted mt-2">출처: 제주특별자치도 제주 신화 콘텐츠 API(제목·구분·태그). API가 주는 e-book·PDF 주소는 현재 열리지 않아 연결하지 않고, 검색으로 이어 줘요.</p>
+      <p className="small text-muted mt-2">출처: 제주특별자치도 제주 신화 콘텐츠(제목·구분·태그). 원문 링크가 현재 열리지 않아, 대신 검색으로 이어 줘요.</p>
     </section>
   )
 }

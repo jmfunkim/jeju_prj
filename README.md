@@ -52,15 +52,30 @@
 <td align="center"><b>돌 전시 3D</b><br/>오른쪽에서 돌을 고르면 3D 모델과 카메라가 바뀝니다.</td>
 </tr>
 <tr>
-<td colspan="2" align="center"><img src="docs/myth.jpg" alt="신화·설화 카드" width="50%" /><br/><b>신화·설화</b> — 장소 사진과 이야기를 카드로, 눌러서 전문을 읽습니다.</td>
+<td colspan="2" align="center"><img src="docs/myth.jpg" alt="신화·설화 카드" width="50%" /><br/><b>신화·설화</b> — 이야기를 카드로, 눌러서 전문을 읽습니다. (한국관광공사 사진은 `DATA_GO_KR_KEY`를 넣으면 카드 위에 나타납니다. 이 화면은 키 없이 찍어 갈래 무늬입니다.)</td>
 </tr>
 </table>
+
+### 🪨 세계관과 캐릭터 — 돌이
+
+> **돌은 이야기를 기억해요.** 제주는 돌이 이야기를 기억하는 섬이고, 현무암의 구멍마다 이야기가 숨 쉬던 자리가 있습니다. 사람이 그곳에서 이야기를 들으면 구멍에서 따뜻한 빛, **돌빛**이 새어 나옵니다. 돌빛은 24곳에 숨어 있고, 도장을 찍을 때마다 하나씩 켜집니다.
+
+**돌이**는 벙거지를 쓴 아기 돌하르방으로, 이야기를 들려주고 돌빛을 깨우는 길을 안내합니다. 감귤과 바람 소리를 좋아하고, 짧고 다정한 해요체로 말하며 제주 인사말(혼저 옵서예, 폭삭 속았수다)은 가끔만 씁니다.
+
+| 어디서 만나나 | 돌이가 하는 일 |
+|---|---|
+| 홈 | 인사 말풍선과 "돌빛 세계" 소개 카드 |
+| 이야기 산책 | 장소마다 한마디(갈래·장소별), 도장을 찍으면 도장 말 — 4·3처럼 무거운 장소에서는 차분하게 |
+| AI 가이드 | 프로필 카드, 답변 옆 아바타, Claude 경로에서는 돌이 말투 지시(`server/guide.js`) |
+| 내 수첩 | **돌빛 단계**(잠든 돌 → 깨어나는 돌 → 반짝이는 돌 → 빛나는 돌 → 돌빛 지킴이 → 돌빛 완성)와 갈래별 뱃지(별빛 이야기꾼 · 돌담 지킴이 · 기억 지킴이) |
+
+돌이는 SVG로 직접 그렸고(`src/components/Doli.jsx`, 기분 4가지와 돌빛 세기 조절), 설정과 대사는 `src/data/world.js`에 모았습니다. **이 세계관은 서비스가 만든 창작 이야기이며 제주의 전승이 아닙니다.** 화면에도 그렇게 적혀 있습니다.
 
 ### 페이지별로 보면
 
 | 페이지 | 주소 | 하는 일 |
 |---|---|---|
-| **홈** | `/` | 오늘의 코스(2시간), 세 걸음 사용법, 세 갈래 소개, 내 위치에서 가까운 이야기 3곳 |
+| **홈** | `/` | 오늘의 코스(2시간)와 출발지 바꾸기, 세 걸음 사용법, 세 가지 이야기, 돌빛 세계 소개 |
 | **지도** | `/map` | 2D(실제 지도, 기본)와 3D 전환, 갈래별 레이어, 장소 상세·길찾기·주변 볼거리 |
 | **이야기 산책** | `/walk` | 코스 만들기, 장소별 이동·머묾 시간·현장 팁·도장·길찾기 |
 | **AI 가이드** | `/guide` | 말로 묻고 코스를 받아 산책 화면으로 열기 |
@@ -93,7 +108,7 @@
 
 | API | 엔드포인트 | 화면 |
 |---|---|---|
-| 한국관광공사 국문 관광정보(KorService2) | `/api/tour?lat=&lng=&radius=` | 장소 상세·산책 카드의 주변 정보, 위치정보 › 내 주변 |
+| 한국관광공사 국문 관광정보(KorService2) | `/api/tour?lat=&lng=&radius=` · `/api/placephoto` | 장소 사진, 장소 상세·산책 카드의 주변 정보, 위치정보 › 내 주변 |
 | 국가유산청 국가유산 검색 | `/api/heritage?keyword=` | 위치정보 › 국가유산 |
 | 기상청 단기예보 | `/api/weather?place=` | 홈, AI 가이드(비 확인) |
 | 제주 신화 콘텐츠 (제주도청, 키 없음) | `/api/myth?keyword=&type=` ← `jeju.go.kr/rest/JejuMythContents/getJejuMythContentsList` | 신화·설화 › 신화 아카이브(제목·구분·태그), AI 가이드 |
@@ -154,7 +169,7 @@ npm run dev                    # http://localhost:5173
 ```
 project/
 ├─ api/                  서버 함수 (주소 = /api/파일이름) — 비밀 키는 여기서만
-│  ├─ hello · tour · heritage · weather
+│  ├─ hello · tour · placephoto · heritage · weather
 │  ├─ myth · stonepark   제주도청 신화 콘텐츠 / 돌문화공원 유물
 │  ├─ history            제주역사문화위치정보 (odcloud)
 │  └─ guide              AI 가이드
@@ -167,9 +182,9 @@ project/
 │  ├─ router.jsx           메뉴(NAV_ITEMS)와 주소별 페이지
 │  ├─ layouts/             상단 내비, 모바일 탭바·메뉴, 계정 버튼
 │  ├─ pages/               Home · MapPage · Walk · Guide · Myth · Stone · Places · Notebook · Login
-│  ├─ components/          RealMap(2D) · JejuMapView(3D) · ThreeStage · MythArchive · RelicShelf · HistoryPlaces · ui
+│  ├─ components/          RealMap(2D) · JejuMapView(3D) · ThreeStage · Doli(캐릭터) · MythArchive · RelicShelf · HistoryPlaces · ui
 │  ├─ scenes/              terrain · jejuMap · harbang(돌 전시) · helpers  (three.js)
-│  ├─ data/                places(24곳) · walk(현장 정보) · photos(사진·출처) · stones(돌문화 해설)
+│  ├─ data/                world(세계관·돌이 대사·단계) · places(24곳) · walk(현장 정보) · photoQuery(사진 검색어) · stones(돌문화 해설)
 │  ├─ store/               useAppStore(수첩·도장·지도) · useAuthStore(로그인)
 │  ├─ lib/                 geo(거리) · course(코스 알고리즘) · auth · cloud · sync
 │  ├─ api/client.js        화면 → /api 호출
@@ -197,12 +212,12 @@ Bootstrap 5 위에 **밝고 깔끔한 여행 앱** 느낌의 테마를 입혔습
 
 - 넓은 화면은 상단 내비게이션, 모바일은 **하단 탭바**(홈·지도·이야기 산책·AI 가이드·내 수첩)와 햄버거 메뉴
 - 흰 카드 · 얇은 테두리 · 부드러운 그림자 · 둥근 모서리, 글꼴 Noto Sans KR
-- 장소 카드는 **사진**, 사진이 없으면 갈래별 무늬(신화 별빛 · 돌문화 현무암 · 역사문화 기와선)
+- 장소 카드는 **한국관광공사 사진**, 사진이 없으면 갈래별 무늬(신화 별빛 · 돌문화 현무암 · 역사문화 기와선)
 - 도장 효과, 오름·해·파도 로고(헤더·파비콘), 시스템의 "동작 줄이기" 설정이면 움직임을 끕니다
 
 ## 📷 출처와 라이선스
 
-- **장소 사진 22장** — [위키미디어 커먼즈](https://commons.wikimedia.org)의 자유 이용 사진(CC0 · CC BY · CC BY-SA · 공공누리 1유형 · 퍼블릭 도메인). 카드와 상세 화면에 **작성자 · 라이선스 · 원본 링크**를 표시하고, 목록은 [`src/data/photos.js`](src/data/photos.js)에 있습니다. 위키미디어에서 바로 불러오며 앱에 복사해 두지 않고, 불러오지 못하면 무늬 머리띠가 대신 보입니다. 귀덕 복덕개와 하도리 불턱은 사진이 없습니다. 방사탑(용수리), 추사 유배지(불이선란도), 김만덕기념관(묘비)은 같은 종류의 다른 사진이며 사진 아래에 그렇게 표시됩니다.
+- **장소 사진** — 한국관광공사 국문 관광정보(TourAPI)의 대표 이미지입니다. 서버(`/api/placephoto`)가 장소 이름(`src/data/photoQuery.js`)으로 키워드 검색한 뒤, 좌표가 8km 안에 있고 제목이 맞는 것을 골라 카드와 상세 화면에 보여 줍니다(6시간 보관). 사진 아래에 *사진 한국관광공사*와 저작권 유형(출처표시·변경금지)을 표시하고, 마우스를 올리면 어떤 TourAPI 항목과 맞췄는지 보입니다. **`DATA_GO_KR_KEY`가 있어야 나옵니다.** 키가 없거나 찾지 못한 장소는 갈래 무늬 머리띠를 씁니다. 엉뚱한 사진이 붙으면 `photoQuery.js`의 검색어를 고치세요.
 - **2D 지도** — © [OpenStreetMap](https://www.openstreetmap.org/copyright) 기여자. 지도 오른쪽 아래의 출처 표시를 지우지 마세요.
 - **공공데이터** — 제주특별자치도, 한국관광공사, 국가유산청, 기상청, 공공데이터포털.
 

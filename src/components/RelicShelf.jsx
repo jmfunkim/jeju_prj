@@ -33,7 +33,7 @@ export default function RelicShelf() {
     <section className="archive mt-5">
       <div className="d-flex flex-wrap align-items-end gap-2 mb-3">
         <div className="me-auto">
-          <p className="stamp mb-1">제주도청 공공데이터</p>
+          <p className="stamp mb-1">제주도청 자료</p>
           <h2 className="h3 mb-0">돌문화공원 소장 유물{d && <small className="text-muted"> {d.total}점</small>}</h2>
         </div>
         <Form.Control style={{ maxWidth: 180 }} size="sm" placeholder="이름·설명 검색" value={q} onChange={reset(setQ)} />
@@ -63,7 +63,7 @@ export default function RelicShelf() {
           {Array.from({ length: pages }, (_, i) => <Pagination.Item key={i} active={page === i + 1} onClick={() => setPage(i + 1)}>{i + 1}</Pagination.Item>)}
         </Pagination>
       )}
-      <p className="small text-muted mt-2">출처: 제주특별자치도 제주돌문화공원 소장유물 API.</p>
+      <p className="small text-muted mt-2">출처: 제주특별자치도 제주돌문화공원 소장 유물.</p>
     </section>
   )
 }

@@ -14,6 +14,9 @@ function baseParams(rows) {
   })
 }
 
+// 관광공사 이미지 주소는 http 로 오는 경우가 있어, https 로 열리는 화면에서 막히지 않게 바꿔 둡니다.
+const secure = (u) => (String(u ?? '').startsWith('http://') ? 'https://' + String(u).slice(7) : String(u ?? ''))
+
 async function call(op, params) {
   if (!process.env.DATA_GO_KR_KEY) throw new Error('DATA_GO_KR_KEY 가 설정되지 않았어요 (.env.local 확인)')
   const r = await fetch(`${BASE}/${op}?${params}`)
@@ -23,7 +26,7 @@ async function call(op, params) {
   const item = data?.response?.body?.items?.item
   const list = !item ? [] : Array.isArray(item) ? item : [item]
   return list.map((p) => ({
-    id: p.contentid, title: p.title, addr: p.addr1, image: p.firstimage,
+    id: p.contentid, title: p.title, addr: p.addr1, image: secure(p.firstimage), copyright: p.cpyrhtDivCd || '',
     lng: Number(p.mapx), lat: Number(p.mapy), type: p.contenttypeid,
     distM: p.dist ? Math.round(Number(p.dist)) : undefined,   // 위치기반 조회일 때만: 내 위치와의 거리(m)
   }))

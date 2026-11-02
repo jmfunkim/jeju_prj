@@ -2,9 +2,11 @@ import { useMemo, useState } from 'react'
 import { Form, ToggleButton, ToggleButtonGroup } from 'react-bootstrap'
 import { Link, useSearchParams } from 'react-router-dom'
 import RealMap from '../components/RealMap'
+import { DoliSay } from '../components/Doli'
 import { KindBadge, LocateBar, NearbyTour, PlacePhoto, SaveButton, routeUrl } from '../components/ui'
 import { KINDS, KIND_KEYS, PLACES, placeById } from '../data/places'
 import { MODES, TIME_OPTIONS, buildCourse, fmtMin, planFromIds } from '../lib/course'
+import { doliSays, doliStamped } from '../data/world'
 import { DEMO_ME, distanceKm, fmtKm } from '../lib/geo'
 import { useAppStore } from '../store/useAppStore'
 
@@ -32,6 +34,7 @@ function StopCard({ n, s, me }) {
       <p className="place-sum">{place.summary}</p>
       {info.look && <p className="stop__look"><b>현장에서 볼 것</b> {info.look}</p>}
       {info.tip && <p className="stop__tip"><i className="bi bi-lightbulb me-1" />{info.tip}</p>}
+      <DoliSay mood={stamp ? 'happy' : 'hi'} glow={stamp ? 1 : 0.5} className="mb-2">{stamp ? doliStamped(place) : doliSays(place)}</DoliSay>
       <details className="stop__story">
         <summary>이야기 전문 읽기</summary>
         <h4>{place.title}</h4>
@@ -40,7 +43,7 @@ function StopCard({ n, s, me }) {
       <div className="d-flex flex-wrap gap-2 align-items-center">
         {stamp ? (
           <span className={`stamp-done ${stamp.verified ? 'is-verified' : ''}`}>
-            <i className="bi bi-patch-check-fill me-1" />{stamp.verified ? '현장 도장' : '체험 도장'} · {new Date(stamp.at).toLocaleDateString('ko-KR')} · {stampCount}/{PLACES.length}
+            <i className="bi bi-patch-check-fill me-1" />{stamp.verified ? '현장 돌빛' : '멀리서 켠 돌빛'} · {new Date(stamp.at).toLocaleDateString('ko-KR')} · {stampCount}/{PLACES.length}
           </span>
         ) : (
           <button className="btn btn-sm btn-dol" onClick={() => doStamp(place.id, verified)}>
@@ -50,7 +53,7 @@ function StopCard({ n, s, me }) {
         <SaveButton id={place.id} />
         <a className="btn btn-sm btn-outline-dark" href={routeUrl(place)} target="_blank" rel="noreferrer"><i className="bi bi-signpost-2 me-1" />길찾기</a>
       </div>
-      {!stamp && <p className="stop__hint">{verified ? '지금 이 장소 500m 안이에요. 현장 도장으로 찍혀요.' : '현장(500m 이내)에서 누르면 현장 도장, 아니면 체험 도장으로 찍혀요.'}</p>}
+      {!stamp && <p className="stop__hint">{verified ? '지금 이 장소 500m 안이에요. 현장 돌빛으로 남아요.' : '장소 500m 안에서 누르면 현장 돌빛, 멀리서 누르면 멀리서 켠 돌빛으로 남아요.'}</p>}
       <div className="mt-2"><NearbyTour place={place} /></div>
     </article>
   )
@@ -124,7 +127,7 @@ export default function Walk() {
       </div>
 
       {stops.length === 0 ? (
-        <div className="stone-card p-4 text-center text-muted">조건에 맞는 장소가 없어요. 갈래를 늘리거나 비 오는 날 옵션을 꺼 보세요.</div>
+        <div className="stone-card p-4 text-center text-muted">조건에 맞는 장소가 없어요. 분야를 늘리거나 비 오는 날 옵션을 꺼 보세요.</div>
       ) : (
         <div className="row g-3">
           <div className="col-xl-5 order-xl-2">

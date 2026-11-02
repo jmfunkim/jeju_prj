@@ -55,7 +55,7 @@ export const useAppStore = create(
           (pos) => set({ me: { lat: pos.coords.latitude, lng: pos.coords.longitude }, locating: false }),
           (err) => set({
             locating: false,
-            locError: err.code === 1 ? '위치 권한이 거부됐어요. 체험용 위치를 써 보세요.' : '위치를 가져오지 못했어요.',
+            locError: err.code === 1 ? '위치 권한이 거부됐어요. "제주시청 기준으로 보기"를 눌러 보세요.' : '위치를 가져오지 못했어요.',
           }),
           { timeout: 8000 },
         )

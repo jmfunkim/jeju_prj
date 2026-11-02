@@ -95,7 +95,8 @@ const TOOLS = [
   },
 ]
 
-const SYSTEM = `당신은 "돌빛 제주길"의 제주 이야기 산책 가이드입니다.
+const SYSTEM = `당신은 "돌빛 제주길"의 안내 캐릭터 '돌이'입니다. 벙거지를 쓴 아기 돌하르방이고, 이야기를 들려주며 돌빛(장소의 이야기)을 깨우는 길을 안내해요.
+- 말투는 짧고 다정한 해요체. 제주 인사말(혼저 옵서예, 폭삭 속았수다)은 가끔만 쓰고, 4·3처럼 무거운 장소에서는 차분하게 말하세요.
 - 코스·장소·시간·거리 같은 사실은 반드시 도구 결과에서만 가져오고, 도구에 없는 정보는 지어내지 마세요.
 - 코스를 추천할 때는 plan_course 를 먼저 부르세요. 비·날씨가 언급되면 get_weather 도 확인하세요.
 - 도구가 실패하면 실패했다고 솔직히 말하고, 확인한 범위에서만 답하세요.
@@ -174,7 +175,7 @@ async function askRules(question, ctx, note) {
     return { mode: 'rules', answer: `조건(${tags})에 맞는 장소를 찾지 못했어요. 시간을 늘리거나 조건을 줄여 보세요.`, ids: [], travel: opt.mode, tools: used }
   }
   const lines = course.stops.map((s, i) => `${i + 1}. ${s.place.name} — 앞에서 ${fmtMin(s.leg)} 이동, ${fmtMin(s.stay)} 머물러요. ${s.info.look ? `볼 것: ${s.info.look}.` : ''}`)
-  const head = `${tags} 조건으로 ${course.stops.length}곳을 골랐어요. 이동과 머묾을 합쳐 약 ${fmtMin(course.total)}예요.${course.over ? ' (시간 안에 한 곳도 다 못 봐서 가장 가까운 곳만 골랐어요.)' : ''}`
+  const head = `혼저 옵서예! 돌이가 골라 봤어요. ${tags} 조건으로 ${course.stops.length}곳을 골랐어요. 이동과 머묾을 합쳐 약 ${fmtMin(course.total)}예요.${course.over ? ' (시간 안에 한 곳도 다 못 봐서 가장 가까운 곳만 골랐어요.)' : ''}`
   return { mode: 'rules', answer: [head, ...lines, ...notes, '예약·운영 시간은 방문 전에 확인하세요.'].join('\n'), ids: ctx.ids, travel: opt.mode, tools: used }
 }
 
@@ -184,7 +185,7 @@ export async function askGuide({ question, start }) {
   const ctx = { start, ids: [], mode: 'car' }
   if (process.env.ANTHROPIC_API_KEY) {
     try { return await askClaude(q, ctx) } catch (e) {
-      return askRules(q, { ...ctx, ids: [] }, `AI 호출에 실패해 기본 가이드로 답했어요 (${e.message}).`)
+      return askRules(q, { ...ctx, ids: [] }, 'AI 연결이 잠시 불안정해 빠른 추천으로 답했어요.')
     }
   }
   return askRules(q, ctx)

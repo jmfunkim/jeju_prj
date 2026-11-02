@@ -1,6 +1,8 @@
 import { Link, useNavigate } from 'react-router-dom'
 import { ProgressBar } from 'react-bootstrap'
+import Doli from '../components/Doli'
 import { Cover, SaveButton, distanceLabel } from '../components/ui'
+import { earnedBadges, stageOf } from '../data/world'
 import { KINDS, KIND_KEYS, PLACES, placeById, placesOf } from '../data/places'
 import { useAppStore } from '../store/useAppStore'
 import { useAuthStore } from '../store/useAuthStore'
@@ -11,19 +13,40 @@ export default function Notebook() {
   const sync = useAuthStore((st) => st.sync)
   const navigate = useNavigate()
   const items = saved.map(placeById).filter(Boolean)
+  const stampCount = Object.keys(stamps).length
+  const stage = stageOf(stampCount)
+  const badges = earnedBadges(stamps)
 
   return (
     <div className="page">
       <header className="page-head">
         <p className="stamp">내 수첩</p>
         <h1>담아 둔 이야기와 장소</h1>
-        <p>북마크한 장소와 방문 도장을 모아 둬요. 세 갈래를 골고루 모아 보세요.</p>
+        <p>북마크한 장소와 방문 도장을 모아 둬요. 세 분야를 골고루 모아 보세요.</p>
         {user ? (
           <p className="sync-note"><i className="bi bi-cloud-check me-1" />{user.name} 님의 수첩 · {{ syncing: '저장 중…', ok: '계정에 저장됨', error: '저장하지 못했어요. 새로고침 후 다시 시도해 주세요', idle: '' }[sync]}</p>
         ) : (
           <p className="sync-note"><i className="bi bi-cloud-slash me-1" />지금은 이 브라우저에만 저장돼요. <Link to="/login">로그인</Link>하면 계정에 보관해요.</p>
         )}
       </header>
+
+      <section className="stage stone-card">
+        <Doli size={110} mood={stage.mood} glow={stage.glow} />
+        <div className="stage__body">
+          <p className="stamp">돌빛 단계</p>
+          <h2>{stage.name} <small>{stampCount}/{PLACES.length}</small></h2>
+          <p>{stage.say}</p>
+          <div className="stage__bar" aria-hidden="true"><i style={{ width: `${(stampCount / PLACES.length) * 100}%` }} /></div>
+          <small className="text-muted">{stage.next ? `다음 단계 '${stage.next.name}'까지 도장 ${stage.toNext}개` : '모든 돌빛이 켜졌어요'}</small>
+          <div className="badges">
+            {badges.map((b) => (
+              <span key={b.kind} className={`badge-k ${b.earned ? 'on' : ''}`} style={{ '--k': KINDS[b.kind].color }} title={`${b.have}/${b.total}`}>
+                <i className={`bi bi-${b.icon}`} />{b.name}<em>{b.have}/{b.total}</em>
+              </span>
+            ))}
+          </div>
+        </div>
+      </section>
 
       <div className="row g-3 mb-4">
         {KIND_KEYS.map((k) => {
@@ -41,7 +64,7 @@ export default function Notebook() {
       </div>
 
       <section className="mb-4">
-        <h2 className="h5 mb-2">방문 도장판 <small className="text-muted">{Object.keys(stamps).length}/{PLACES.length}</small></h2>
+        <h2 className="h5 mb-2">돌빛 도장판 <small className="text-muted">{Object.keys(stamps).length}/{PLACES.length}</small></h2>
         <div className="stamp-board">
           {PLACES.map((p) => {
             const st = stamps[p.id]
@@ -53,7 +76,7 @@ export default function Notebook() {
             )
           })}
         </div>
-        <p className="small text-muted mt-2">도장은 <Link to="/walk">이야기 산책</Link>에서 찍어요. 장소 500m 안에서 찍으면 현장 도장이 돼요.</p>
+        <p className="small text-muted mt-2">도장은 <Link to="/walk">이야기 산책</Link>에서 찍어요. 장소 500m 안에서 찍으면 현장 돌빛이 켜져요.</p>
       </section>
 
       {items.length === 0 ? (

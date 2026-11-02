@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react'
 import { Alert, Badge, Button, Spinner } from 'react-bootstrap'
 import { fetchNearby } from '../api/client'
 import { KINDS } from '../data/places'
-import { photoOf } from '../data/photos'
+import { copyrightLabel, usePlacePhotos } from '../lib/photos'
+import { useDataKey } from '../lib/info'
 import { DEMO_ME, distanceKm, fmtKm } from '../lib/geo'
 import { useAppStore } from '../store/useAppStore'
 
@@ -16,24 +17,23 @@ export function KindBadge({ kind, children }) {
   )
 }
 
-// 사진 출처 표시 (위키미디어 커먼즈 자유 이용 사진은 작성자·라이선스·원본 링크를 함께 보여 줘야 해요)
+// 사진 출처 표시 — 한국관광공사 TourAPI 사진
 export function PhotoCredit({ photo }) {
-  const text = `사진 ${photo.author} · ${photo.license}`
+  const cr = copyrightLabel(photo.copyright)
   return (
-    <a className="photo-credit" href={photo.page} target="_blank" rel="noreferrer" onClick={(e) => e.stopPropagation()}
-      title={`${photo.note ? photo.note + ' · ' : ''}${text} (Wikimedia Commons)`}>
-      {photo.note ? `${photo.note} · ` : ''}{text}
-    </a>
+    <span className="photo-credit" title={`한국관광공사 · ${photo.title}${cr ? ' · ' + cr : ''}`}>
+      사진 한국관광공사{cr ? ` · ${cr}` : ''}
+    </span>
   )
 }
 
 // 갈래별 머리띠 — 사진이 있으면 사진, 없으면 무늬 (신화=별빛, 돌=현무암, 역사=기와)
 export function Cover({ kind, label, id }) {
   const k = KINDS[kind]
-  const photo = id ? photoOf(id) : null
+  const photo = usePlacePhotos()[id]
   return (
     <div className={`cover cover--${kind} ${photo ? 'cover--photo' : ''}`} style={{ '--k': k.color }}>
-      {photo && <div className="cover__photo" role="img" aria-label={photo.note ?? '장소 사진'} style={{ backgroundImage: `url(${photo.src})` }} />}
+      {photo && <div className="cover__photo" role="img" aria-label={photo.title} style={{ backgroundImage: `url(${photo.src})` }} />}
       <i className={`bi bi-${k.icon} cover__icon`} aria-hidden="true" />
       <span className="cover__tag">{label ?? k.label}</span>
       {photo && <PhotoCredit photo={photo} />}
@@ -43,11 +43,11 @@ export function Cover({ kind, label, id }) {
 
 // 상세 화면용 큰 사진 + 출처
 export function PlacePhoto({ id, name }) {
-  const photo = photoOf(id)
+  const photo = usePlacePhotos()[id]
   if (!photo) return null
   return (
     <figure className="place-photo">
-      <img src={photo.src} alt={photo.note ?? name ?? '장소 사진'} loading="lazy" width={photo.w} height={photo.h} onError={(e) => { e.currentTarget.closest('figure').style.display = 'none' }} />
+      <img src={photo.src} alt={name ? `${name} 사진` : photo.title} loading="lazy" onError={(e) => { e.currentTarget.closest('figure').style.display = 'none' }} />
       <figcaption><PhotoCredit photo={photo} /></figcaption>
     </figure>
   )
@@ -74,7 +74,7 @@ export function LocateBar({ className = '' }) {
         {locating ? <Spinner size="sm" className="me-1" /> : <i className="bi bi-crosshair me-1" />}내 위치 찾기
       </Button>
       <Button variant="outline-dark" size="sm" onClick={() => setMe(DEMO_ME)}>제주시청 기준으로 보기</Button>
-      {me && <span className="small text-muted"><i className="bi bi-check2-circle text-success me-1" />{me.demo ? '체험용 위치(제주시청 부근)' : '현재 위치 확인됨'}</span>}
+      {me && <span className="small text-muted"><i className="bi bi-check2-circle text-success me-1" />{me.demo ? '제주시청 부근에서 출발해요' : '현재 위치 확인됨'}</span>}
       {locError && <span className="small text-danger">{locError}</span>}
     </div>
   )
@@ -86,7 +86,7 @@ export const distanceLabel = (me, place) => (me ? fmtKm(distanceKm(me, place)) :
 // API 호출 상태(로딩·에러·빈 결과)
 export function ApiState({ loading, error, empty, emptyText = '결과가 없어요.' }) {
   if (loading) return <div className="py-4 text-center"><Spinner animation="border" size="sm" className="me-2" />불러오는 중…</div>
-  if (error) return <Alert variant="warning" className="mb-0"><i className="bi bi-exclamation-triangle me-1" />{error}</Alert>
+  if (error) return <Alert variant="light" className="api-note mb-0"><i className="bi bi-hourglass-split me-2" />{error}</Alert>
   if (empty) return <p className="text-muted py-3 mb-0">{emptyText}</p>
   return null
 }
@@ -95,6 +95,7 @@ const TOUR_TYPE = { 12: '관광지', 14: '문화시설', 15: '축제', 25: '여�
 
 // 이 장소 주변 3km 의 관광정보(한국관광공사 TourAPI) — 눌렀을 때만 불러옵니다
 export function NearbyTour({ place }) {
+  const hasKey = useDataKey()
   const [st, setSt] = useState({ status: 'idle' })
   useEffect(() => setSt({ status: 'idle' }), [place.id])
 
@@ -107,10 +108,13 @@ export function NearbyTour({ place }) {
     }
   }
 
+  // 공공데이터 연결이 안 된 상태에서는 눌러도 오류만 나오므로 버튼을 감춥니다
+  if (hasKey === false) return <p className="small text-muted mb-0"><i className="bi bi-hourglass-split me-1" />주변 볼거리·맛집은 곧 연결할게요.</p>
+
   return (
     <div className="nearby">
       {st.status === 'idle' && (
-        <Button size="sm" variant="outline-dark" onClick={load}><i className="bi bi-binoculars me-1" />주변 볼거리·맛집 (공공데이터)</Button>
+        <Button size="sm" variant="outline-dark" onClick={load}><i className="bi bi-binoculars me-1" />주변 볼거리·맛집</Button>
       )}
       <ApiState loading={st.status === 'loading'} error={st.status === 'error' ? st.message : ''} empty={st.status === 'ok' && st.list.length === 0} emptyText="3km 안에 조회된 곳이 없어요." />
       {st.status === 'ok' && st.list.length > 0 && (

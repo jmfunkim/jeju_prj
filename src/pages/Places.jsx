@@ -15,13 +15,13 @@ export default function Places() {
       <header className="page-head">
         <p className="stamp">역사문화 위치정보</p>
         <h1>어디에 무엇이 있을까</h1>
-        <p>직접 엮은 장소 목록과, 공공데이터 API로 불러온 내 주변 관광·문화시설·국가유산을 함께 볼 수 있어요.</p>
+        <p>돌빛 제주길이 고른 장소와, 내 주변 관광지·문화시설·국가유산을 한곳에서 볼 수 있어요.</p>
       </header>
       <Nav variant="pills" className="pill-nav mb-3" activeKey={tab} onSelect={setTab}>
-        <Nav.Item><Nav.Link eventKey="curated">엮은 장소 {PLACES.length}</Nav.Link></Nav.Item>
-        <Nav.Item><Nav.Link eventKey="history">역사문화 위치 (공공데이터)</Nav.Link></Nav.Item>
-        <Nav.Item><Nav.Link eventKey="nearby">내 주변 (TourAPI)</Nav.Link></Nav.Item>
-        <Nav.Item><Nav.Link eventKey="heritage">국가유산 (국가유산청)</Nav.Link></Nav.Item>
+        <Nav.Item><Nav.Link eventKey="curated">추천 장소 {PLACES.length}</Nav.Link></Nav.Item>
+        <Nav.Item><Nav.Link eventKey="history">역사문화 장소</Nav.Link></Nav.Item>
+        <Nav.Item><Nav.Link eventKey="nearby">내 주변</Nav.Link></Nav.Item>
+        <Nav.Item><Nav.Link eventKey="heritage">국가유산</Nav.Link></Nav.Item>
       </Nav>
       {tab === 'curated' && <Curated />}
       {tab === 'history' && <HistoryPlaces />}
@@ -114,7 +114,7 @@ function Nearby() {
         <Form.Select size="sm" style={{ maxWidth: 160 }} value={type} onChange={(e) => setType(e.target.value)}>
           {TYPES.map(([v, l]) => <option key={v} value={v}>{l}</option>)}
         </Form.Select>
-        <span className="small text-muted">반경 8km · 한국관광공사 위치기반 조회</span>
+        <span className="small text-muted">반경 8km 안 · 출처 한국관광공사</span>
       </div>
       {!me && <ApiState empty emptyText="먼저 '내 위치 찾기'나 '제주시청 기준으로 보기'를 눌러 주세요." />}
       {me && <ApiState loading={state.loading} error={state.error} empty={!state.loading && !state.error && state.items.length === 0} emptyText="주변에 조회된 장소가 없어요." />}
@@ -157,7 +157,7 @@ function Heritage() {
     <>
       <div className="stone-card p-3 mb-3 d-flex flex-wrap gap-3 align-items-center">
         <Form.Control style={{ maxWidth: 260 }} size="sm" placeholder="국가유산 이름 (예: 관덕정)" value={q} onChange={(e) => setQ(e.target.value)} />
-        <span className="small text-muted">국가유산청 국가유산 검색 · 제주</span>
+        <span className="small text-muted">제주 국가유산 검색 · 출처 국가유산청</span>
         {weather && <span className="small ms-auto"><i className="bi bi-cloud-sun me-1" />제주시 {weather.temp}°C · {weather.sky}</span>}
       </div>
       <ApiState loading={state.loading} error={state.error} empty={!state.loading && !state.error && state.items.length === 0} />

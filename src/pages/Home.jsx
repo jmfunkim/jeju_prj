@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import Doli, { DoliSay } from '../components/Doli'
 import JejuMapView from '../components/JejuMapView'
-import { LocateBar, distanceLabel } from '../components/ui'
+import { LocateBar } from '../components/ui'
 import { fetchWeather } from '../api/client'
-import { KINDS, KIND_KEYS, PLACES, placesOf } from '../data/places'
+import { KINDS, KIND_KEYS, placesOf } from '../data/places'
+import { DOLI, DOLI_HELLO, WORLD } from '../data/world'
 import { buildCourse, fmtMin } from '../lib/course'
-import { DEMO_ME, distanceKm } from '../lib/geo'
+import { DEMO_ME } from '../lib/geo'
 import { useAppStore } from '../store/useAppStore'
 
 const STEPS = [
@@ -14,22 +16,16 @@ const STEPS = [
   { n: 3, icon: 'patch-check', title: '걷고 도장 받기', sub: '이야기를 읽고 장소마다 도장 찍기' },
 ]
 const LINKS = { myth: '/myth', stone: '/stone', history: '/places' }
-const QUICK = [
-  { to: '/walk', icon: 'signpost-split', c: '#0f8b9d', title: '이야기 산책', sub: '시간에 맞춘 코스 만들기' },
-  { to: '/guide', icon: 'chat-heart', c: '#ff8a1f', title: 'AI 가이드', sub: '비 오는 날, 아이와 함께?' },
-  { to: '/map', icon: 'globe-asia-australia', c: '#3d5fa8', title: '문화 지도', sub: '2D · 3D로 24곳 보기' },
-]
 
 export default function Home() {
   const me = useAppStore((s) => s.me)
-  const select = useAppStore((s) => s.select)
   const [weather, setWeather] = useState(null)
 
   useEffect(() => { fetchWeather('제주시').then((w) => setWeather(w[0])).catch(() => {}) }, [])
 
   const start = me ?? DEMO_ME
   const today = buildCourse({ start, minutes: 120, mode: 'car' })
-  const nearest = me ? [...PLACES].sort((a, b) => distanceKm(me, a) - distanceKm(me, b)).slice(0, 3) : []
+  const real = me && !me.demo
 
   return (
     <div className="page">
@@ -40,52 +36,47 @@ export default function Home() {
           <p className="intent">
             신화와 돌, 역사가 남은 장소를 지도에 모으고, 내 위치와 쓸 수 있는 시간에 맞춰 걸을 코스를 짜 드려요.
           </p>
-          <div className="d-flex flex-wrap gap-2 mb-3">
+          <div className="d-flex flex-wrap align-items-center gap-2 mb-3">
             <Link to="/walk" className="btn btn-dol btn-lg px-4">산책 코스 만들기</Link>
             <Link to="/guide" className="btn btn-outline-dark btn-lg">AI 가이드에게 묻기</Link>
+            <Link to="/map" className="home-link">지도로 둘러보기 <i className="bi bi-arrow-right" /></Link>
           </div>
+          <DoliSay mood="hi" className="mb-3">{DOLI_HELLO}</DoliSay>
           {weather && (
             <p className="weather"><i className="bi bi-cloud-sun me-1" />지금 제주시 {weather.temp}°C · {weather.sky} <small>(기상청 예보)</small></p>
           )}
         </div>
         <div className="col-lg-6 order-1 order-lg-2">
-          <div className="blob-frame"><JejuMapView autoRotate camera={{ position: [0, 17, 26], fov: 48 }} /></div>
+          <div className="blob-frame">
+            <JejuMapView autoRotate camera={{ position: [0, 17, 26], fov: 48 }} />
+            <Link to="/map" className="blob-frame__cta">지도에서 24곳 보기 <i className="bi bi-arrow-right" /></Link>
+          </div>
         </div>
       </section>
 
-      <ul className="stats" aria-label="한눈에 보기">
-        <li><b>{PLACES.length}</b>이야기 장소</li>
-        <li><b>368</b>3D 오름</li>
-        <li><b>6</b>공공데이터 API</li>
-        <li><b>2D·3D</b>지도 보기</li>
-      </ul>
-
-      <section className="quick" aria-label="바로가기">
-        {QUICK.map((q) => (
-          <Link key={q.to} to={q.to} className="quick__item" style={{ '--c': q.c }}>
-            <i className={`bi bi-${q.icon}`} />
-            <span><b>{q.title}</b><small>{q.sub}</small></span>
-          </Link>
-        ))}
-      </section>
-
       {today.stops.length > 0 && (
-        <section className="today">
-          <div className="today__head">
-            <p className="stamp">오늘의 코스</p>
-            <h2>{me && !me.demo ? '내 위치에서' : '제주시청에서'} 2시간, {today.stops.length}곳</h2>
-            <p>이동 {fmtMin(today.travel)} + 머묾 {fmtMin(today.stay)}. 바로 걸어 볼 수 있는 코스예요.</p>
-            <Link to={`/walk?ids=${today.stops.map((s) => s.place.id).join(',')}&mode=car`} className="btn btn-dol btn-lg px-4">이 코스로 걷기</Link>
+        <>
+          <section className="today">
+            <div className="today__head">
+              <p className="stamp">오늘의 코스</p>
+              <h2>{real ? '내 위치에서' : '제주시청에서'} 2시간, {today.stops.length}곳</h2>
+              <p>이동 {fmtMin(today.travel)} + 머묾 {fmtMin(today.stay)}. 바로 걸어 볼 수 있는 코스예요.</p>
+              <Link to={`/walk?ids=${today.stops.map((s) => s.place.id).join(',')}&mode=car`} className="btn btn-dol btn-lg px-4">이 코스로 걷기</Link>
+            </div>
+            <ol className="today__stops">
+              {today.stops.map((s, i) => (
+                <li key={s.place.id} style={{ '--k': KINDS[s.place.kind].color }}>
+                  <b>{i + 1}</b>
+                  <span><strong>{s.place.name}</strong><small>{KINDS[s.place.kind].label} · {fmtMin(s.stay)} 머물기</small></span>
+                </li>
+              ))}
+            </ol>
+          </section>
+          <div className="today__locate">
+            <span><i className="bi bi-geo-alt me-1" />출발지를 바꾸면 코스도 바뀌어요</span>
+            <LocateBar />
           </div>
-          <ol className="today__stops">
-            {today.stops.map((s, i) => (
-              <li key={s.place.id} style={{ '--k': KINDS[s.place.kind].color }}>
-                <b>{i + 1}</b>
-                <span><strong>{s.place.name}</strong><small>{KINDS[s.place.kind].label} · {fmtMin(s.stay)} 머물기</small></span>
-              </li>
-            ))}
-          </ol>
-        </section>
+        </>
       )}
 
       <div className="section-title"><h2>이렇게 써요</h2><small>세 걸음</small></div>
@@ -95,7 +86,7 @@ export default function Home() {
         ))}
       </ol>
 
-      <div className="section-title"><h2>세 갈래 이야기</h2><small>신화·돌·역사</small></div>
+      <div className="section-title"><h2>세 가지 이야기</h2><small>신화·돌·역사</small></div>
       <section className="row g-3">
         {KIND_KEYS.map((k) => (
           <div className="col-md-4" key={k}>
@@ -109,33 +100,26 @@ export default function Home() {
         ))}
       </section>
 
-      <p className="legend-line"><span className="legend-line__row">“설문대할망이 치마폭으로 흙을 날라 한라산을 쌓고,</span><span className="legend-line__row">흘린 흙이 오름 삼백예순여덟 개가 되었다.”</span><small>— 제주 설화 중에서</small></p>
-
-      <section className="stone-card near">
-        <div className="row g-3 align-items-center">
-          <div className="col-lg-5">
-            <h2 className="h4 mb-1"><i className="bi bi-compass me-2 text-info" />내 위치에서 가까운 이야기</h2>
-            <p className="text-muted mb-2">위치 권한을 허용하면 가장 가까운 장소 3곳을 알려 드려요.</p>
-            <LocateBar />
-          </div>
-          <div className="col-lg-7">
-            {nearest.length === 0 ? (
-              <p className="text-muted mb-0">아직 위치를 모르는 상태예요.</p>
-            ) : (
-              <ol className="near-list">
-                {nearest.map((p) => (
-                  <li key={p.id}>
-                    <Link to="/map" onClick={() => select(p.id)}>
-                      <b>{p.name}</b> <small>{KINDS[p.kind].label}</small>
-                      <span>{distanceLabel(me, p)}</span>
-                    </Link>
-                  </li>
-                ))}
-              </ol>
-            )}
-          </div>
+      <section className="world world--compact">
+        <div className="world__doli"><Doli size={130} mood="hi" glow={0.9} /></div>
+        <div className="world__text">
+          <p className="stamp">돌빛 세계</p>
+          <h2>{WORLD.title}</h2>
+          <p>{WORLD.lines[0]}</p>
+          <details className="world__more">
+            <summary>돌이와 돌빛 이야기 더 보기</summary>
+            {WORLD.lines.slice(1).map((l) => <p key={l}>{l}</p>)}
+            <div className="world__who">
+              <b>{DOLI.name}</b> · {DOLI.who}
+              <small>{DOLI.intro}</small>
+              <span>{DOLI.likes.map((x) => <i key={x}>{x}</i>)}</span>
+            </div>
+            <p className="world__note">{WORLD.note}</p>
+          </details>
         </div>
       </section>
+
+      <p className="legend-line"><span className="legend-line__row">“설문대할망이 치마폭으로 흙을 날라 한라산을 쌓고,</span><span className="legend-line__row">흘린 흙이 오름 삼백예순여덟 개가 되었다.”</span><small>— 제주 설화 중에서</small></p>
     </div>
   )
 }
