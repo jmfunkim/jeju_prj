@@ -39,6 +39,10 @@ export default function MythArchive() {
           {d.types.map((t) => <Nav.Item key={t}><Nav.Link eventKey={t}>{t}</Nav.Link></Nav.Item>)}
         </Nav>
       )}
+      <p className="small text-muted mb-3">
+        본풀이는 제주 마을의 당(신당)에서 전해 온 신들의 이야기예요. 위 탭은 제주도청 자료의 구분입니다 —
+        <b> 원문</b>은 채록한 본풀이 원본, <b>해제</b>는 자료를 설명하는 글, <b>현지조사</b>는 현장에서 조사한 자료예요.
+      </p>
       <ApiState loading={st.loading && !d} error={st.error} empty={!st.loading && !st.error && d && d.items.length === 0} emptyText="맞는 자료가 없어요." />
       {d && (
         <>
@@ -49,10 +53,9 @@ export default function MythArchive() {
                   <span className="mini-tag" style={{ '--k': TYPE_COLOR[m.type] ?? '#6e7f86' }}>{m.type}</span>
                   <h3>{m.title}</h3>
                   <div className="d-flex flex-wrap gap-1 mb-2">{m.tags.slice(0, 3).map((t) => <span key={t} className="kw">#{t}</span>)}</div>
-                  <div className="d-flex gap-2">
-                    {m.ebookUrl && <a className="btn btn-sm btn-outline-dark" href={m.ebookUrl} target="_blank" rel="noreferrer"><i className="bi bi-book me-1" />e-book</a>}
-                    {m.pdfUrl && <a className="btn btn-sm btn-outline-dark" href={m.pdfUrl} target="_blank" rel="noreferrer"><i className="bi bi-file-earmark-pdf me-1" />PDF</a>}
-                  </div>
+                  <a className="btn btn-sm btn-outline-dark" href={`https://search.naver.com/search.naver?query=${encodeURIComponent(`제주 ${m.title.replace(/\(.*\)/, '')} 본풀이`)}`} target="_blank" rel="noreferrer">
+                    <i className="bi bi-search me-1" />더 알아보기
+                  </a>
                 </article>
               </div>
             ))}
@@ -63,7 +66,7 @@ export default function MythArchive() {
           </div>
         </>
       )}
-      <p className="small text-muted mt-2">출처: 제주특별자치도 제주 신화 콘텐츠 API. 원문과 해제는 제주도청 e-book·PDF로 연결돼요.</p>
+      <p className="small text-muted mt-2">출처: 제주특별자치도 제주 신화 콘텐츠 API(제목·구분·태그). API가 주는 e-book·PDF 주소는 현재 열리지 않아 연결하지 않고, 검색으로 이어 줘요.</p>
     </section>
   )
 }

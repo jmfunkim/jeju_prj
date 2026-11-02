@@ -1,5 +1,6 @@
 // 제주특별자치도(jeju.go.kr) 공공 API 두 가지 — 둘 다 인증키가 필요 없습니다.
 //  · 제주 신화 콘텐츠  : XML  /rest/JejuMythContents/getJejuMythContentsList  (조건 파라미터를 무시하고 전체 182건을 줌 → 여기서 걸러요)
+//    응답의 ebookUrl·pdfUrl 은 모두 도청의 '페이지 없음' 화면으로 가서(364개 확인) 쓰지 않습니다.
 //  · 돌문화공원 소장유물: JSON /api/jejustonepark/have                          (한 페이지 9건 고정 → 전체 페이지를 모아요)
 import { XMLParser } from 'fast-xml-parser'
 
@@ -32,7 +33,6 @@ function loadMyth() {
     return list.map((i) => ({
       code: i.codeNo, type: i.type, title: String(i.title ?? '').trim(),
       tags: String(i.tag ?? '').split(',').map((t) => t.trim()).filter(Boolean),
-      ebookUrl: i.ebookUrl || '', pdfUrl: i.pdfUrl || '',
     }))
   })
 }

@@ -52,7 +52,7 @@ async function runTool(name, input, ctx) {
   }
   if (name === 'search_myth_archive') {
     const r = await listMyth({ keyword: String(input.keyword ?? ''), limit: 8 })
-    return { matched: r.matched, items: r.items.map((m) => ({ title: m.title, type: m.type, tags: m.tags, ebook: m.ebookUrl })) }
+    return { matched: r.matched, items: r.items.map((m) => ({ title: m.title, type: m.type, tags: m.tags })) }
   }
   return { error: `알 수 없는 도구: ${name}` }
 }

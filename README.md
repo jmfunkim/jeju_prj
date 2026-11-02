@@ -149,7 +149,7 @@ npm run dev                    # http://localhost:5173
 | 한국관광공사 국문 관광정보(KorService2) | `/api/tour?lat=&lng=&radius=` | 장소 상세·산책 카드의 주변 정보, 위치정보 › 내 주변 |
 | 국가유산청 국가유산 검색 | `/api/heritage?keyword=` | 위치정보 › 국가유산 |
 | 기상청 단기예보 | `/api/weather?place=` | 홈, AI 가이드(비 확인) |
-| 제주 신화 콘텐츠 (제주도청, 키 없음) | `/api/myth?keyword=&type=` ← `jeju.go.kr/rest/JejuMythContents/getJejuMythContentsList` | 신화·설화 › 신화 아카이브 (e-book·PDF 링크), AI 가이드 |
+| 제주 신화 콘텐츠 (제주도청, 키 없음) | `/api/myth?keyword=&type=` ← `jeju.go.kr/rest/JejuMythContents/getJejuMythContentsList` | 신화·설화 › 신화 아카이브(제목·구분·태그), AI 가이드 |
 | 제주돌문화공원 소장유물 (제주도청, 키 없음) | `/api/stonepark?keyword=&material=&age=` ← `jeju.go.kr/api/jejustonepark/have` | 돌문화 › 소장 유물 |
 | 제주역사문화위치정보 (공공데이터포털 15109570) | `/api/history?page=&perPage=` ← `api.odcloud.kr/api/15109570/v1/uddi:8781…` | 위치정보 › 역사문화 위치 (2D 지도 + 목록) |
 | AI 가이드(자체) | `/api/guide?q=&lat=&lng=` | AI 가이드 |
