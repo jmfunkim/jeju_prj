@@ -109,7 +109,7 @@ export default function Home() {
         ))}
       </section>
 
-      <p className="legend-line">“설문대할망이 치마폭으로 흙을 날라 한라산을 쌓고, 흘린 흙이 오름 삼백예순여덟 개가 되었다.”<small>— 제주 설화 중에서</small></p>
+      <p className="legend-line">“설문대할망이 치마폭으로 흙을 날라 한라산을 쌓고,<br className="d-none d-md-inline" /> 흘린 흙이 오름 삼백예순여덟 개가 되었다.”<small>— 제주 설화 중에서</small></p>
 
       <section className="stone-card near">
         <div className="row g-3 align-items-center">
