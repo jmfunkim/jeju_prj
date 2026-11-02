@@ -33,7 +33,7 @@ export default function Myth() {
           <div className="col" key={m.id}>
             <article className="stone-card myth-card" style={{ '--tilt': `${(i % 3 - 1) * 0.6}deg` }} onClick={() => setOpen(m)} role="button" tabIndex={0}
               onKeyDown={(e) => e.key === 'Enter' && setOpen(m)}>
-              <Cover kind="myth" label={m.tag} />
+              <Cover kind="myth" label={m.tag} id={m.id} />
               <SaveButton id={m.id} compact className="cover-save" />
               <h2>{m.title}</h2>
               <p>{m.summary}</p>

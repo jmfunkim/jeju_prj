@@ -70,7 +70,7 @@ export default function Stone() {
         {placesOf('stone').map((p) => (
           <div className="col" key={p.id}>
             <article className="stone-card place-card" style={{ '--k': '#6e7f86' }}>
-              <Cover kind="stone" label={p.tag} />
+              <Cover kind="stone" label={p.tag} id={p.id} />
               <h3>{p.name}</h3>
               <p>{p.summary}</p>
               <div className="d-flex gap-2">

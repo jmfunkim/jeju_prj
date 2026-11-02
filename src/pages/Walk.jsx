@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react'
 import { Form, ToggleButton, ToggleButtonGroup } from 'react-bootstrap'
 import { Link, useSearchParams } from 'react-router-dom'
 import RealMap from '../components/RealMap'
-import { KindBadge, LocateBar, NearbyTour, SaveButton, routeUrl } from '../components/ui'
+import { KindBadge, LocateBar, NearbyTour, PlacePhoto, SaveButton, routeUrl } from '../components/ui'
 import { KINDS, KIND_KEYS, PLACES, placeById } from '../data/places'
 import { MODES, TIME_OPTIONS, buildCourse, fmtMin, planFromIds } from '../lib/course'
 import { DEMO_ME, distanceKm, fmtKm } from '../lib/geo'
@@ -23,6 +23,7 @@ function StopCard({ n, s, me }) {
         <i className="bi bi-arrow-down-short" />
         {n === 1 ? '출발지에서' : '앞 장소에서'} {fmtKm(s.km)} · {s.legMode} 약 {fmtMin(s.leg)}
       </div>
+      <PlacePhoto id={place.id} name={place.name} />
       <div className="d-flex flex-wrap align-items-center gap-2 mb-1">
         <KindBadge kind={place.kind}>{place.tag}</KindBadge>
         <span className="stop__stay"><i className="bi bi-clock me-1" />머무는 시간 약 {fmtMin(s.stay)}</span>

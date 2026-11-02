@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Alert, Badge, Button, Spinner } from 'react-bootstrap'
 import { fetchNearby } from '../api/client'
 import { KINDS } from '../data/places'
+import { photoOf } from '../data/photos'
 import { DEMO_ME, distanceKm, fmtKm } from '../lib/geo'
 import { useAppStore } from '../store/useAppStore'
 
@@ -15,14 +16,40 @@ export function KindBadge({ kind, children }) {
   )
 }
 
-// 갈래별 무늬 머리띠 — 사진이 없는 카드의 얼굴 (신화=별빛, 돌=현무암, 역사=기와)
-export function Cover({ kind, label }) {
-  const k = KINDS[kind]
+// 사진 출처 표시 (위키미디어 커먼즈 자유 이용 사진은 작성자·라이선스·원본 링크를 함께 보여 줘야 해요)
+export function PhotoCredit({ photo }) {
+  const text = `사진 ${photo.author} · ${photo.license}`
   return (
-    <div className={`cover cover--${kind}`} style={{ '--k': k.color }}>
+    <a className="photo-credit" href={photo.page} target="_blank" rel="noreferrer" onClick={(e) => e.stopPropagation()}
+      title={`${photo.note ? photo.note + ' · ' : ''}${text} (Wikimedia Commons)`}>
+      {photo.note ? `${photo.note} · ` : ''}{text}
+    </a>
+  )
+}
+
+// 갈래별 머리띠 — 사진이 있으면 사진, 없으면 무늬 (신화=별빛, 돌=현무암, 역사=기와)
+export function Cover({ kind, label, id }) {
+  const k = KINDS[kind]
+  const photo = id ? photoOf(id) : null
+  return (
+    <div className={`cover cover--${kind} ${photo ? 'cover--photo' : ''}`} style={{ '--k': k.color }}>
+      {photo && <div className="cover__photo" role="img" aria-label={photo.note ?? '장소 사진'} style={{ backgroundImage: `url(${photo.src})` }} />}
       <i className={`bi bi-${k.icon} cover__icon`} aria-hidden="true" />
       <span className="cover__tag">{label ?? k.label}</span>
+      {photo && <PhotoCredit photo={photo} />}
     </div>
+  )
+}
+
+// 상세 화면용 큰 사진 + 출처
+export function PlacePhoto({ id, name }) {
+  const photo = photoOf(id)
+  if (!photo) return null
+  return (
+    <figure className="place-photo">
+      <img src={photo.src} alt={photo.note ?? name ?? '장소 사진'} loading="lazy" width={photo.w} height={photo.h} onError={(e) => { e.currentTarget.closest('figure').style.display = 'none' }} />
+      <figcaption><PhotoCredit photo={photo} /></figcaption>
+    </figure>
   )
 }
 
@@ -105,6 +132,7 @@ export function PlaceBody({ place, me }) {
   const dist = distanceLabel(me, place)
   return (
     <>
+      <PlacePhoto id={place.id} name={place.name} />
       <div className="d-flex flex-wrap align-items-center gap-2 mb-2">
         <KindBadge kind={place.kind}>{place.tag}</KindBadge>
         {dist && <Badge bg="info" text="dark" pill><i className="bi bi-signpost-split me-1" />내 위치에서 {dist}</Badge>}

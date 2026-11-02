@@ -67,7 +67,7 @@ export default function Notebook() {
           {items.map((p) => (
             <div className="col" key={p.id}>
               <article className="stone-card place-card" style={{ '--k': KINDS[p.kind].color }}>
-                <Cover kind={p.kind} label={p.tag} />
+                <Cover kind={p.kind} label={p.tag} id={p.id} />
                 <SaveButton id={p.id} compact className="cover-save" />
                 <h3>{p.name}</h3>
                 <p>{p.summary}</p>

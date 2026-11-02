@@ -327,3 +327,18 @@ a.stone-card:hover, .myth-card:hover, .kind-card:hover { transform: translateY(-
 .steps b { display: block; }
 .steps small { color: var(--muted); }
 @media (max-width: 767.98px) { .steps { grid-template-columns: 1fr; } }
+
+/* ───────────── 장소 사진 ───────────── */
+.cover--photo { height: 150px; }
+.cover--photo .cover__icon { display: none; }
+.cover__photo { position: absolute; inset: 0; background-size: cover; background-position: center; }
+.cover--photo::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0, 0, 0, .08) 35%, rgba(0, 0, 0, .55)); pointer-events: none; }
+.cover--photo .cover__tag { position: relative; z-index: 2; background: rgba(19, 34, 45, .62); }
+.photo-credit { color: rgba(255, 255, 255, .92); font-size: 10.5px; line-height: 1.3; text-decoration: none; text-shadow: 0 1px 3px rgba(0, 0, 0, .7); }
+.cover .photo-credit { position: absolute; z-index: 2; right: 10px; bottom: 8px; max-width: 58%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.photo-credit:hover { text-decoration: underline; color: #fff; }
+.place-photo { margin: 0 0 14px; }
+.place-photo img { display: block; width: 100%; height: auto; max-height: 280px; object-fit: cover; border-radius: 14px; background: var(--sea-soft); }
+.place-photo figcaption { margin-top: 4px; }
+.place-photo .photo-credit { color: var(--muted); text-shadow: none; font-size: 11.5px; }
+.place-photo .photo-credit:hover { color: var(--sea-d); }
