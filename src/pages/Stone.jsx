@@ -15,8 +15,10 @@ export default function Stone() {
   const [mood, setMood] = useState('day')
   const [orange, setOrange] = useState(false)
   const [spin, setSpin] = useState(true)
+  const [model, setModel] = useState('harbang')   // 오른쪽 설명에서 고른 돌 — 3D 모델이 따라 바뀝니다
+  const [bars, setBars] = useState(0)
   const live = useRef({})
-  Object.assign(live.current, { mood, orange, spin })
+  Object.assign(live.current, { mood, orange, spin, model, bars })
   const select = useAppStore((s) => s.select)
   const navigate = useNavigate()
 
@@ -25,7 +27,7 @@ export default function Stone() {
       <header className="page-head">
         <p className="stamp">제주 돌문화</p>
         <h1>구멍 숭숭 뚫린 돌의 섬</h1>
-        <p>화산섬 사람들은 현무암으로 신을 모시고, 밭을 지키고, 집을 열고 닫았어요. 돌하르방을 직접 돌려 보세요.</p>
+        <p>화산섬 사람들은 현무암으로 신을 모시고, 밭을 지키고, 집을 열고 닫았어요. 오른쪽에서 돌을 고르면 3D 모델이 바뀌어요. 마우스로 돌려 보세요.</p>
       </header>
 
       <div className="row g-3">
@@ -34,7 +36,7 @@ export default function Stone() {
             <div className="map-frame map-frame--tall">
               <ThreeStage camera={{ position: [0, 3.2, 8.5], fov: 42 }}
                 controls={{ enablePan: false, minDistance: 4.5, maxDistance: 14, maxPolarAngle: Math.PI * 0.49 }}
-                build={(ctx) => { ctx.controls.target.set(0, 2.2, 0); return buildHarbang(ctx, live.current) }} />
+                build={(ctx) => buildHarbang(ctx, live.current)} />
             </div>
             <div className="d-flex flex-wrap gap-2 justify-content-between mt-2 px-1">
               <ButtonGroup size="sm">
@@ -43,7 +45,8 @@ export default function Stone() {
                 ))}
               </ButtonGroup>
               <div className="d-flex gap-1">
-                <button className={`btn btn-sm ${orange ? 'btn-dark' : 'btn-outline-dark'}`} onClick={() => setOrange(!orange)}>🍊 감귤 들기</button>
+                {model === 'harbang' && <button className={`btn btn-sm ${orange ? 'btn-dark' : 'btn-outline-dark'}`} onClick={() => setOrange(!orange)}>🍊 감귤 들기</button>}
+                {model === 'jeongnang' && <button className="btn btn-sm btn-outline-dark" onClick={() => setBars((bars + 1) % 4)}>정낭 걸기 ({bars}/3)</button>}
                 <button className={`btn btn-sm ${spin ? 'btn-dark' : 'btn-outline-dark'}`} onClick={() => setSpin(!spin)}>자동 회전</button>
               </div>
             </div>
@@ -51,7 +54,7 @@ export default function Stone() {
         </div>
 
         <div className="col-lg-5">
-          <Accordion defaultActiveKey="harbang" className="stone-accordion">
+          <Accordion activeKey={model} onSelect={(k) => k && setModel(k)} className="stone-accordion">
             {STONES.map((s) => (
               <Accordion.Item eventKey={s.id} key={s.id}>
                 <Accordion.Header><i className={`bi bi-${s.icon} me-2`} /><b>{s.name}</b><span className="ms-2 text-muted small d-none d-sm-inline">{s.what}</span></Accordion.Header>
