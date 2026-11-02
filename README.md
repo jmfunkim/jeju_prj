@@ -2,13 +2,14 @@
 
 # 耽 탐라 이야기 수첩
 
-### 돌이 말하고, 바람이 전하는 섬 — 제주 신화·돌문화·역사문화를 3D 지도로
+### 돌이 말하고, 바람이 전하는 섬 — 오늘 걸을 제주 이야기 길을 짜 드립니다
 
 ![Vite](https://img.shields.io/badge/Vite-6-646CFF?logo=vite&logoColor=white)
 ![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black)
 ![three.js](https://img.shields.io/badge/three.js-3D-000000?logo=threedotjs&logoColor=white)
 ![Bootstrap](https://img.shields.io/badge/Bootstrap-5-7952B3?logo=bootstrap&logoColor=white)
-![Zustand](https://img.shields.io/badge/Zustand-store-433e38)
+![Supabase](https://img.shields.io/badge/Supabase-Auth·DB-3FCF8E?logo=supabase&logoColor=white)
+![Claude](https://img.shields.io/badge/AI-Claude_agent-D97757)
 
 <img src="docs/home.jpg" alt="탐라 이야기 수첩 홈 화면" width="760" />
 
@@ -18,34 +19,56 @@
 
 ## ✨ 한눈에 보기
 
-> **기획 의도** — 신화와 돌, 역사가 남은 장소를 3D 섬 위에 모으고, 지금 **내 위치에서 가장 가까운 이야기**부터 걸어 볼 수 있게 합니다.
+> **기획 의도** — 신화·돌·역사가 남은 장소를 지도에 모으고, **지금 내 위치와 쓸 수 있는 시간에 맞춰 이야기 산책 코스**를 짜 줍니다. 가서 도장을 찍고, 계정에 수첩으로 남깁니다.
 
 | | 갈래 | 담은 것 | 지도 표지 |
 |---|---|---|---|
-| 🟠 | **신화·설화** | 설문대할망, 오백장군, 산방산, 삼성혈, 영등할망 등 8곳 | 구슬 |
-| ⚪ | **돌문화** | 돌하르방, 밭담, 방사탑, 정낭, 불턱, 돌문화공원 6곳 | 돌 |
-| 🔵 | **역사문화** | 제주목 관아, 항파두리, 4·3평화공원, 추사 유배지 등 6곳 | 마름모 |
+| 🟠 | **신화·설화** | 설문대할망, 오백장군, 산방산, 삼성혈, 천제연 선녀 등 9곳 | 동그라미 |
+| ⚪ | **돌문화** | 돌하르방, 밭담, 방사탑, 정낭, 불턱, 돌문화공원, 만장굴, 거문오름 8곳 | 네모 |
+| 🔵 | **역사문화** | 제주목 관아, 항파두리, 4·3평화공원, 추사 유배지, 해녀박물관 등 7곳 | 마름모 |
+
+## 🧭 사용자 관점에서 다시 만든 부분
+
+"여행자가 실제로 다시 열어 볼까?"를 기준으로 약했던 곳을 보강했습니다.
+
+| 부족했던 점 | 이렇게 바꿨어요 |
+|---|---|
+| 내용이 얇다 (20곳) | **24곳**으로 늘리고, 장소마다 **머무는 시간·현장에서 볼 것·팁·비 오는 날/아이와 가기 좋은지**를 추가 (`src/data/walk.js`) |
+| 3D가 정보를 가린다 | 지도에 **2D ↔ 3D 전환**. 찾을 때는 2D(기본), 둘러볼 때는 3D |
+| 재방문할 이유가 없다 | **방문 도장판** + **로그인 계정에 수첩 저장** (Supabase) |
+| 위치에서 이어지는 게 없다 | **이야기 산책**: 출발지·시간·이동수단으로 코스를 짜고, 이동 시간·현장 팁·**길찾기** 링크까지 연결 |
+| 공공데이터가 숨어 있다 | 장소 상세와 산책 카드에서 **주변 볼거리·맛집(TourAPI)** 을 바로 조회 |
+| 과제의 AI 에이전트 | **AI 가이드**: "아이와 1시간, 비 오는 날" 같은 질문에 도구(코스·날씨·주변 관광정보)를 불러 코스를 추천 |
 
 ## 🗺️ 주요 기능
 
 <table>
 <tr>
-<td width="50%"><img src="docs/map.jpg" alt="3D 문화 지도" /></td>
+<td width="50%"><img src="docs/walk.jpg" alt="이야기 산책 코스" /></td>
+<td width="50%"><img src="docs/guide.jpg" alt="AI 가이드" /></td>
+</tr>
+<tr>
+<td align="center"><b>이야기 산책</b><br/>시간·이동수단·갈래로 코스를 짜고, 장소마다 도장을 찍습니다.</td>
+<td align="center"><b>AI 가이드</b><br/>질문을 말하면 도구를 불러 코스를 만들고 산책으로 열어 줍니다.</td>
+</tr>
+<tr>
+<td width="50%"><img src="docs/map2d.jpg" alt="2D 문화 지도" /></td>
 <td width="50%"><img src="docs/stone.jpg" alt="돌하르방 3D" /></td>
 </tr>
 <tr>
-<td align="center"><b>3D 문화 지도</b><br/>실제 위·경도로 세운 제주 섬. 표지를 누르면 카메라가 날아갑니다.</td>
+<td align="center"><b>2D · 3D 문화 지도</b><br/>같은 지형 함수로 그린 2D 지도, 오름 368개의 3D 지도.</td>
 <td align="center"><b>돌하르방 3D</b><br/>현무암 질감 모델. 한낮·노을·달밤 조명, 감귤 소품.</td>
 </tr>
 </table>
 
-- **3D 문화 지도** — 한라산과 오름 368개, 파도치는 바다, 레이어(신화·돌문화·역사문화) 켜고 끄기
-- **내 위치 연동** — Geolocation으로 가까운 장소 거리 계산·정렬, 3D 지도에 *내 위치* 표시 (권한이 없으면 제주시청 기준 체험 모드)
-- **신화·설화 읽기** — 갈래별 필터와 전체 이야기 모달, "지도에서 보기"로 바로 이동
-- **돌문화 도감** — 돌하르방·밭담·방사탑·정낭·불턱 해설 + 돌하르방 3D 뷰어
-- **공공데이터 연동** — 한국관광공사 TourAPI 위치기반 조회, 국가유산청 국가유산, 기상청 단기예보
-- **로그인·회원가입** — Supabase Auth 연동. 키가 없으면 브라우저에만 저장되는 체험 모드로 동작 (비밀번호는 솔트+SHA-256 해시)
-- **내 수첩** — 북마크한 장소를 브라우저에 보관하고, 세 갈래 수집 진행도를 표시
+- **이야기 산책** — 가까운 곳부터 갈래가 겹치지 않게 고르는 코스 알고리즘(`src/lib/course.js`). 비 오는 날·아이와 함께 옵션, 이동 시간은 직선거리에 우회 계수를 곱한 어림값
+- **방문 도장** — 장소 500m 안에서 찍으면 **현장 도장**, 아니면 **체험 도장**
+- **로그인·회원가입** — Supabase Auth. 키가 없으면 브라우저 안에서만 도는 체험 모드(비밀번호는 솔트+SHA-256 해시)
+- **계정 수첩** — 담은 장소와 도장을 계정에 저장(`notebooks` 테이블, RLS). 기기를 바꿔도 이어집니다
+- **AI 가이드** — `ANTHROPIC_API_KEY`가 있으면 Claude가 도구를 골라 부르고, 없으면 규칙 기반 가이드가 같은 도구를 직접 호출
+- **내 위치 연동** — Geolocation으로 거리 계산·정렬 (권한이 없으면 제주시청 기준 체험 모드)
+- **신화·설화 / 돌문화 도감** — 갈래별 이야기 모달, 돌하르방 3D 뷰어
+- **공공데이터** — 한국관광공사 TourAPI, 국가유산청, 기상청 단기예보
 
 ## 🎨 디자인 컨셉 — "한지 · 현무암 · 돌 도장"
 
@@ -53,6 +76,7 @@ Bootstrap 5를 기반으로 하되 컴포넌트를 **제주의 돌담**처럼 �
 
 - **현무암 레일** — 왼쪽 세로 내비게이션을 돌을 엇갈려 쌓듯 배치 (모바일에서는 Offcanvas)
 - **돌 도장 카드** — 손으로 깎은 듯 비대칭 둥근 모서리 + 두꺼운 테두리 + 단단한 그림자
+- **밭담 구분선 · 한라산 실루엣** — 섹션을 돌담으로 나누고 화면 아래에 오름·파도를 옅게 깔았습니다
 - **색** — 한지 `#f1e8d4`, 현무암 `#26231f`, 갈옷 `#9c5a2c`, 감귤 `#f08a1c`, 바다 `#1e8a9a`
 - **글꼴** — 제목 *Gowun Batang*(명조), 본문 *Gowun Dodum*
 
@@ -64,19 +88,20 @@ project/
 │  ├─ hello.js            동작 확인
 │  ├─ tour.js             한국관광공사 (위치기반·키워드)
 │  ├─ heritage.js         국가유산청
-│  └─ weather.js          기상청
-├─ server/              공공 API 호출 함수 (api/ 가 import)
+│  ├─ weather.js          기상청
+│  └─ guide.js            AI 가이드 (GET /api/guide?q=)
+├─ server/              공공 API·에이전트 호출 함수 (api/ 가 import)
+│  └─ guide.js            도구(plan_course·get_weather·nearby_tour·search_places) + Claude 루프 + 규칙 기반 대체
+├─ supabase/schema.sql  notebooks 테이블 + RLS
 ├─ src/
-│  ├─ main.jsx            Bootstrap + 테마 CSS + 라우터 시작
 │  ├─ router.jsx          메뉴(NAV_ITEMS) + 주소별 페이지
-│  ├─ layouts/            공통 틀 (돌 레일, 모바일 Offcanvas)
-│  ├─ pages/              Home · MapPage · Myth · Stone · Places · Notebook
-│  ├─ components/         ThreeStage(3D 공통 래퍼) · JejuMapView · ui(뱃지·저장·위치)
-│  ├─ scenes/             terrain(지형) · jejuMap(지도 장면) · harbang(돌하르방) · helpers
-│  ├─ data/               places(20곳) · stones(돌문화 해설)
-│  ├─ store/              Zustand 전역 상태 (수첩·레이어·내 위치)
-│  ├─ lib/geo.js          하버사인 거리 계산
-│  ├─ lib/auth.js         회원가입·로그인 (Supabase / 체험 모드)
+│  ├─ layouts/            공통 틀 (돌 레일, 모바일 Offcanvas, 계정 버튼)
+│  ├─ pages/              Home · MapPage · Myth · Stone · Walk · Guide · Places · Notebook · Login
+│  ├─ components/         ThreeStage · JejuMapView(3D) · FlatMap(2D) · WallDivider · ui
+│  ├─ scenes/             terrain · jejuMap · harbang · helpers  (three.js)
+│  ├─ data/               places(24곳) · walk(현장 정보) · stones(돌문화 해설)
+│  ├─ store/              Zustand — useAppStore(수첩·도장·지도) · useAuthStore(로그인)
+│  ├─ lib/                geo(거리) · course(코스 알고리즘) · auth · cloud · sync
 │  └─ api/client.js       화면 → /api 호출
 └─ docs/                README 스크린샷
 ```
@@ -85,42 +110,54 @@ project/
 
 ```bash
 npm install
-cp .env.example .env.local     # 공공데이터포털 키 입력 (선택)
+cp .env.example .env.local     # 키 입력 (모두 선택)
 npm run dev                    # http://localhost:5173
 ```
 
 `npm run dev` 만으로도 `/api/*` 서버 함수가 동작합니다. (`vite.config.js`의 개발용 미들웨어가 `api/` 폴더를 그대로 불러 줍니다. 배포 시에는 Vercel이 같은 파일을 서버 함수로 실행합니다.)
 
-> 키가 없어도 3D 지도·신화·돌문화·수첩은 모두 동작합니다. 공공데이터 탭(내 주변·국가유산)과 날씨만 키가 필요합니다.
+> 키가 없어도 지도·신화·돌문화·산책·도장·로그인(체험 모드)·기본 AI 가이드는 모두 동작합니다.
 
 ### 환경변수
 
 | 이름 | 용도 | 비고 |
 |---|---|---|
 | `DATA_GO_KR_KEY` | 한국관광공사 TourAPI · 기상청 단기예보 | 공공데이터포털 **Decoding 키**. 브라우저에 노출되지 않음 |
-| `VITE_SUPABASE_URL` · `VITE_SUPABASE_ANON_KEY` | 로그인·회원가입 (선택) | anon 키는 공개용. 비워 두면 체험 모드 |
+| `VITE_SUPABASE_URL` · `VITE_SUPABASE_ANON_KEY` | 로그인·회원가입, 계정 수첩 | anon 키는 공개용. 비우면 체험 모드. `supabase/schema.sql` 을 먼저 실행 |
+| `ANTHROPIC_API_KEY` | AI 가이드(Claude 에이전트) | 서버 전용. 비우면 규칙 기반 가이드. `ANTHROPIC_MODEL` 로 모델 변경 가능 |
 
-국가유산청 API는 키가 필요 없습니다.
+국가유산청 API는 키가 필요 없습니다. 값을 바꾼 뒤에는 개발 서버를 다시 시작하세요.
 
-## 🌐 사용한 공공데이터
+### Supabase 설정 (선택)
+
+1. Supabase 프로젝트를 만들고 **SQL Editor**에서 [`supabase/schema.sql`](supabase/schema.sql)을 실행합니다.
+2. **Settings → API**의 Project URL과 `anon` `public` 키를 `.env.local`에 넣습니다. (`service_role` 키는 넣지 마세요)
+3. 이메일 확인을 켜 두었다면 가입 후 메일의 링크를 눌러야 로그인됩니다.
+
+## 🌐 사용한 API
 
 | API | 엔드포인트 | 화면 |
 |---|---|---|
-| 한국관광공사 국문 관광정보(KorService2) | `/api/tour?lat=&lng=&radius=` | 위치정보 › 내 주변 |
+| 한국관광공사 국문 관광정보(KorService2) | `/api/tour?lat=&lng=&radius=` | 장소 상세·산책 카드의 주변 정보, 위치정보 › 내 주변 |
 | 국가유산청 국가유산 검색 | `/api/heritage?keyword=` | 위치정보 › 국가유산 |
-| 기상청 단기예보 | `/api/weather?place=` | 홈, 국가유산 탭 |
+| 기상청 단기예보 | `/api/weather?place=` | 홈, AI 가이드(비 확인) |
+| AI 가이드(자체) | `/api/guide?q=&lat=&lng=` | AI 가이드 |
 
 ## 🧠 구현 메모
 
-- **지형 생성** — 외부 모델 없이 높이함수(섬 윤곽 + 한라산 가우시안 + 기복)로 메시를 만들고, 높이에 따라 정점 색을 입힙니다. 오름 368개는 고정 시드로 `InstancedMesh`에 배치합니다.
-- **3D ↔ React 연결** — `ThreeStage`가 렌더 루프·리사이즈·정리(dispose)를 맡고, 장면은 React 값을 담은 `live` ref를 읽습니다. 상태가 바뀌어도 장면을 다시 만들지 않습니다.
-- **위치정보** — `navigator.geolocation` → 하버사인 거리 → 정렬/표시. 3D에서는 섬 밖 위치도 장면 안에 머물도록 범위를 제한합니다.
+- **지형 생성** — 외부 모델 없이 높이함수(섬 윤곽 + 한라산 가우시안 + 기복)로 메시를 만들고, 같은 함수로 2D 지도도 그립니다. 오름 368개는 고정 시드의 `InstancedMesh`입니다.
+- **3D ↔ React 연결** — `ThreeStage`가 렌더 루프·리사이즈·정리(dispose)를 맡고, 장면은 React 값을 담은 `live` ref를 읽습니다.
+- **코스 알고리즘** — 현재 위치에서 시간 안에 들어가는 후보 중 `이동 시간 + 같은 갈래 가산점 − 아이 동반 가산점`이 가장 낮은 곳을 반복해서 고릅니다. 화면과 서버(AI 도구)가 같은 함수를 씁니다.
+- **에이전트** — 서버가 `plan_course`·`get_weather`·`nearby_tour`·`search_places` 도구를 Claude에 노출하고, `tool_use`가 끝날 때까지 최대 6번 반복합니다. 코스의 사실(시간·거리·장소)은 도구 결과에서만 가져오게 지시했습니다.
+- **수첩 동기화** — 로그인하면 계정 수첩을 불러와 로컬과 합집합으로 합친 뒤 변경마다 저장합니다. 불러오기에 실패하면 저장하지 않아 빈 값으로 덮어쓰지 않습니다. 로그아웃하면 이 기기의 수첩을 비웁니다.
 
 ## ⚠️ 알아두기
 
 - **전승은 지역과 채록자에 따라 다릅니다.** 대표적인 이야기를 요약한 것이며, 발표·배포 전 검수가 필요합니다.
-- 지도의 **좌표는 대략적인 위치**입니다. 정확한 위치는 공공데이터 탭을 이용하세요.
-- 공공데이터 API 연동은 키 없이 검증하지 못했습니다. 키를 넣은 뒤 `/api/hello`, `/api/tour?lat=33.5&lng=126.53` 으로 먼저 확인하세요.
+- 지도의 **좌표와 머무는 시간은 대략값**입니다. 운영 시간·예약(한라산, 거문오름 등)은 방문 전에 확인하세요.
+- 공공데이터 API, Supabase, Claude 연동은 **키 없이는 실제 호출을 검증하지 못했습니다.** 키를 넣은 뒤 `/api/hello`, `/api/tour?lat=33.5&lng=126.53`, 가입·로그인, AI 가이드 질문을 차례로 확인하세요.
+- 체험 모드(Supabase 없음)의 계정은 그 브라우저에만 있고 보안 수단이 아닙니다.
+- AI 가이드 API는 호출 횟수 제한이 없습니다. 공개 배포 전에 제한을 두세요.
 
 ---
 

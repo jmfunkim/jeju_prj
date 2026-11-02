@@ -4,6 +4,7 @@ import { NavLink, Outlet } from 'react-router-dom'
 import { NAV_ITEMS } from '../router'
 import { useAppStore } from '../store/useAppStore'
 import { useAuthStore } from '../store/useAuthStore'
+import { useNotebookSync } from '../lib/sync'
 
 function NavList({ onPick }) {
   const count = useAppStore((s) => s.saved.length)
@@ -35,7 +36,7 @@ function AccountLink({ onPick }) {
   return (
     <div className="account">
       <span className="account__name" title={user.email}><i className="bi bi-person-check" /> {user.name}</span>
-      <button type="button" className="account__out" onClick={() => { signOut(); onPick?.() }}>로그아웃</button>
+      <button type="button" className="account__out" onClick={async () => { await signOut(); useAppStore.getState().clearNotebook(); onPick?.() }}>로그아웃</button>
     </div>
   )
 }
@@ -44,6 +45,7 @@ export default function RootLayout() {
   const [open, setOpen] = useState(false)
   const init = useAuthStore((s) => s.init)
   useEffect(() => { init() }, [init])
+  useNotebookSync()
 
   return (
     <div className="app">

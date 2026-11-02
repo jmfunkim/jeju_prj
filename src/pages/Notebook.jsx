@@ -3,9 +3,12 @@ import { ProgressBar } from 'react-bootstrap'
 import { KindBadge, SaveButton, distanceLabel } from '../components/ui'
 import { KINDS, KIND_KEYS, PLACES, placeById, placesOf } from '../data/places'
 import { useAppStore } from '../store/useAppStore'
+import { useAuthStore } from '../store/useAuthStore'
 
 export default function Notebook() {
-  const { saved, select, me } = useAppStore()
+  const { saved, stamps, select, me } = useAppStore()
+  const user = useAuthStore((st) => st.user)
+  const sync = useAuthStore((st) => st.sync)
   const navigate = useNavigate()
   const items = saved.map(placeById).filter(Boolean)
 
@@ -14,7 +17,12 @@ export default function Notebook() {
       <header className="page-head">
         <p className="stamp">내 수첩</p>
         <h1>담아 둔 이야기와 장소</h1>
-        <p>북마크한 장소가 이 브라우저에 보관돼요. 세 갈래를 골고루 모아 보세요.</p>
+        <p>북마크한 장소와 방문 도장을 모아 둬요. 세 갈래를 골고루 모아 보세요.</p>
+        {user ? (
+          <p className="sync-note"><i className="bi bi-cloud-check me-1" />{user.name} 님의 수첩 · {{ syncing: '저장 중…', ok: '계정에 저장됨', error: '저장하지 못했어요. 새로고침 후 다시 시도해 주세요', idle: '' }[sync]}</p>
+        ) : (
+          <p className="sync-note"><i className="bi bi-cloud-slash me-1" />지금은 이 브라우저에만 저장돼요. <Link to="/login">로그인</Link>하면 계정에 보관해요.</p>
+        )}
       </header>
 
       <div className="row g-3 mb-4">
@@ -31,6 +39,22 @@ export default function Notebook() {
           )
         })}
       </div>
+
+      <section className="mb-4">
+        <h2 className="h5 mb-2">방문 도장판 <small className="text-muted">{Object.keys(stamps).length}/{PLACES.length}</small></h2>
+        <div className="stamp-board">
+          {PLACES.map((p) => {
+            const st = stamps[p.id]
+            return (
+              <div key={p.id} className={`stamp-slot ${st ? 'on' : ''} ${st?.verified ? 'is-verified' : ''}`} style={{ '--k': KINDS[p.kind].color }} title={st ? new Date(st.at).toLocaleDateString('ko-KR') : '아직 안 찍었어요'}>
+                <span>{st ? '✔' : ''}</span>
+                <b>{p.name}</b>
+              </div>
+            )
+          })}
+        </div>
+        <p className="small text-muted mt-2">도장은 <Link to="/walk">이야기 산책</Link>에서 찍어요. 장소 500m 안에서 찍으면 현장 도장이 돼요.</p>
+      </section>
 
       {items.length === 0 ? (
         <div className="stone-card p-5 text-center">

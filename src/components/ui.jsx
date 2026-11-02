@@ -1,4 +1,6 @@
+import { useEffect, useState } from 'react'
 import { Alert, Badge, Button, Spinner } from 'react-bootstrap'
+import { fetchNearby } from '../api/client'
 import { KINDS } from '../data/places'
 import { DEMO_ME, distanceKm, fmtKm } from '../lib/geo'
 import { useAppStore } from '../store/useAppStore'
@@ -50,6 +52,42 @@ export function ApiState({ loading, error, empty, emptyText = '결과가 없어�
   if (empty) return <p className="text-muted py-3 mb-0">{emptyText}</p>
   return null
 }
+
+const TOUR_TYPE = { 12: '관광지', 14: '문화시설', 15: '축제', 25: '여행코스', 28: '레포츠', 32: '숙박', 38: '쇼핑', 39: '음식점' }
+
+// 이 장소 주변 3km 의 관광정보(한국관광공사 TourAPI) — 눌렀을 때만 불러옵니다
+export function NearbyTour({ place }) {
+  const [st, setSt] = useState({ status: 'idle' })
+  useEffect(() => setSt({ status: 'idle' }), [place.id])
+
+  async function load() {
+    setSt({ status: 'loading' })
+    try {
+      setSt({ status: 'ok', list: (await fetchNearby(place.lat, place.lng, 3000)).slice(0, 6) })
+    } catch (e) {
+      setSt({ status: 'error', message: e.message })
+    }
+  }
+
+  return (
+    <div className="nearby">
+      {st.status === 'idle' && (
+        <Button size="sm" variant="outline-dark" onClick={load}><i className="bi bi-binoculars me-1" />주변 볼거리·맛집 (공공데이터)</Button>
+      )}
+      <ApiState loading={st.status === 'loading'} error={st.status === 'error' ? st.message : ''} empty={st.status === 'ok' && st.list.length === 0} emptyText="3km 안에 조회된 곳이 없어요." />
+      {st.status === 'ok' && st.list.length > 0 && (
+        <ul className="nearby__list">
+          {st.list.map((t) => (
+            <li key={t.id}><b>{t.title}</b> <small>{TOUR_TYPE[t.type] ?? '관광정보'}{t.distM != null && ` · ${fmtKm(t.distM / 1000)}`}</small></li>
+          ))}
+        </ul>
+      )}
+    </div>
+  )
+}
+
+// 길찾기(카카오맵 링크 — 키 없이 열려요)
+export const routeUrl = (p) => `https://map.kakao.com/link/to/${encodeURIComponent(p.name)},${p.lat},${p.lng}`
 
 // 장소 상세 본문 (지도 패널·모달 공용)
 export function PlaceBody({ place, me }) {

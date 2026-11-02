@@ -5,6 +5,7 @@ import * as auth from '../lib/auth'
 export const useAuthStore = create((set) => ({
   user: null,
   ready: false,
+  sync: 'idle',   // 수첩 저장 상태: idle | syncing | ok | error
   init: async () => set({ user: await auth.restore((user) => set({ user })), ready: true }),
   signUp: async (form) => { const user = await auth.signUp(form); set({ user }); return user },
   signIn: async (form) => { const user = await auth.signIn(form); set({ user }); return user },

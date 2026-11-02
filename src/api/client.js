@@ -20,5 +20,9 @@ export const fetchTourByKeyword = (keyword, type = '') =>
 // ② 국가유산청 국가유산 (제주)
 export const fetchHeritage = (keyword = '') => get(`/api/heritage?keyword=${encodeURIComponent(keyword)}`)
 
+// ④ AI 가이드 (도구를 부르는 에이전트)
+export const askGuide = (q, me) =>
+  get(`/api/guide?q=${encodeURIComponent(q)}${me && !me.demo ? `&lat=${me.lat}&lng=${me.lng}` : ''}`)
+
 // ③ 기상청 단기예보
 export const fetchWeather = (place = '제주시') => get(`/api/weather?place=${encodeURIComponent(place)}`)
