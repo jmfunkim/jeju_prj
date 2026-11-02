@@ -24,5 +24,14 @@ export const fetchHeritage = (keyword = '') => get(`/api/heritage?keyword=${enco
 export const askGuide = (q, me) =>
   get(`/api/guide?q=${encodeURIComponent(q)}${me && !me.demo ? `&lat=${me.lat}&lng=${me.lng}` : ''}`)
 
+// ⑤ 제주도청 공공 API (키 없음) — 신화 콘텐츠 / 돌문화공원 소장유물
+export const fetchMyth = (keyword = '', type = '', limit = 40) =>
+  get(`/api/myth?keyword=${encodeURIComponent(keyword)}&type=${encodeURIComponent(type)}&limit=${limit}`)
+export const fetchRelics = (keyword = '', material = '', age = '') =>
+  get(`/api/stonepark?keyword=${encodeURIComponent(keyword)}&material=${encodeURIComponent(material)}&age=${encodeURIComponent(age)}`)
+
+// ⑥ 공공데이터포털 제주역사문화위치정보 (DATA_GO_KR_KEY 필요)
+export const fetchHistoryPlaces = (page = 1, perPage = 300) => get(`/api/history?page=${page}&perPage=${perPage}`)
+
 // ③ 기상청 단기예보
 export const fetchWeather = (place = '제주시') => get(`/api/weather?place=${encodeURIComponent(place)}`)

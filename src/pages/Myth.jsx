@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Modal, Nav } from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom'
+import MythArchive from '../components/MythArchive'
 import { KindBadge, PlaceBody, SaveButton } from '../components/ui'
 import { placesOf } from '../data/places'
 import { useAppStore } from '../store/useAppStore'
@@ -44,6 +45,8 @@ export default function Myth() {
         ))}
       </div>
       <p className="text-muted small mt-3">※ 같은 이야기도 마을과 채록자에 따라 내용이 다르게 전해질 수 있어요.</p>
+
+      <MythArchive />
 
       <Modal show={!!open} onHide={() => setOpen(null)} centered scrollable size="lg" contentClassName="stone-modal">
         {open && (

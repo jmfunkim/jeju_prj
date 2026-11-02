@@ -4,6 +4,7 @@ import { KIND_KEYS, PLACES, placeById } from '../src/data/places.js'
 import { MODES, buildCourse, fmtMin } from '../src/lib/course.js'
 import { getWeather } from './weather.js'
 import { nearbyTour } from './tour.js'
+import { listMyth } from './jejugo.js'
 
 const API = 'https://api.anthropic.com/v1/messages'
 const MODEL = () => process.env.ANTHROPIC_MODEL || 'claude-haiku-5-5'
@@ -49,6 +50,10 @@ async function runTool(name, input, ctx) {
     const hit = PLACES.filter((p) => [p.name, p.title, p.summary, p.tag, ...p.keywords].some((t) => t.includes(q)))
     return hit.slice(0, 8).map((p) => ({ id: p.id, name: p.name, kind: p.kind, tag: p.tag, summary: p.summary }))
   }
+  if (name === 'search_myth_archive') {
+    const r = await listMyth({ keyword: String(input.keyword ?? ''), limit: 8 })
+    return { matched: r.matched, items: r.items.map((m) => ({ title: m.title, type: m.type, tags: m.tags, ebook: m.ebookUrl })) }
+  }
   return { error: `알 수 없는 도구: ${name}` }
 }
 
@@ -77,6 +82,11 @@ const TOOLS = [
     name: 'nearby_tour',
     description: '큐레이션 장소 주변 3km 의 관광지·음식점 등을 한국관광공사 TourAPI 로 찾습니다.',
     input_schema: { type: 'object', properties: { place_id: { type: 'string' } }, required: ['place_id'] },
+  },
+  {
+    name: 'search_myth_archive',
+    description: '제주도청 제주 신화 콘텐츠(본풀이·당신화 원문과 해제)에서 제목·태그로 자료를 찾습니다. 신화 자료를 더 읽고 싶다는 요청에 쓰세요.',
+    input_schema: { type: 'object', properties: { keyword: { type: 'string' } }, required: ['keyword'] },
   },
   {
     name: 'search_places',

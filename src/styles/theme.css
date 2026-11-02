@@ -378,3 +378,15 @@ body {
 .stamp-slot.is-verified span { border-color: #b3261e; color: #b3261e; background: rgba(179, 38, 30, .08); }
 
 @media (max-width: 575.98px) { .stops { padding-left: 20px; } .stop__no { left: -35px; } .flat__pin { width: 18px; height: 18px; } }
+
+/* ───────────── 제주도청·공공데이터 아카이브 ───────────── */
+.archive-item { height: 100%; padding: 14px 16px; box-shadow: 3px 3px 0 var(--basalt); }
+.archive-item h3 { font-size: 17px; margin: 4px 0 6px; line-height: 1.4; }
+.stone-pager .page-link { color: var(--basalt); border: 2px solid var(--basalt); background: var(--paper); margin: 0 2px; border-radius: 8px 12px 7px 11px !important; font-weight: 700; }
+.stone-pager .page-item.active .page-link { background: var(--basalt); color: var(--hanji); border-color: var(--basalt); }
+.hist-list { list-style: none; margin: 0; padding: 0; max-height: 440px; overflow-y: auto; display: grid; gap: 6px; }
+.hist-list li { display: grid; gap: 1px; padding: 8px 12px; cursor: pointer; background: var(--paper); border: 2px solid var(--basalt); border-radius: 10px 14px 9px 13px; }
+.hist-list li.on { background: #ffe7c2; }
+.hist-list small { color: var(--ink-soft); }
+.hist-list span { display: flex; gap: 12px; font-size: 13px; font-weight: 700; }
+.hist-list em { font-style: normal; color: var(--sea); }

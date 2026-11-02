@@ -12,7 +12,7 @@ const EXAMPLES = [
   '걸어서 2시간, 돌문화랑 역사 보고 싶어',
   '해녀 이야기랑 용암동굴 보고 싶어',
 ]
-const TOOL_LABEL = { plan_course: '코스 짜기', get_weather: '날씨 확인', nearby_tour: '주변 관광정보', search_places: '장소 검색' }
+const TOOL_LABEL = { plan_course: '코스 짜기', get_weather: '날씨 확인', nearby_tour: '주변 관광정보', search_places: '장소 검색', search_myth_archive: '신화 아카이브 검색' }
 
 export default function Guide() {
   const me = useAppStore((s) => s.me)

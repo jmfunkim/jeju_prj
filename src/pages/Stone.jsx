@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react'
 import { Accordion, ButtonGroup, ToggleButton } from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom'
+import RelicShelf from '../components/RelicShelf'
 import ThreeStage from '../components/ThreeStage'
 import { SaveButton } from '../components/ui'
 import { placesOf } from '../data/places'
@@ -77,6 +78,8 @@ export default function Stone() {
           </div>
         ))}
       </div>
+
+      <RelicShelf />
     </div>
   )
 }
