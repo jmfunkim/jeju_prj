@@ -1,0 +1,162 @@
+/* Bootstrap 5 위에 덧입히는 "한지 바탕 · 현무암 레일 · 돌 도장 카드" 테마 */
+:root {
+  --hanji: #f1e8d4;
+  --paper: #fffaf0;
+  --basalt: #26231f;
+  --galot: #9c5a2c;      /* 감물 들인 갈옷 색 */
+  --orange: #f08a1c;
+  --sea: #1e8a9a;
+  --serif: 'Gowun Batang', 'Noto Serif KR', 'Nanum Myeongjo', Batang, serif;
+  --stone-r: 22px 34px 18px 30px / 30px 18px 34px 22px;   /* 손으로 깎은 돌처럼 비대칭 둥글기 */
+
+  --bs-body-bg: var(--hanji);
+  --bs-body-color: var(--basalt);
+  --bs-font-sans-serif: 'Gowun Dodum', 'Pretendard', 'Noto Sans KR', 'Malgun Gothic', system-ui, sans-serif;
+  --bs-primary: var(--orange);
+  --bs-link-color: var(--galot);
+  --bs-border-color: var(--basalt);
+}
+body {
+  background-color: var(--hanji);
+  background-image: radial-gradient(rgba(38, 35, 31, .07) 1px, transparent 1.4px);
+  background-size: 22px 22px;
+  line-height: 1.7;
+}
+h1, h2, h3, .display-title { font-family: var(--serif); font-weight: 700; }
+
+/* ── 틀: 돌 레일 + 본문 ── */
+.app { min-height: 100vh; }
+.content { min-height: 100vh; display: flex; flex-direction: column; }
+.content main { flex: 1; }
+@media (min-width: 992px) { .content { margin-left: 104px; } }
+.page { max-width: 1240px; margin: 0 auto; padding: 36px clamp(16px, 3vw, 40px) 24px; }
+.foot { text-align: center; font-size: 12px; color: #6b6258; padding: 22px 16px 28px; border-top: 2px dashed rgba(38, 35, 31, .25); margin: 24px clamp(16px, 3vw, 40px) 0; }
+
+.rail {
+  position: fixed; inset: 0 auto 0 0; width: 104px; z-index: 40; flex-direction: column; align-items: center;
+  padding: 18px 10px; background: var(--basalt); color: var(--hanji);
+  background-image: radial-gradient(rgba(255, 255, 255, .06) 1.4px, transparent 1.8px); background-size: 14px 14px;
+}
+.rail__brand { display: grid; place-items: center; width: 70px; height: 78px; margin-bottom: 14px; color: var(--basalt); background: var(--orange); border-radius: 50% 50% 46% 54% / 56% 48% 52% 44%; text-decoration: none; transform: rotate(-4deg); }
+.rail__brand span { font-family: var(--serif); font-size: 30px; font-weight: 700; line-height: 1; margin-top: 6px; }
+.rail__brand small { font-size: 11px; margin-top: -14px; font-weight: 700; }
+.rail__list { list-style: none; padding: 0; margin: 0; width: 100%; display: flex; flex-direction: column; gap: 7px; }
+.rail__list li:nth-child(even) { transform: translateX(5px); }   /* 돌담처럼 엇갈려 쌓기 */
+.stone-link {
+  position: relative; display: flex; flex-direction: column; align-items: center; gap: 1px; padding: 9px 4px 7px;
+  font-size: 12px; text-decoration: none; color: var(--hanji); background: rgba(255, 255, 255, .08);
+  border-radius: var(--stone-r); transition: .18s;
+}
+.stone-link i { font-size: 20px; }
+.stone-link:hover { background: rgba(255, 255, 255, .17); color: #fff; }
+.stone-link.active { background: var(--hanji); color: var(--basalt); font-weight: 700; box-shadow: -4px 4px 0 var(--orange); }
+.stone-link em { position: absolute; top: 3px; right: 7px; font-style: normal; font-size: 10px; font-weight: 800; background: var(--orange); color: var(--basalt); border-radius: 99px; padding: 0 6px; }
+.rail__foot { margin-top: auto; writing-mode: vertical-rl; letter-spacing: .3em; font-size: 11px; opacity: .55; font-family: var(--serif); }
+.topbar { position: sticky; top: 0; z-index: 40; display: flex; align-items: center; justify-content: space-between; padding: 10px 16px; background: var(--basalt); }
+.topbar__brand { color: var(--hanji); text-decoration: none; font-family: var(--serif); font-weight: 700; display: flex; align-items: center; gap: 8px; }
+.topbar__brand span { display: grid; place-items: center; width: 30px; height: 30px; background: var(--orange); color: var(--basalt); border-radius: 50% 46% 54% 50%; }
+.offcanvas-dol { background: var(--basalt); color: var(--hanji); width: 260px; }
+.offcanvas-dol .rail__list li:nth-child(even) { transform: none; }
+.offcanvas-dol .stone-link { flex-direction: row; justify-content: flex-start; gap: 12px; padding: 12px 16px; font-size: 15px; }
+
+/* ── 돌 도장 카드 ── */
+.stone-card {
+  position: relative; background: var(--paper); border: 2px solid var(--basalt); border-radius: var(--stone-r);
+  box-shadow: 5px 5px 0 var(--basalt); padding: 20px;
+}
+.stone-card.p-0 { padding: 0; }
+a.stone-card, .myth-card, .kind-card { text-decoration: none; color: inherit; transition: transform .18s, box-shadow .18s; display: block; }
+a.stone-card:hover, .myth-card:hover, .kind-card:hover { transform: translate(-3px, -3px); box-shadow: 8px 8px 0 var(--basalt); }
+.btn { border-radius: 14px 20px 12px 18px / 18px 12px 20px 14px; font-weight: 700; }
+.btn-dol { background: var(--orange); color: var(--basalt); border: 2px solid var(--basalt); box-shadow: 3px 3px 0 var(--basalt); }
+.btn-dol:hover, .btn-dol:focus { background: #ffa23d; color: var(--basalt); transform: translate(-1px, -1px); box-shadow: 4px 4px 0 var(--basalt); }
+.btn-dol:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--basalt); }
+.btn-dark { background: var(--basalt); border-color: var(--basalt); }
+.btn-outline-dark { color: var(--basalt); border: 2px solid var(--basalt); --bs-btn-hover-bg: var(--basalt); --bs-btn-hover-color: var(--hanji); --bs-btn-active-bg: var(--basalt); }
+
+.stamp { display: inline-block; margin: 0 0 12px; padding: 2px 14px; font-family: var(--serif); font-weight: 700; font-size: 14px; color: var(--galot); border: 2px solid var(--galot); border-radius: 6px 12px 7px 13px; transform: rotate(-1.6deg); letter-spacing: .08em; }
+.page-head { margin-bottom: 22px; max-width: 760px; }
+.page-head h1 { font-size: clamp(28px, 4vw, 42px); margin-bottom: 6px; }
+.page-head p:last-child { color: #5d554b; margin: 0; }
+
+.kind-badge { background: color-mix(in srgb, var(--k) 16%, white) !important; color: color-mix(in srgb, var(--k) 65%, black) !important; border: 1.5px solid var(--k); font-weight: 700; }
+.kw { font-size: 12px; padding: 1px 9px; border-radius: 8px 12px 7px 11px; background: rgba(38, 35, 31, .08); }
+.mini-tag { display: inline-block; font-size: 12px; font-weight: 700; color: color-mix(in srgb, var(--k) 70%, black); border-bottom: 3px solid var(--k); margin-bottom: 6px; }
+
+/* ── 홈 ── */
+.home-hero { min-height: 74vh; }
+.display-title { font-size: clamp(40px, 6.4vw, 78px); line-height: 1.12; margin-bottom: 20px; letter-spacing: -.02em; }
+.display-title span { color: var(--galot); background: linear-gradient(transparent 62%, rgba(240, 138, 28, .35) 62%); }
+.intent { max-width: 520px; font-size: 17px; padding-left: 14px; border-left: 4px solid var(--orange); }
+.intent b { margin-right: 6px; color: var(--galot); }
+.weather { font-weight: 700; }
+.blob-frame { position: relative; width: 100%; aspect-ratio: 1 / 1; max-height: 600px; margin-inline: auto; border: 3px solid var(--basalt); border-radius: 58% 42% 55% 45% / 48% 56% 44% 52%; overflow: hidden; box-shadow: 10px 10px 0 var(--basalt); }
+.kind-card { padding: 22px; }
+.kind-card i { font-size: 32px; color: var(--k); }
+.kind-card h2 { font-size: 22px; margin: 6px 0 2px; }
+.kind-card p { color: #5d554b; margin-bottom: 8px; }
+.kind-card strong { color: color-mix(in srgb, var(--k) 70%, black); }
+.near-list { margin: 0; padding-left: 0; list-style: none; counter-reset: n; display: grid; gap: 8px; }
+.near-list li { counter-increment: n; }
+.near-list a { display: flex; align-items: baseline; gap: 10px; padding: 10px 14px; text-decoration: none; color: inherit; background: var(--hanji); border: 2px solid var(--basalt); border-radius: 12px 18px 11px 16px; }
+.near-list a::before { content: counter(n); font-family: var(--serif); font-weight: 700; color: var(--orange); font-size: 20px; }
+.near-list a span { margin-left: auto; font-weight: 700; color: var(--sea); }
+.near-list small { color: #6b6258; }
+
+/* ── 3D 프레임, 지도 ── */
+.map-frame { position: relative; height: 520px; border-radius: 16px 24px 14px 22px / 22px 14px 24px 16px; overflow: hidden; border: 2px solid var(--basalt); }
+.map-frame--tall { height: 540px; }
+.detail { position: sticky; top: 16px; max-height: calc(100vh - 32px); overflow-y: auto; animation: rise .35s ease; }
+@keyframes rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+.place-title { font-size: 24px; line-height: 1.35; margin-bottom: 4px; }
+.place-spot { color: var(--sea); font-weight: 700; font-size: 14px; }
+.place-sum { font-weight: 700; padding-left: 12px; border-left: 4px solid var(--orange); }
+.place-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.chip { display: inline-flex; align-items: center; gap: 7px; padding: 5px 13px; font-size: 14px; background: var(--paper); border: 2px solid var(--basalt); border-radius: 12px 18px 11px 16px; cursor: pointer; transition: .15s; }
+.chip i { width: 10px; height: 10px; border-radius: 50%; background: var(--k); border: 1.5px solid var(--basalt); }
+.chip small { color: var(--sea); font-weight: 700; }
+.chip:hover { transform: translateY(-2px); }
+.chip.on { background: var(--basalt); color: var(--hanji); }
+.chip.on small { color: #7fe0ee; }
+.layer-btn { font-weight: 700; }
+
+/* ── 목록 · 카드 ── */
+.pill-nav .nav-link { color: var(--basalt); font-weight: 700; border: 2px solid transparent; border-radius: 12px 18px 11px 16px; }
+.pill-nav .nav-link:hover { border-color: var(--basalt); }
+.pill-nav .nav-link.active { background: var(--basalt); color: var(--hanji); }
+.myth-card { height: 100%; cursor: pointer; transform: rotate(var(--tilt, 0deg)); }
+.myth-card:hover { transform: rotate(0deg) translate(-3px, -3px); }
+.myth-card h2 { font-size: 20px; line-height: 1.4; }
+.myth-card p { color: #4d463d; font-size: 15px; }
+.place-card { height: 100%; display: flex; flex-direction: column; gap: 4px; }
+.place-card h3 { font-size: 19px; margin: 0; }
+.place-card p { flex: 1; color: #4d463d; font-size: 15px; margin-bottom: 8px; }
+.api-card { padding: 0; overflow: hidden; height: 100%; }
+.api-card img, .api-card__noimg { display: block; width: 100%; height: 150px; object-fit: cover; border-bottom: 2px solid var(--basalt); }
+.api-card__noimg { display: grid; place-items: center; font-size: 34px; color: #b4a78f; background: var(--hanji); }
+.api-card__body { padding: 14px 16px 16px; }
+.api-card h3 { font-size: 17px; }
+.place-table thead th { font-family: var(--serif); background: var(--hanji); border-bottom: 2px solid var(--basalt); }
+.place-table tbody tr:hover > * { background: rgba(240, 138, 28, .09); }
+.stone-progress { height: 14px; border: 2px solid var(--basalt); border-radius: 99px; background: var(--hanji); }
+.stone-progress .progress-bar { background: var(--k); }
+
+/* Bootstrap 컴포넌트 덧입히기 */
+.stone-accordion { --bs-accordion-bg: var(--paper); --bs-accordion-border-color: var(--basalt); --bs-accordion-active-bg: #ffe7c2; --bs-accordion-active-color: var(--basalt); --bs-accordion-btn-focus-box-shadow: none; --bs-accordion-border-radius: 20px; }
+.stone-accordion .accordion-item { border: 2px solid var(--basalt); border-radius: var(--stone-r) !important; margin-bottom: 10px; overflow: hidden; box-shadow: 4px 4px 0 var(--basalt); }
+.stone-accordion .accordion-button { font-family: var(--serif); }
+.stone-modal { background: var(--paper); border: 2px solid var(--basalt); border-radius: var(--stone-r); box-shadow: 8px 8px 0 var(--basalt); }
+.stone-modal .modal-header, .stone-modal .modal-footer { border-color: rgba(38, 35, 31, .2); }
+.form-control, .form-select { border: 2px solid var(--basalt); border-radius: 10px 14px 9px 13px; background-color: var(--paper); }
+.form-control:focus, .form-select:focus { border-color: var(--orange); box-shadow: 0 0 0 .2rem rgba(240, 138, 28, .25); }
+
+/* ── 3D 캔버스 ── */
+.stage { position: relative; width: 100%; height: 100%; min-width: 0; overflow: hidden; }
+.stage canvas { position: absolute; inset: 0; display: block; width: 100%; height: 100%; cursor: grab; }
+.stage canvas:active { cursor: grabbing; }
+
+@media (max-width: 991.98px) {
+  .map-frame, .map-frame--tall { height: 400px; }
+  .detail { position: static; max-height: none; }
+  .home-hero { min-height: auto; }
+}
