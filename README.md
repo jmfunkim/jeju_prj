@@ -79,7 +79,7 @@
 | **지도** | `/map` | 2D(실제 지도, 기본)와 3D 전환, 갈래별 레이어, 장소 상세·길찾기·주변 볼거리 |
 | **이야기 산책** | `/walk` | 코스 만들기, 장소별 이동·머묾 시간·현장 팁·도장·길찾기 |
 | **AI 가이드** | `/guide` | 말로 묻고 코스를 받아 산책 화면으로 열기 |
-| **신화·설화** | `/myth` | 설화 9편 카드와 전문, 제주도청 신화 아카이브(182건) 검색 |
+| **신화·설화** | `/myth` | 장소로 만나는 설화 9편(제주도청 사진·삽화, 없으면 직접 그린 장면), **전설의 사진과 그림** 갤러리(제주신화정보 129점), **제주 본풀이** — 제주도청 신화 자료 182건으로 만든 대표 8편 카드와 자료실 |
 | **돌문화** | `/stone` | 돌 5종 3D 전시(돌하르방·밭담·방사탑·정주석과 정낭·불턱), 돌문화공원 소장 유물(77점) |
 | **위치정보** | `/places` | 엮은 장소 표, 역사문화 위치(공공데이터), 내 주변(TourAPI), 국가유산 |
 | **내 수첩** | `/notebook` | 담은 장소, 방문 도장판(n/24), 계정 저장 상태 |
@@ -112,6 +112,7 @@
 | 국가유산청 국가유산 검색 | `/api/heritage?keyword=` | 위치정보 › 국가유산 |
 | 기상청 단기예보 | `/api/weather?place=` | 홈, AI 가이드(비 확인) |
 | 제주 신화 콘텐츠 (제주도청, 키 없음) | `/api/myth?keyword=&type=` ← `jeju.go.kr/rest/JejuMythContents/getJejuMythContentsList` | 신화·설화 › 신화 아카이브(제목·구분·태그), AI 가이드 |
+| 제주신화정보 이미지 (제주도청, 키 없음) | `/api/mythmedia` ← `jeju.go.kr/tool/openapi/jejumythservice/jejumythlist/` | 신화·설화 카드의 사진·삽화(`dataImageUrl`), 상세의 관련 사진, 전설의 사진과 그림, 본풀이 카드 삽화 |
 | 제주돌문화공원 소장유물 (제주도청, 키 없음) | `/api/stonepark?keyword=&material=&age=` ← `jeju.go.kr/api/jejustonepark/have` | 돌문화 › 소장 유물 |
 | 제주역사문화위치정보 (공공데이터포털 15109570) | `/api/history?page=&perPage=` ← `api.odcloud.kr/api/15109570/v1/uddi:8781…` | 위치정보 › 역사문화 위치 (지도 + 목록) |
 | AI 가이드(자체) | `/api/guide?q=&lat=&lng=` | AI 가이드 |
@@ -170,7 +171,7 @@ npm run dev                    # http://localhost:5173
 project/
 ├─ api/                  서버 함수 (주소 = /api/파일이름) — 비밀 키는 여기서만
 │  ├─ hello · tour · placephoto · heritage · weather
-│  ├─ myth · stonepark   제주도청 신화 콘텐츠 / 돌문화공원 유물
+│  ├─ myth · mythmedia · stonepark   제주도청 신화 콘텐츠 / 돌문화공원 유물
 │  ├─ history            제주역사문화위치정보 (odcloud)
 │  └─ guide              AI 가이드
 ├─ server/               공공 API·에이전트 호출 함수 (api/ 가 import)
@@ -182,9 +183,9 @@ project/
 │  ├─ router.jsx           메뉴(NAV_ITEMS)와 주소별 페이지
 │  ├─ layouts/             상단 내비, 모바일 탭바·메뉴, 계정 버튼
 │  ├─ pages/               Home · MapPage · Walk · Guide · Myth · Stone · Places · Notebook · Login
-│  ├─ components/          RealMap(2D) · JejuMapView(3D) · ThreeStage · Doli(캐릭터) · MythArchive · RelicShelf · HistoryPlaces · ui
+│  ├─ components/          RealMap(2D) · JejuMapView(3D) · ThreeStage · Doli(캐릭터) · MythArt(설화 일러스트) · Bonpuri(본풀이 마당) · MythGallery(전설 사진과 그림) · RelicShelf · HistoryPlaces · ui
 │  ├─ scenes/              terrain · jejuMap · harbang(돌 전시) · helpers  (three.js)
-│  ├─ data/                world(세계관·돌이 대사·단계) · places(24곳) · walk(현장 정보) · photoQuery(사진 검색어) · stones(돌문화 해설)
+│  ├─ data/                bonpuri(본풀이 8편 소개) · world(세계관·돌이 대사·단계) · places(24곳) · walk(현장 정보) · photoQuery(사진 검색어) · stones(돌문화 해설)
 │  ├─ store/               useAppStore(수첩·도장·지도) · useAuthStore(로그인)
 │  ├─ lib/                 geo(거리) · course(코스 알고리즘) · auth · cloud · sync
 │  ├─ api/client.js        화면 → /api 호출
@@ -199,7 +200,7 @@ project/
 - **돌 전시** — 모델 5개를 한 장면에 만들어 두고, 선택한 것만 커지며 나타납니다. 돌은 꼭짓점을 위치 기준으로 흔든 이십면체(현무암 질감)이고, 밭담·방사탑·불턱은 난수 시드를 고정해 새로고침해도 모양이 같습니다.
 - **코스 알고리즘** — 현재 위치에서 시간 안에 들어가는 후보 중 `이동 시간 + 같은 갈래 가산점 − 아이 동반 가산점`이 가장 낮은 곳을 반복해서 고릅니다. 화면과 서버(AI 도구)가 같은 함수를 씁니다.
 - **에이전트** — 서버가 도구를 Claude에 노출하고 `tool_use`가 끝날 때까지 최대 6번 반복합니다. 코스의 사실(시간·거리·장소)은 도구 결과에서만 가져오게 지시했습니다.
-- **제주도청 API 다루기** — 신화 API는 조건 파라미터를 무시하고 전체 182건을 주고, 유물 API는 한 페이지 9건 고정이라, 서버에서 전체를 받아 걸러 냅니다. 신화 응답의 e-book·PDF 주소는 모두 "페이지 없음"으로 연결돼(364개 확인) 쓰지 않습니다.
+- **제주도청 API 다루기** — 신화 이미지 API(`jejumythlist`)는 주소 끝에 `/`가 없으면 307로 되돌려 보내고, `pageSize`를 크게 주면 182건을 한 번에 받습니다. 신화 API는 조건 파라미터를 무시하고 전체 182건을 주고, 유물 API는 한 페이지 9건 고정이라, 서버에서 전체를 받아 걸러 냅니다. 신화 응답의 e-book·PDF 주소는 모두 "페이지 없음"으로 연결돼(364개 확인) 쓰지 않습니다.
 - **수첩 동기화** — 로그인하면 계정 수첩을 불러와 로컬과 합집합으로 합친 뒤 변경마다 저장하고, 로그아웃하면 이 기기의 수첩을 비웁니다.
 
 ## 🎨 디자인 — "제주 블루 · 감귤 오렌지"
@@ -217,7 +218,7 @@ Bootstrap 5 위에 **밝고 깔끔한 여행 앱** 느낌의 테마를 입혔습
 
 ## 📷 출처와 라이선스
 
-- **장소 사진** — 한국관광공사 국문 관광정보(TourAPI)의 대표 이미지입니다. 서버(`/api/placephoto`)가 장소 이름(`src/data/photoQuery.js`)으로 키워드 검색한 뒤, 좌표가 8km 안에 있고 제목이 맞는 것을 골라 카드와 상세 화면에 보여 줍니다(6시간 보관). 사진 아래에 *사진 한국관광공사*와 저작권 유형(출처표시·변경금지)을 표시하고, 마우스를 올리면 어떤 TourAPI 항목과 맞췄는지 보입니다. **`DATA_GO_KR_KEY`가 있어야 나옵니다.** 키가 없거나 찾지 못한 장소는 갈래 무늬 머리띠를 씁니다. 엉뚱한 사진이 붙으면 `photoQuery.js`의 검색어를 고치세요.
+- **장소 사진·삽화** — 두 곳에서 가져옵니다. ① **제주신화정보**(제주도청 OpenAPI, 키 없음)의 `dataImageUrl` — 신화·설화 장소의 사진과 삽화이고, 이미지의 저작권은 제주특별자치도에 있으며 카드에 *사진·삽화 제주특별자치도*로 표시합니다. 전자책(책 표지)은 출판사 저작물이라 쓰지 않았습니다. ② **한국관광공사 TourAPI** 대표 이미지 — 그 밖의 장소이고 서버(`/api/placephoto`)가 장소 이름(`src/data/photoQuery.js`)으로 검색해 좌표가 8km 안인 것을 고릅니다. **`DATA_GO_KR_KEY`가 있어야 나옵니다.** 신화·설화 장소는 ①을, 나머지는 ②를 먼저 쓰고 없으면 서로 대신하며, 둘 다 없으면 직접 그린 장면·갈래 무늬를 씁니다. 어떤 자료를 대표 이미지로 쓸지는 `src/data/mythMedia.js`, 안 맞는 사진이 붙으면 거기와 `photoQuery.js`를 고치세요.
 - **2D 지도** — © [OpenStreetMap](https://www.openstreetmap.org/copyright) 기여자. 지도 오른쪽 아래의 출처 표시를 지우지 마세요.
 - **공공데이터** — 제주특별자치도, 한국관광공사, 국가유산청, 기상청, 공공데이터포털.
 

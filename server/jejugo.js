@@ -74,3 +74,35 @@ export async function listRelics({ keyword = '', material = '', age = '' } = {})
   const uniq = (key) => [...new Set(all.map((r) => r[key]).filter(Boolean))]
   return { total: all.length, matched: items.length, materials: uniq('material'), ages: uniq('age'), items }
 }
+
+// ── 제주신화정보 이미지 자료 ─────────────────────────────
+// 제주도청 OpenAPI 활용가이드 E09 '제주신화정보'(jejumythlist). 키 없이 쓰고, 사진·삽화·애니메이션 장면·동영상 장면의 이미지 주소(dataImageUrl)를 줍니다.
+// 주소 끝에 / 가 없으면 307 로 한 번 되돌려 보내므로 처음부터 붙이고, pageSize 를 크게 줘서 182건을 한 번에 받아요.
+// 전자책(책 표지)은 출판사 저작물이라 쓰지 않고, 도(제주특별자치도)가 낸 사진·삽화·애니메이션·동영상만 남깁니다.
+const MEDIA_URL = 'https://www.jeju.go.kr/tool/openapi/jejumythservice/jejumythlist/?page=1&pageSize=500'
+const MEDIA_FORMS = ['사진', '이미지', '애니메이션', '동영상']
+const clean = (v) => String(v ?? '').trim()
+
+function loadMythMedia() {
+  return cached('mythmedia', async () => {
+    const xml = await getText(MEDIA_URL)
+    const res = new XMLParser({ parseTagValue: false }).parse(xml)?.response
+    if (!res || clean(res.header?.resultCode) !== '0000') throw new Error('신화 이미지 자료가 오류를 돌려줬어요.')
+    const raw = res.body?.items?.item
+    const list = !raw ? [] : Array.isArray(raw) ? raw : [raw]
+    return list
+      .filter((i) => MEDIA_FORMS.includes(clean(i.dataForm)) && clean(i.dataImageUrl))
+      .map((i) => ({
+        title: clean(i.title), form: clean(i.dataForm), type: clean(i.dataType),
+        credit: (clean(i.copyright) || clean(i.publisher)).replace('제주특벽', '제주특별'),   // 응답의 오타 하나를 바로잡음
+        date: clean(i.recordDate),
+        image: clean(i.dataImageUrl).replace(/^http:\/\//, 'https://'),
+      }))
+  })
+}
+
+export async function listMythMedia() {
+  const items = await loadMythMedia()
+  const forms = items.reduce((m, i) => ({ ...m, [i.form]: (m[i.form] ?? 0) + 1 }), {})
+  return { total: items.length, forms, items }
+}

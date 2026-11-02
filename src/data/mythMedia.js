@@ -1,0 +1,37 @@
+// 장소 id → 제주신화정보(제주도청)의 사진·삽화를 찾는 이름.
+//  main: 대표 이미지로 쓸 자료 — '형식:제목' 이 똑같은 것 중 앞에 있는 것부터
+//  keys: 관련 자료를 모아 보여 줄 때 제목에 들어 있어야 할 말
+// 형식은 사진 · 이미지(삽화) · 애니메이션 · 동영상입니다. 안 맞는 사진이 붙으면 여기를 고치세요.
+export const PLACE_MEDIA = {
+  seolmundae: { main: ['이미지:설문대할망 전설', '사진:한라산전설'], keys: ['설문대', '한라산전설', '백록'] },
+  obaek: { main: ['이미지:설문대할망과 오백장군 전설', '사진:영실기암전설'], keys: ['오백장군', '영실기암'] },
+  sanbang: { main: ['사진:산방산전설', '사진:산방굴사전설'], keys: ['산방', '용머리'] },
+  samsung: { main: ['사진:삼성혈전설', '이미지:삼성혈'], keys: ['삼성혈', '혼인지'] },
+  yeongdeung: { main: ['이미지:영등할망 전설', '이미지:영등할망(외눈박이 거인)'], keys: ['영등'] },
+  yongduam: { main: ['사진:용두암 전설', '사진:용두암'], keys: ['용두암'] },
+  cheonjeyeon: { main: ['사진:천제연폭포전설'], keys: ['천제연'] },
+  manjanggul: { main: ['사진:만장굴'], keys: ['만장굴'] },
+  'gwandeok-harbang': { main: ['사진:관덕정전설'], keys: ['관덕정'] },
+  hangpaduri: { main: ['사진:항파두리전설'], keys: ['항파두리'] },
+}
+
+export const mediaKey = (m) => `${m.form}:${m.title}`
+
+// 장소의 대표 이미지(없으면 null)
+export function mainMedia(id, items) {
+  const cfg = PLACE_MEDIA[id]
+  if (!cfg) return null
+  for (const k of cfg.main) {
+    const hit = items.find((m) => mediaKey(m) === k)
+    if (hit) return hit
+  }
+  return null
+}
+
+// 장소와 관련된 사진·삽화·장면 (대표 이미지는 빼고)
+export function relatedMedia(id, items) {
+  const cfg = PLACE_MEDIA[id]
+  if (!cfg) return []
+  const main = mainMedia(id, items)
+  return items.filter((m) => m !== main && cfg.keys.some((k) => m.title.includes(k)))
+}

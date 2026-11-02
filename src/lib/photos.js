@@ -1,25 +1,51 @@
 import { useEffect, useSyncExternalStore } from 'react'
-import { fetchPlacePhotos } from '../api/client'
+import { fetchMythMedia, fetchPlacePhotos } from '../api/client'
+import { PLACES } from '../data/places'
+import { mainMedia } from '../data/mythMedia'
 
-// 장소 사진은 한국관광공사 TourAPI 에서 /api/placephoto 로 한 번에 받아 모든 화면이 나눠 씁니다.
-// 받지 못하면(키 없음·오프라인) 빈 값이라 화면은 갈래 무늬 머리띠를 그대로 씁니다.
-let state = null          // null = 아직 안 받음, {} = 받았지만 없음
+// 장소 사진은 두 곳에서 모읍니다.
+//  · 제주신화정보(제주도청) — 신화·설화 장소의 사진·삽화. 키가 필요 없어요.
+//  · 한국관광공사 TourAPI — 그 밖의 장소 사진. 공공데이터 키가 있어야 해요.
+// 신화·설화 장소는 신화정보 이미지를, 나머지는 관광공사 사진을 먼저 쓰고 없으면 서로 대신합니다.
+// 둘 다 못 받으면 빈 값이라 화면은 갈래 무늬·일러스트를 그대로 씁니다.
+let tour = null
+let media = null
+let merged = null            // null = 아직 모름
 let started = false
 const subs = new Set()
-const emit = () => subs.forEach((f) => f())
+
+function recompute() {
+  const items = media ?? []
+  const out = {}
+  for (const p of PLACES) {
+    const m = mainMedia(p.id, items)
+    const jeju = m && { src: m.image, title: m.title, credit: m.credit, form: m.form, source: 'jeju' }
+    const t = tour?.[p.id] && { ...tour[p.id], source: 'tour' }
+    const pick = p.kind === 'myth' ? (jeju ?? t) : (t ?? jeju)
+    if (pick) out[p.id] = pick
+  }
+  merged = out
+  subs.forEach((f) => f())
+}
 
 function load() {
   if (started) return
   started = true
-  fetchPlacePhotos()
-    .then((d) => { state = d.photos ?? {} })
-    .catch(() => { state = {} })
-    .finally(emit)
+  fetchPlacePhotos().then((d) => { tour = d.photos ?? {} }).catch(() => { tour = {} }).finally(recompute)
+  fetchMythMedia().then((d) => { media = d.items ?? [] }).catch(() => { media = [] }).finally(recompute)
 }
+
+const subscribe = (f) => { subs.add(f); return () => subs.delete(f) }
 
 export function usePlacePhotos() {
   useEffect(load, [])
-  return useSyncExternalStore((f) => { subs.add(f); return () => subs.delete(f) }, () => state) ?? {}
+  return useSyncExternalStore(subscribe, () => merged) ?? {}
+}
+
+// 제주신화정보의 사진·삽화·장면 전체 목록(받기 전에는 빈 배열)
+export function useMythMedia() {
+  useEffect(load, [])
+  return useSyncExternalStore(subscribe, () => media) ?? []
 }
 
 const COPYRIGHT = { Type1: '출처표시', Type3: '출처표시·변경금지' }

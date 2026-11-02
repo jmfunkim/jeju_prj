@@ -39,6 +39,9 @@ export const fetchMyth = (keyword = '', type = '', limit = 40) =>
 export const fetchRelics = (keyword = '', material = '', age = '') =>
   get(`/api/stonepark?keyword=${encodeURIComponent(keyword)}&material=${encodeURIComponent(material)}&age=${encodeURIComponent(age)}`)
 
+// 제주신화정보(제주도청) — 신화·전설의 사진·삽화·장면 이미지 (키 없음)
+export const fetchMythMedia = () => get('/api/mythmedia')
+
 // 장소 사진 — 한국관광공사 TourAPI 의 대표 이미지
 export const fetchPlacePhotos = () => get('/api/placephoto')
 

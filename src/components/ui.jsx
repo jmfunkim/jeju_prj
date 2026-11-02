@@ -2,8 +2,10 @@ import { useEffect, useState } from 'react'
 import { Alert, Badge, Button, Spinner } from 'react-bootstrap'
 import { fetchNearby } from '../api/client'
 import { KINDS } from '../data/places'
-import { copyrightLabel, usePlacePhotos } from '../lib/photos'
+import { copyrightLabel, useMythMedia, usePlacePhotos } from '../lib/photos'
+import { relatedMedia } from '../data/mythMedia'
 import { useDataKey } from '../lib/info'
+import MythArt, { hasMythArt } from './MythArt'
 import { DEMO_ME, distanceKm, fmtKm } from '../lib/geo'
 import { useAppStore } from '../store/useAppStore'
 
@@ -17,8 +19,11 @@ export function KindBadge({ kind, children }) {
   )
 }
 
-// 사진 출처 표시 — 한국관광공사 TourAPI 사진
+// 사진 출처 표시 — 제주신화정보(제주도청)와 한국관광공사 TourAPI 사진
 export function PhotoCredit({ photo }) {
+  if (photo.source === 'jeju') {
+    return <span className="photo-credit" title={`제주신화정보 · ${photo.title}`}>{photo.form === '이미지' ? '삽화' : '사진'} {photo.credit}</span>
+  }
   const cr = copyrightLabel(photo.copyright)
   return (
     <span className="photo-credit" title={`한국관광공사 · ${photo.title}${cr ? ' · ' + cr : ''}`}>
@@ -28,11 +33,13 @@ export function PhotoCredit({ photo }) {
 }
 
 // 갈래별 머리띠 — 사진이 있으면 사진, 없으면 무늬 (신화=별빛, 돌=현무암, 역사=기와)
-export function Cover({ kind, label, id }) {
+export function Cover({ kind, label, id, tall = false }) {
   const k = KINDS[kind]
   const photo = usePlacePhotos()[id]
+  const art = kind === 'myth' && hasMythArt(id)
   return (
-    <div className={`cover cover--${kind} ${photo ? 'cover--photo' : ''}`} style={{ '--k': k.color }}>
+    <div className={`cover cover--${kind} ${photo ? 'cover--photo' : ''} ${art ? 'cover--art' : ''} ${tall ? 'cover--tall' : ''}`} style={{ '--k': k.color }}>
+      {art && <MythArt id={id} className="cover__art" />}
       {photo && <div className="cover__photo" role="img" aria-label={photo.title} style={{ backgroundImage: `url(${photo.src})` }} />}
       <i className={`bi bi-${k.icon} cover__icon`} aria-hidden="true" />
       <span className="cover__tag">{label ?? k.label}</span>
@@ -44,12 +51,35 @@ export function Cover({ kind, label, id }) {
 // 상세 화면용 큰 사진 + 출처
 export function PlacePhoto({ id, name }) {
   const photo = usePlacePhotos()[id]
-  if (!photo) return null
+  if (!photo) {
+    // 사진이 없는 신화·설화는 직접 그린 장면을 보여 줍니다
+    return hasMythArt(id) ? <figure className="place-photo place-photo--art"><MythArt id={id} /></figure> : null
+  }
   return (
     <figure className="place-photo">
       <img src={photo.src} alt={name ? `${name} 사진` : photo.title} loading="lazy" onError={(e) => { e.currentTarget.closest('figure').style.display = 'none' }} />
       <figcaption><PhotoCredit photo={photo} /></figcaption>
     </figure>
+  )
+}
+
+// 이 장소와 관련된 제주신화정보의 사진·삽화·장면 (제주도청, 키 없음)
+export function RelatedMedia({ id }) {
+  const items = useMythMedia()
+  const list = relatedMedia(id, items).slice(0, 8)
+  if (list.length === 0) return null
+  return (
+    <div className="related-media">
+      <p className="related-media__head"><i className="bi bi-images me-1" />관련 사진·삽화 <small>제주특별자치도 · 눌러서 크게 보기</small></p>
+      <div className="related-media__row">
+        {list.map((m) => (
+          <a key={m.image} href={m.image} target="_blank" rel="noreferrer" title={`${m.title} · ${m.credit}`}>
+            <img src={m.image} alt={m.title} loading="lazy" />
+            <span>{m.form === '애니메이션' || m.form === '동영상' ? '장면 · ' : ''}{m.title}</span>
+          </a>
+        ))}
+      </div>
+    </div>
   )
 }
 
@@ -145,6 +175,7 @@ export function PlaceBody({ place, me }) {
       <p className="place-spot"><i className="bi bi-geo-alt-fill me-1" />{place.name} · {place.spot}</p>
       <p className="place-sum">{place.summary}</p>
       {place.story.map((p, i) => <p key={i}>{p}</p>)}
+      <RelatedMedia id={place.id} />
       <div className="d-flex flex-wrap gap-1 mb-3">
         {place.keywords.map((k) => <span key={k} className="kw">#{k}</span>)}
       </div>
