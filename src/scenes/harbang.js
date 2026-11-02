@@ -74,7 +74,7 @@ export function buildHarbang({ scene, camera }, live) {
   root.add(orange)
 
   // 바닥
-  const ground = new THREE.Mesh(new THREE.CircleGeometry(9, 48), new THREE.MeshStandardMaterial({ color: 0x2c3a2a, roughness: 1 }))
+  const ground = new THREE.Mesh(new THREE.CircleGeometry(9, 48), new THREE.MeshStandardMaterial({ color: 0x78a65c, roughness: 1 }))
   ground.rotation.x = -Math.PI / 2
   scene.add(ground)
 

@@ -1,6 +1,6 @@
 <div align="center">
 
-# 耽 탐라 이야기 수첩
+# 🌋 탐라 이야기 수첩
 
 ### 돌이 말하고, 바람이 전하는 섬 — 오늘 걸을 제주 이야기 길을 짜 드립니다
 
@@ -70,15 +70,17 @@
 - **신화·설화 / 돌문화 도감** — 갈래별 이야기 모달, 돌하르방 3D 뷰어
 - **공공데이터 6종** — 한국관광공사 TourAPI, 국가유산청, 기상청 단기예보, 그리고 **제주도청 신화 콘텐츠(182건)**, **제주돌문화공원 소장유물(77점)**, **제주역사문화위치정보**
 
-## 🎨 디자인 컨셉 — "한지 · 현무암 · 돌 도장"
+## 🎨 디자인 컨셉 — "제주 블루 · 감귤 오렌지"
 
-Bootstrap 5를 기반으로 하되 컴포넌트를 **제주의 돌담**처럼 다시 입혔습니다.
+Bootstrap 5 위에 **밝고 깔끔한 여행 앱** 느낌의 테마를 덧입혔습니다.
 
-- **현무암 레일** — 왼쪽 세로 내비게이션을 돌을 엇갈려 쌓듯 배치 (모바일에서는 Offcanvas)
-- **돌 도장 카드** — 손으로 깎은 듯 비대칭 둥근 모서리 + 두꺼운 테두리 + 단단한 그림자
-- **밭담 구분선 · 한라산 실루엣** — 섹션을 돌담으로 나누고 화면 아래에 오름·파도를 옅게 깔았습니다
-- **색** — 한지 `#f1e8d4`, 현무암 `#26231f`, 갈옷 `#9c5a2c`, 감귤 `#f08a1c`, 바다 `#1e8a9a`
-- **글꼴** — 제목 *Gowun Batang*(명조), 본문 *Gowun Dodum*
+- **상단 내비게이션** — 흰 유리 질감의 sticky 헤더. 좁은 화면에서는 햄버거 메뉴(Offcanvas)와 **하단 탭바**(홈·지도·이야기 산책·AI 가이드·내 수첩)
+- **카드** — 흰 배경, 얇은 테두리와 부드러운 그림자, 둥근 모서리. 갈래별 색(신화 주황, 돌 회청, 역사 파랑)은 아이콘 타일로 표시
+- **홈** — 큰 제목 + 3D 섬 카드, 숫자 요약 줄, 바로가기 3개(산책·가이드·지도), 세 갈래 카드, 내 주변 장소
+- **로고** — 오름과 떠오르는 해, 파도를 그린 SVG 마크(헤더와 파비콘 공통)
+- **3D 장면** — 돌하르방 뷰어는 밝은 하늘과 풀밭 배경, 페이지 전환은 가볍게 올라오는 효과(동작 줄이기 설정 시 꺼짐)
+- **색** — 바다 `#0f8b9d`, 감귤 `#ff8a1f`, 잉크 `#13222d`, 배경 `#f4f8fa`
+- **글꼴** — Noto Sans KR
 
 ## 🧱 폴더 구조
 
@@ -99,9 +101,9 @@ project/
 ├─ supabase/schema.sql  notebooks 테이블 + RLS
 ├─ src/
 │  ├─ router.jsx          메뉴(NAV_ITEMS) + 주소별 페이지
-│  ├─ layouts/            공통 틀 (돌 레일, 모바일 Offcanvas, 계정 버튼)
+│  ├─ layouts/            공통 틀 (상단 내비, 모바일 탭바·Offcanvas, 계정 버튼)
 │  ├─ pages/              Home · MapPage · Myth · Stone · Walk · Guide · Places · Notebook · Login
-│  ├─ components/         ThreeStage · JejuMapView(3D) · FlatMap(2D) · WallDivider · ui
+│  ├─ components/         ThreeStage · JejuMapView(3D) · FlatMap(2D) · ui · MythArchive · RelicShelf · HistoryPlaces
 │  ├─ scenes/             terrain · jejuMap · harbang · helpers  (three.js)
 │  ├─ data/               places(24곳) · walk(현장 정보) · stones(돌문화 해설)
 │  ├─ store/              Zustand — useAppStore(수첩·도장·지도) · useAuthStore(로그인)
