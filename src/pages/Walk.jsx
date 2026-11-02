@@ -8,6 +8,7 @@ import { KINDS, KIND_KEYS, PLACES, placeById } from '../data/places'
 import { MODES, TIME_OPTIONS, buildCourse, fmtMin, planFromIds } from '../lib/course'
 import { doliSays, doliStamped } from '../data/world'
 import { DEMO_ME, distanceKm, fmtKm } from '../lib/geo'
+import { courseName, courseUrl, shareCourse } from '../lib/share'
 import { useAppStore } from '../store/useAppStore'
 
 const NEAR_KM = 0.5   // 이 안에 있으면 '현장 확인' 도장
@@ -61,6 +62,10 @@ function StopCard({ n, s, me }) {
 
 export default function Walk() {
   const me = useAppStore((s) => s.me)
+  const courses = useAppStore((s) => s.courses)
+  const saveCourse = useAppStore((s) => s.saveCourse)
+  const removeCourse = useAppStore((s) => s.removeCourse)
+  const [note, setNote] = useState('')
   const [params, setParams] = useSearchParams()
   const [minutes, setMinutes] = useState(120)
   const [mode, setMode] = useState(params.get('mode') === 'walk' ? 'walk' : 'car')
@@ -80,6 +85,27 @@ export default function Walk() {
   const stops = plan.stops.map((s) => ({ ...s, legMode: MODES[mode].label }))
   const numbers = Object.fromEntries(stops.map((s, i) => [s.place.id, i + 1]))
 
+  // 코스 저장·공유 — 코스는 장소 순서(ids)와 이동수단(mode)만 있으면 어디서든 다시 열려요
+  const stopIds = stops.map((s) => s.place.id)
+  const courseId = `${mode}:${stopIds.join(',')}`
+  const savedCourse = courses.find((c) => c.id === courseId)
+  const flash = (msg) => { setNote(msg); setTimeout(() => setNote(''), 3000) }
+  const toggleSave = () => {
+    if (savedCourse) {
+      removeCourse(courseId)
+      flash('저장한 코스에서 뺐어요.')
+    } else {
+      saveCourse({ name: courseName(stops.map((s) => s.place)), ids: stopIds, mode })
+      flash('내 수첩에 저장했어요.')
+    }
+  }
+  const share = async () => {
+    const names = stops.map((s) => s.place.name).join(' → ')
+    const r = await shareCourse({ title: '돌빛 제주길 이야기 산책', text: `돌빛 제주길 이야기 산책 코스예요 (${fmtMin(plan.total)}): ${names}`, url: courseUrl(stopIds, mode) })
+    if (r === 'copied') flash('링크를 복사했어요. 붙여 넣어 보내 주세요.')
+    if (r === 'shared') flash('공유했어요.')
+  }
+
   return (
     <div className="page">
       <header className="page-head">
@@ -92,7 +118,7 @@ export default function Walk() {
         <LocateBar className="mb-3" />
         {custom ? (
           <div className="walk-banner">
-            <i className="bi bi-robot me-2" />AI 가이드가 추천한 코스를 보고 있어요.
+            <i className="bi bi-link-45deg me-2" />링크로 받았거나 AI 가이드가 만든 코스를 보고 있어요.
             <button className="btn btn-sm btn-outline-dark ms-2" onClick={() => setParams({})}>직접 만들기로 돌아가기</button>
           </div>
         ) : (
@@ -144,6 +170,13 @@ export default function Walk() {
             </div>
           </div>
           <div className="col-xl-7 order-xl-1">
+            <div className="walk-actions">
+              <button type="button" className={`btn btn-sm ${savedCourse ? 'btn-dark' : 'btn-outline-dark'}`} onClick={toggleSave} aria-pressed={!!savedCourse}>
+                <i className={`bi bi-bookmark-heart${savedCourse ? '-fill' : ''} me-1`} />{savedCourse ? '저장한 코스' : '이 코스 저장'}
+              </button>
+              <button type="button" className="btn btn-sm btn-dol" onClick={share}><i className="bi bi-share me-1" />친구에게 공유</button>
+              {note && <span className="walk-actions__note" role="status">{note}</span>}
+            </div>
             <div className="stops">
               {stops.map((s, i) => <StopCard key={s.place.id} n={i + 1} s={s} me={me} />)}
             </div>

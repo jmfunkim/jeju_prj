@@ -4,8 +4,12 @@ create table if not exists public.notebooks (
   user_id uuid primary key references auth.users (id) on delete cascade,
   saved jsonb not null default '[]'::jsonb,
   stamps jsonb not null default '{}'::jsonb,
+  courses jsonb not null default '[]'::jsonb,
   updated_at timestamptz not null default now()
 );
+
+-- 이미 예전 버전으로 만들어 둔 테이블이면 이 줄만으로 코스 저장 열이 추가됩니다.
+alter table public.notebooks add column if not exists courses jsonb not null default '[]'::jsonb;
 
 alter table public.notebooks enable row level security;
 

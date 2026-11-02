@@ -6,18 +6,21 @@ const key = (uid) => `tamna-nb:${uid}`
 
 export async function loadNotebook(user) {
   if (supabase) {
-    const { data, error } = await supabase.from('notebooks').select('saved, stamps').eq('user_id', user.id).maybeSingle()
+    let { data, error } = await supabase.from('notebooks').select('saved, stamps, courses').eq('user_id', user.id).maybeSingle()
+    if (error && /courses/.test(error.message)) ({ data, error } = await supabase.from('notebooks').select('saved, stamps').eq('user_id', user.id).maybeSingle())   // courses 열이 아직 없는 테이블
     if (error) throw new Error(error.message)
-    return data ? { saved: data.saved ?? [], stamps: data.stamps ?? {} } : null
+    return data ? { saved: data.saved ?? [], stamps: data.stamps ?? {}, courses: data.courses ?? [] } : null
   }
   try { return JSON.parse(localStorage.getItem(key(user.id))) } catch { return null }
 }
 
-export async function saveNotebook(user, { saved, stamps }) {
+export async function saveNotebook(user, { saved, stamps, courses = [] }) {
   if (supabase) {
-    const { error } = await supabase.from('notebooks').upsert({ user_id: user.id, saved, stamps, updated_at: new Date().toISOString() })
+    const row = { user_id: user.id, saved, stamps, updated_at: new Date().toISOString() }
+    let { error } = await supabase.from('notebooks').upsert({ ...row, courses })
+    if (error && /courses/.test(error.message)) ({ error } = await supabase.from('notebooks').upsert(row))   // courses 열이 아직 없으면 코스만 빼고 저장
     if (error) throw new Error(error.message)
     return
   }
-  localStorage.setItem(key(user.id), JSON.stringify({ saved, stamps }))
+  localStorage.setItem(key(user.id), JSON.stringify({ saved, stamps, courses }))
 }

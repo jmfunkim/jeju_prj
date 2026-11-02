@@ -1,14 +1,18 @@
+import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { ProgressBar } from 'react-bootstrap'
 import Doli from '../components/Doli'
 import { Cover, SaveButton, distanceLabel } from '../components/ui'
 import { earnedBadges, stageOf } from '../data/world'
 import { KINDS, KIND_KEYS, PLACES, placeById, placesOf } from '../data/places'
+import { MODES } from '../lib/course'
+import { courseUrl, shareCourse } from '../lib/share'
 import { useAppStore } from '../store/useAppStore'
 import { useAuthStore } from '../store/useAuthStore'
 
 export default function Notebook() {
-  const { saved, stamps, select, me } = useAppStore()
+  const { saved, stamps, select, me, courses, removeCourse, renameCourse } = useAppStore()
+  const [note, setNote] = useState('')
   const user = useAuthStore((st) => st.user)
   const sync = useAuthStore((st) => st.sync)
   const navigate = useNavigate()
@@ -62,6 +66,44 @@ export default function Notebook() {
           )
         })}
       </div>
+
+      <section className="mb-4">
+        <h2 className="h5 mb-2">저장한 코스 <small className="text-muted">{courses.length}개</small></h2>
+        {courses.length === 0 ? (
+          <div className="stone-card saved-empty">
+            <p className="mb-2">아직 저장한 코스가 없어요. 이야기 산책에서 마음에 드는 코스를 저장해 보세요.</p>
+            <Link to="/walk" className="btn btn-sm btn-dol">코스 만들러 가기</Link>
+          </div>
+        ) : (
+          <div className="saved-courses">
+            {courses.map((c) => {
+              const stops = c.ids.map(placeById).filter(Boolean)
+              const share = async () => {
+                const r = await shareCourse({ title: '돌빛 제주길 이야기 산책', text: `돌빛 제주길 이야기 산책 코스예요: ${stops.map((p) => p.name).join(' → ')}`, url: courseUrl(c.ids, c.mode) })
+                if (r === 'copied') { setNote('링크를 복사했어요.'); setTimeout(() => setNote(''), 2500) }
+              }
+              return (
+                <article key={c.id} className="stone-card saved-course">
+                  <div className="saved-course__head">
+                    <h3>{c.name}</h3>
+                    <button type="button" className="icon-btn" title="이름 바꾸기" aria-label="이름 바꾸기" onClick={() => { const n = window.prompt('코스 이름', c.name); if (n !== null) renameCourse(c.id, n) }}><i className="bi bi-pencil" /></button>
+                  </div>
+                  <p className="saved-course__meta">{stops.length}곳 · {MODES[c.mode]?.label ?? '자동차'} · {new Date(c.at).toLocaleDateString('ko-KR')} 저장</p>
+                  <ol className="saved-course__stops">
+                    {stops.map((p) => <li key={p.id} style={{ '--k': KINDS[p.kind].color }}><i />{p.name}</li>)}
+                  </ol>
+                  <div className="d-flex flex-wrap gap-2">
+                    <button type="button" className="btn btn-sm btn-dol" onClick={() => navigate(`/walk?ids=${c.ids.join(',')}&mode=${c.mode}`)}><i className="bi bi-signpost-split me-1" />열기</button>
+                    <button type="button" className="btn btn-sm btn-outline-dark" onClick={share}><i className="bi bi-share me-1" />공유</button>
+                    <button type="button" className="btn btn-sm btn-outline-dark" onClick={() => { if (window.confirm(`'${c.name}' 코스를 지울까요?`)) removeCourse(c.id) }}><i className="bi bi-trash me-1" />삭제</button>
+                  </div>
+                </article>
+              )
+            })}
+          </div>
+        )}
+        {note && <p className="small text-success mt-2 mb-0" role="status">{note}</p>}
+      </section>
 
       <section className="mb-4">
         <h2 className="h5 mb-2">돌빛 도장판 <small className="text-muted">{Object.keys(stamps).length}/{PLACES.length}</small></h2>

@@ -7,7 +7,7 @@ export const PLACE_MEDIA = {
   obaek: { main: ['이미지:설문대할망과 오백장군 전설', '사진:영실기암전설'], keys: ['오백장군', '영실기암'] },
   sanbang: { main: ['사진:산방산전설', '사진:산방굴사전설'], keys: ['산방', '용머리'] },
   samsung: { main: ['사진:삼성혈전설', '이미지:삼성혈'], keys: ['삼성혈', '혼인지'] },
-  yeongdeung: { main: ['이미지:영등할망 전설', '이미지:영등할망(외눈박이 거인)'], keys: ['영등'] },
+  yeongdeung: { main: ['사진:영등대왕전설'], keys: [] },   // 영등 삽화는 괴물 그림이라 쓰지 않아요(전설의 사진과 그림 갤러리에서는 볼 수 있어요)
   yongduam: { main: ['사진:용두암 전설', '사진:용두암'], keys: ['용두암'] },
   cheonjeyeon: { main: ['사진:천제연폭포전설'], keys: ['천제연'] },
   manjanggul: { main: ['사진:만장굴'], keys: ['만장굴'] },

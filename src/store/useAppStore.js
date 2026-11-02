@@ -35,9 +35,22 @@ export const useAppStore = create(
         for (const [id, s] of Object.entries(get().stamps)) {
           if (!stamps[id] || (s.verified && !stamps[id].verified)) stamps[id] = s
         }
-        set({ saved: [...new Set([...(remote.saved ?? []), ...get().saved])], stamps })
+        const have = new Set((remote.courses ?? []).map((c) => c.id))
+        const courses = [...(remote.courses ?? []), ...get().courses.filter((c) => !have.has(c.id))].slice(0, 20)
+        set({ saved: [...new Set([...(remote.saved ?? []), ...get().saved])], stamps, courses })
       },
-      clearNotebook: () => set({ saved: [], stamps: {} }),
+      clearNotebook: () => set({ saved: [], stamps: {}, courses: [] }),
+
+      // 저장한 산책 코스 { id, name, ids(장소 순서), mode, at } — 최대 20개
+      courses: [],
+      saveCourse: ({ name, ids, mode }) => {
+        const id = `${mode}:${ids.join(',')}`
+        const list = get().courses
+        if (list.some((c) => c.id === id)) return
+        set({ courses: [{ id, name, ids, mode, at: new Date().toISOString() }, ...list].slice(0, 20) })
+      },
+      removeCourse: (id) => set({ courses: get().courses.filter((c) => c.id !== id) }),
+      renameCourse: (id, name) => set({ courses: get().courses.map((c) => (c.id === id ? { ...c, name: name.trim() || c.name } : c)) }),
 
       // 지도 보기 방식: 2D(찾기 쉬움) / 3D(둘러보기)
       mapMode: '2d',
@@ -63,7 +76,7 @@ export const useAppStore = create(
     }),
     {
       name: 'tamna-notebook-v2',
-      partialize: (s) => ({ saved: s.saved, stamps: s.stamps, layers: s.layers, showOreum: s.showOreum, mapMode: s.mapMode }),
+      partialize: (s) => ({ saved: s.saved, stamps: s.stamps, courses: s.courses, layers: s.layers, showOreum: s.showOreum, mapMode: s.mapMode }),
     },
   ),
 )

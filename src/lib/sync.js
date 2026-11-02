@@ -15,9 +15,9 @@ export function useNotebookSync() {
     const setSync = (sync) => alive && useAuthStore.setState({ sync })
     const push = () => {
       if (!useAuthStore.getState().user) return
-      const { saved, stamps } = useAppStore.getState()
+      const { saved, stamps, courses } = useAppStore.getState()
       setSync('syncing')
-      saveNotebook(user, { saved, stamps }).then(() => setSync('ok')).catch(() => setSync('error'))
+      saveNotebook(user, { saved, stamps, courses }).then(() => setSync('ok')).catch(() => setSync('error'))
     }
 
     setSync('syncing')
@@ -32,7 +32,7 @@ export function useNotebookSync() {
 
     const unsub = useAppStore.subscribe((s, prev) => {
       // 로그아웃 때 이 기기 수첩을 비우는 변경이 계정 저장소를 덮어쓰지 않도록 user 를 확인합니다.
-      if (!ready || !useAuthStore.getState().user || (s.saved === prev.saved && s.stamps === prev.stamps)) return
+      if (!ready || !useAuthStore.getState().user || (s.saved === prev.saved && s.stamps === prev.stamps && s.courses === prev.courses)) return
       clearTimeout(timer)
       timer = setTimeout(push, 600)
     })
