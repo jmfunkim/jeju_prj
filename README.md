@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🌋 탐라 이야기 수첩
+# 🌋 돌빛 제주길
 
 ### 돌이 말하고, 바람이 전하는 섬 — 오늘 걸을 제주 이야기 길을 짜 드립니다
 
@@ -11,7 +11,7 @@
 ![Supabase](https://img.shields.io/badge/Supabase-Auth·DB-3FCF8E?logo=supabase&logoColor=white)
 ![Claude](https://img.shields.io/badge/AI-Claude_agent-D97757)
 
-<img src="docs/home.jpg" alt="탐라 이야기 수첩 홈 화면" width="760" />
+<img src="docs/home.jpg" alt="돌빛 제주길 홈 화면" width="760" />
 
 </div>
 

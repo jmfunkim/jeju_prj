@@ -69,7 +69,7 @@ export default function RootLayout() {
     <div className="app">
       <header className="topnav">
         <div className="topnav__in">
-          <NavLink to="/" className="brand" aria-label="탐라 이야기 수첩 홈">
+          <NavLink to="/" className="brand" aria-label="돌빛 제주길 홈">
             <span className="brand__mark">
               {/* 오름과 떠오르는 해, 파도 */}
               <svg viewBox="0 0 32 32" width="26" height="26" aria-hidden="true">
@@ -78,7 +78,7 @@ export default function RootLayout() {
                 <path d="M2 28q3.5-3 7 0t7 0 7 0 7 0" fill="none" stroke="#fff" strokeOpacity=".75" strokeWidth="1.8" strokeLinecap="round" />
               </svg>
             </span>
-            <span>탐라 이야기 수첩<small>제주 신화·돌·역사 산책</small></span>
+            <span>돌빛 제주길<small>제주 신화·돌·역사 산책</small></span>
           </NavLink>
           <div className="d-none d-xl-flex flex-grow-1 align-items-center"><NavList /></div>
           <div className="d-none d-xl-block"><AccountLink /></div>
@@ -97,7 +97,7 @@ export default function RootLayout() {
       <div className="content">
         <main><Outlet /></main>
         <footer className="foot">
-          탐라 이야기 수첩 · 신화·설화 / 돌문화 / 역사문화 위치정보 · 지도의 좌표는 대략적인 위치이며 전승은 지역에 따라 다를 수 있습니다
+          돌빛 제주길 · 신화·설화 / 돌문화 / 역사문화 위치정보 · 지도의 좌표는 대략적인 위치이며 전승은 지역에 따라 다를 수 있습니다
         </footer>
       </div>
       <TabBar />

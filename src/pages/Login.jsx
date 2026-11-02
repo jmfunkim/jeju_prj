@@ -37,7 +37,7 @@ export default function Login() {
     <div className="page">
       <div className="auth-wrap">
         <div className="stone-card auth-card">
-          <p className="stamp">탐라 이야기 수첩</p>
+          <p className="stamp">돌빛 제주길</p>
           <h1 className="h2 mb-1">{mode === 'in' ? '다시 오셨네요' : '수첩 만들기'}</h1>
           <p className="text-muted">{mode === 'in' ? '로그인하면 내 수첩이 내 이름으로 남아요.' : '이름과 이메일만 있으면 돼요.'}</p>
 
