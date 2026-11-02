@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 import { Form, ToggleButton, ToggleButtonGroup } from 'react-bootstrap'
 import { Link, useSearchParams } from 'react-router-dom'
-import FlatMap from '../components/FlatMap'
+import RealMap from '../components/RealMap'
 import { KindBadge, LocateBar, NearbyTour, SaveButton, routeUrl } from '../components/ui'
 import { KINDS, KIND_KEYS, placeById } from '../data/places'
 import { MODES, TIME_OPTIONS, buildCourse, fmtMin, planFromIds } from '../lib/course'
@@ -127,7 +127,7 @@ export default function Walk() {
         <div className="row g-3">
           <div className="col-xl-5 order-xl-2">
             <div className="stone-card p-2 walk-side">
-              <FlatMap places={stops.map((s) => s.place)} numbers={numbers} me={start} route={stops.map((s) => s.place)} />
+              <RealMap places={stops.map((s) => s.place)} numbers={numbers} me={start} route={stops.map((s) => s.place)} />
               <ul className="walk-sum">
                 <li><b>{stops.length}곳</b>코스</li>
                 <li><b>{fmtMin(plan.total)}</b>이동 {fmtMin(plan.travel)} + 머묾 {fmtMin(plan.stay)}</li>

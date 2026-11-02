@@ -165,21 +165,23 @@ a.stone-card:hover, .myth-card:hover, .kind-card:hover { transform: translateY(-
 .chip.on small { color: #8fe3ee; }
 .layer-btn { font-weight: 600; }
 
-.flat { position: relative; width: 100%; border-radius: 16px; overflow: hidden; background: #c4e2e4; box-shadow: inset 0 0 0 1px rgba(19, 34, 45, .08); }
-.flat canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
-.flat__route { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
-.flat__route polyline { fill: none; stroke: #fff; stroke-width: 4; stroke-dasharray: 8 6; stroke-linecap: round; stroke-linejoin: round; filter: drop-shadow(0 1px 2px rgba(0, 0, 0, .5)); }
-.flat__pin { position: absolute; z-index: 2; width: 20px; height: 20px; padding: 0; transform: translate(-50%, -50%); display: grid; place-items: center; border: 2.5px solid #fff; background: var(--k); color: #fff; font-size: 11px; font-weight: 800; cursor: pointer; transition: transform .15s; box-shadow: 0 2px 6px rgba(0, 0, 0, .35); }
-.flat__pin--myth { border-radius: 50%; }
-.flat__pin--stone { border-radius: 5px; }
-.flat__pin--history { border-radius: 4px; rotate: 45deg; }
-.flat__pin--history b { rotate: -45deg; }
-.flat__pin b { font-style: normal; line-height: 1; }
-.flat__pin:hover { transform: translate(-50%, -50%) scale(1.25); z-index: 4; }
-.flat__pin.on { z-index: 5; transform: translate(-50%, -50%) scale(1.4); box-shadow: 0 0 0 5px rgba(255, 255, 255, .7), 0 4px 10px rgba(0, 0, 0, .35); }
-.flat__pin span { position: absolute; left: 50%; top: -28px; translate: -50% 0; white-space: nowrap; pointer-events: none; background: var(--ink); color: #fff; border-radius: 8px; padding: 1px 9px; font-size: 12px; font-weight: 600; }
-.flat__pin--history span { rotate: -45deg; top: -10px; left: -6px; translate: -100% -80%; }
-.flat__me { position: absolute; z-index: 3; width: 16px; height: 16px; border-radius: 50%; background: #ff3d57; border: 3px solid #fff; transform: translate(-50%, -50%); box-shadow: 0 0 0 0 rgba(255, 61, 87, .6); animation: ping 1.8s infinite; }
+.flat { position: relative; width: 100%; aspect-ratio: 640 / 444; min-height: 320px; border-radius: 16px; overflow: hidden; background: #dfeaec; box-shadow: inset 0 0 0 1px rgba(19, 34, 45, .08); }
+.flat__map { position: absolute; inset: 0; font-family: var(--font); z-index: 0; }
+.flat .leaflet-container { font-family: var(--font); background: #dfeaec; }
+.flat .leaflet-control-attribution { font-size: 11px; }
+.rpin-wrap { background: none; border: 0; }
+.rpin { position: relative; display: grid; place-items: center; width: 22px; height: 22px; border: 2.5px solid #fff; background: var(--k); color: #fff; font-size: 11px; font-weight: 800; box-shadow: 0 2px 6px rgba(0, 0, 0, .4); transition: transform .15s; }
+.rpin b { font-style: normal; line-height: 1; }
+.rpin--myth { border-radius: 50%; }
+.rpin--stone { border-radius: 6px; }
+.rpin--history { border-radius: 4px; transform: rotate(45deg); }
+.rpin--history b { transform: rotate(-45deg); }
+.rpin:hover { transform: scale(1.2); }
+.rpin--history:hover { transform: rotate(45deg) scale(1.2); }
+.rpin.on { box-shadow: 0 0 0 5px rgba(255, 138, 31, .55), 0 4px 10px rgba(0, 0, 0, .4); transform: scale(1.35); }
+.rpin--history.on { transform: rotate(45deg) scale(1.35); }
+.rpin__label { position: absolute; left: 50%; top: -30px; transform: translateX(-50%); white-space: nowrap; pointer-events: none; font-style: normal; background: var(--ink); color: #fff; border-radius: 8px; padding: 1px 9px; font-size: 12px; font-weight: 600; }
+.rme { display: block; width: 18px; height: 18px; border-radius: 50%; background: #ff3d57; border: 3px solid #fff; box-shadow: 0 0 0 0 rgba(255, 61, 87, .6); animation: ping 1.8s infinite; }
 @keyframes ping { to { box-shadow: 0 0 0 16px rgba(255, 61, 87, 0); } }
 
 /* ── 목록 · 카드 ── */

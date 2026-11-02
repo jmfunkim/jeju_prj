@@ -56,7 +56,7 @@
 <td width="50%"><img src="docs/stone.jpg" alt="돌하르방 3D" /></td>
 </tr>
 <tr>
-<td align="center"><b>2D · 3D 문화 지도</b><br/>같은 지형 함수로 그린 2D 지도, 오름 368개의 3D 지도.</td>
+<td align="center"><b>2D · 3D 문화 지도</b><br/>OpenStreetMap 실제 지도 위의 2D, 오름 368개의 3D 지도.</td>
 <td align="center"><b>돌하르방 3D</b><br/>현무암 질감 모델. 한낮·노을·달밤 조명, 감귤 소품.</td>
 </tr>
 </table>
@@ -103,7 +103,7 @@ project/
 │  ├─ router.jsx          메뉴(NAV_ITEMS) + 주소별 페이지
 │  ├─ layouts/            공통 틀 (상단 내비, 모바일 탭바·Offcanvas, 계정 버튼)
 │  ├─ pages/              Home · MapPage · Myth · Stone · Walk · Guide · Places · Notebook · Login
-│  ├─ components/         ThreeStage · JejuMapView(3D) · FlatMap(2D) · ui · MythArchive · RelicShelf · HistoryPlaces
+│  ├─ components/         ThreeStage · JejuMapView(3D) · RealMap(2D 실제 지도) · ui · MythArchive · RelicShelf · HistoryPlaces
 │  ├─ scenes/             terrain · jejuMap · harbang · helpers  (three.js)
 │  ├─ data/               places(24곳) · walk(현장 정보) · stones(돌문화 해설)
 │  ├─ store/              Zustand — useAppStore(수첩·도장·지도) · useAuthStore(로그인)
@@ -140,6 +140,8 @@ npm run dev                    # http://localhost:5173
 2. **Settings → API**의 Project URL과 `anon` `public` 키를 `.env.local`에 넣습니다. (`service_role` 키는 넣지 마세요)
 3. 이메일 확인을 켜 두었다면 가입 후 메일의 링크를 눌러야 로그인됩니다.
 
+> **2D 지도**는 Leaflet + OpenStreetMap 타일(인증키 없음)입니다. 지도 오른쪽 아래에 출처를 표시하며, 많은 트래픽을 받는 서비스로 공개할 때는 [OSM 타일 사용 정책](https://operations.osmfoundation.org/policies/tiles/)에 맞게 자체 타일 서버나 상용 타일로 바꾸세요.
+
 ## 🌐 사용한 API
 
 | API | 엔드포인트 | 화면 |
@@ -154,7 +156,7 @@ npm run dev                    # http://localhost:5173
 
 ## 🧠 구현 메모
 
-- **지형 생성** — 외부 모델 없이 높이함수(섬 윤곽 + 한라산 가우시안 + 기복)로 메시를 만들고, 같은 함수로 2D 지도도 그립니다. 오름 368개는 고정 시드의 `InstancedMesh`입니다.
+- **지형 생성** — 외부 모델 없이 높이함수(섬 윤곽 + 한라산 가우시안 + 기복)로 메시를 만들고. 오름 368개는 고정 시드의 `InstancedMesh`입니다.
 - **3D ↔ React 연결** — `ThreeStage`가 렌더 루프·리사이즈·정리(dispose)를 맡고, 장면은 React 값을 담은 `live` ref를 읽습니다.
 - **코스 알고리즘** — 현재 위치에서 시간 안에 들어가는 후보 중 `이동 시간 + 같은 갈래 가산점 − 아이 동반 가산점`이 가장 낮은 곳을 반복해서 고릅니다. 화면과 서버(AI 도구)가 같은 함수를 씁니다.
 - **에이전트** — 서버가 `plan_course`·`get_weather`·`nearby_tour`·`search_places` 도구를 Claude에 노출하고, `tool_use`가 끝날 때까지 최대 6번 반복합니다. 코스의 사실(시간·거리·장소)은 도구 결과에서만 가져오게 지시했습니다.

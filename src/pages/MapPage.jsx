@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { ToggleButton, ToggleButtonGroup } from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom'
 import JejuMapView from '../components/JejuMapView'
-import FlatMap from '../components/FlatMap'
+import RealMap from '../components/RealMap'
 import { LocateBar, NearbyTour, PlaceBody, SaveButton, distanceLabel, routeUrl } from '../components/ui'
 import { KINDS, KIND_KEYS, PLACES, placeById } from '../data/places'
 import { distanceKm } from '../lib/geo'
@@ -54,7 +54,7 @@ export default function MapPage() {
                   showLabels={labels} resetNonce={reset} me={me} />
               </div>
             ) : (
-              <FlatMap places={visible} selectedId={selectedId} onPick={select} me={me} labels={labels} />
+              <RealMap places={visible} selectedId={selectedId} onPick={select} me={me} labels={labels} />
             )}
             <LocateBar className="mt-2 px-1" />
           </div>

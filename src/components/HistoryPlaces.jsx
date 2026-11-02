@@ -3,7 +3,7 @@ import { Form } from 'react-bootstrap'
 import { fetchHistoryPlaces } from '../api/client'
 import { distanceKm, fmtKm } from '../lib/geo'
 import { useAppStore } from '../store/useAppStore'
-import FlatMap from './FlatMap'
+import RealMap from './RealMap'
 import { ApiState, LocateBar, routeUrl } from './ui'
 
 // 공공데이터포털 '제주역사문화위치정보' — 이름·주소·좌표를 받아 2D 지도와 목록으로 보여 줍니다
@@ -39,7 +39,7 @@ export default function HistoryPlaces() {
       {st.data && items.length > 0 && (
         <div className="row g-3">
           <div className="col-lg-6">
-            <FlatMap places={items} selectedId={sel} onPick={setSel} me={me} />
+            <RealMap places={items} selectedId={sel} onPick={setSel} me={me} />
           </div>
           <div className="col-lg-6">
             <ul className="hist-list">
