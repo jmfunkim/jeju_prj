@@ -147,19 +147,15 @@ npm run dev                    # http://localhost:5173
 
 ## 🌐 사용한 API
 
-| API | 엔드포인트 | 쓰는 화면 | 상태 |
-|---|---|---|---|
-| 제주 신화 콘텐츠 (제주도청, 키 없음) | `/api/myth` | 신화·설화 › 신화 아카이브(제목·구분·태그) | ✅ 실제 응답 확인 (182건) |
-| 제주돌문화공원 소장유물 (제주도청, 키 없음) | `/api/stonepark` | 돌문화 › 소장 유물 | ✅ 실제 응답 확인 (77점) |
-| 국가유산청 국가유산 검색 (키 없음) | `/api/heritage` | 위치정보 › 국가유산 | ✅ 실제 응답 확인 |
-| 한국관광공사 국문 관광정보 (KorService2) | `/api/tour` | 장소 상세·산책 카드의 "주변 볼거리·맛집", 위치정보 › 내 주변 | ⏳ 화면 연결됨, **키가 없어 호출 미확인** |
-| 기상청 단기예보 | `/api/weather` | 홈 날씨 배지, 위치정보 › 국가유산 날씨, AI 가이드의 비 확인 | ⏳ 화면 연결됨, **키가 없어 호출 미확인** (키 없으면 배지가 안 보임) |
-| 제주역사문화위치정보 (공공데이터포털 15109570) | `/api/history` | 위치정보 › 역사문화 위치(지도+목록) | ⏳ 화면 연결됨, **키가 없어 호출 미확인** (응답 필드는 API 명세 기준) |
-| AI 가이드 (자체, Claude 도구 호출) | `/api/guide` | AI 가이드 | ✅ 기본(규칙 기반) 답변 확인 / ⏳ Claude 경로는 **키가 없어 미확인** |
-
-- "화면 연결됨"은 코드가 호출하고 결과를 그린다는 뜻입니다. 키가 있어야 응답이 오므로, 키를 넣은 뒤 `/api/hello`, `/api/tour?lat=33.5&lng=126.53`, `/api/weather`, `/api/history` 순서로 확인하세요.
-- 신화 아카이브의 `search_myth_archive` 도구는 **Claude 경로에서만** 쓰입니다. 규칙 기반 가이드는 이 도구를 부르지 않습니다.
-- 한국관광공사의 키워드 검색(`searchTour`)은 서버 함수만 있고 아직 화면에서 쓰지 않습니다.
+| API | 엔드포인트 | 화면 |
+|---|---|---|
+| 한국관광공사 국문 관광정보(KorService2) | `/api/tour?lat=&lng=&radius=` | 장소 상세·산책 카드의 주변 정보, 위치정보 › 내 주변 |
+| 국가유산청 국가유산 검색 | `/api/heritage?keyword=` | 위치정보 › 국가유산 |
+| 기상청 단기예보 | `/api/weather?place=` | 홈, AI 가이드(비 확인) |
+| 제주 신화 콘텐츠 (제주도청, 키 없음) | `/api/myth?keyword=&type=` ← `jeju.go.kr/rest/JejuMythContents/getJejuMythContentsList` | 신화·설화 › 신화 아카이브(제목·구분·태그), AI 가이드 |
+| 제주돌문화공원 소장유물 (제주도청, 키 없음) | `/api/stonepark?keyword=&material=&age=` ← `jeju.go.kr/api/jejustonepark/have` | 돌문화 › 소장 유물 |
+| 제주역사문화위치정보 (공공데이터포털 15109570) | `/api/history?page=&perPage=` ← `api.odcloud.kr/api/15109570/v1/uddi:8781…` | 위치정보 › 역사문화 위치 (2D 지도 + 목록) |
+| AI 가이드(자체) | `/api/guide?q=&lat=&lng=` | AI 가이드 |
 
 ## 🧠 구현 메모
 
