@@ -3,7 +3,7 @@ import { Form, ToggleButton, ToggleButtonGroup } from 'react-bootstrap'
 import { Link, useSearchParams } from 'react-router-dom'
 import RealMap from '../components/RealMap'
 import { KindBadge, LocateBar, NearbyTour, SaveButton, routeUrl } from '../components/ui'
-import { KINDS, KIND_KEYS, placeById } from '../data/places'
+import { KINDS, KIND_KEYS, PLACES, placeById } from '../data/places'
 import { MODES, TIME_OPTIONS, buildCourse, fmtMin, planFromIds } from '../lib/course'
 import { DEMO_ME, distanceKm, fmtKm } from '../lib/geo'
 import { useAppStore } from '../store/useAppStore'
@@ -14,6 +14,7 @@ function StopCard({ n, s, me }) {
   const { place, info } = s
   const stamp = useAppStore((st) => st.stamps[place.id])
   const doStamp = useAppStore((st) => st.stamp)
+  const stampCount = useAppStore((st) => Object.keys(st.stamps).length)
   const verified = !!me && !me.demo && distanceKm(me, place) <= NEAR_KM
   return (
     <article className="stone-card stop" style={{ '--k': KINDS[place.kind].color }}>
@@ -38,7 +39,7 @@ function StopCard({ n, s, me }) {
       <div className="d-flex flex-wrap gap-2 align-items-center">
         {stamp ? (
           <span className={`stamp-done ${stamp.verified ? 'is-verified' : ''}`}>
-            <i className="bi bi-patch-check-fill me-1" />{stamp.verified ? '현장 도장' : '체험 도장'} · {new Date(stamp.at).toLocaleDateString('ko-KR')}
+            <i className="bi bi-patch-check-fill me-1" />{stamp.verified ? '현장 도장' : '체험 도장'} · {new Date(stamp.at).toLocaleDateString('ko-KR')} · {stampCount}/{PLACES.length}
           </span>
         ) : (
           <button className="btn btn-sm btn-dol" onClick={() => doStamp(place.id, verified)}>

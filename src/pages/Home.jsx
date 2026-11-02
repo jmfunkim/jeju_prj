@@ -4,9 +4,15 @@ import JejuMapView from '../components/JejuMapView'
 import { LocateBar, distanceLabel } from '../components/ui'
 import { fetchWeather } from '../api/client'
 import { KINDS, KIND_KEYS, PLACES, placesOf } from '../data/places'
-import { distanceKm } from '../lib/geo'
+import { buildCourse, fmtMin } from '../lib/course'
+import { DEMO_ME, distanceKm } from '../lib/geo'
 import { useAppStore } from '../store/useAppStore'
 
+const STEPS = [
+  { n: 1, icon: 'crosshair', title: '위치 켜기', sub: '내 위치나 제주시청 기준으로 출발' },
+  { n: 2, icon: 'clock', title: '시간 고르기', sub: '1시간부터 반나절까지, 비 오는 날·아이 동반' },
+  { n: 3, icon: 'patch-check', title: '걷고 도장 받기', sub: '이야기를 읽고 장소마다 도장 찍기' },
+]
 const LINKS = { myth: '/myth', stone: '/stone', history: '/places' }
 const QUICK = [
   { to: '/walk', icon: 'signpost-split', c: '#0f8b9d', title: '이야기 산책', sub: '시간에 맞춘 코스 만들기' },
@@ -21,6 +27,8 @@ export default function Home() {
 
   useEffect(() => { fetchWeather('제주시').then((w) => setWeather(w[0])).catch(() => {}) }, [])
 
+  const start = me ?? DEMO_ME
+  const today = buildCourse({ start, minutes: 120, mode: 'car' })
   const nearest = me ? [...PLACES].sort((a, b) => distanceKm(me, a) - distanceKm(me, b)).slice(0, 3) : []
 
   return (
@@ -60,6 +68,32 @@ export default function Home() {
           </Link>
         ))}
       </section>
+
+      {today.stops.length > 0 && (
+        <section className="today">
+          <div className="today__head">
+            <p className="stamp">오늘의 코스</p>
+            <h2>{me && !me.demo ? '내 위치에서' : '제주시청에서'} 2시간, {today.stops.length}곳</h2>
+            <p>이동 {fmtMin(today.travel)} + 머묾 {fmtMin(today.stay)}. 바로 걸어 볼 수 있는 코스예요.</p>
+            <Link to={`/walk?ids=${today.stops.map((s) => s.place.id).join(',')}&mode=car`} className="btn btn-dol btn-lg px-4">이 코스로 걷기</Link>
+          </div>
+          <ol className="today__stops">
+            {today.stops.map((s, i) => (
+              <li key={s.place.id} style={{ '--k': KINDS[s.place.kind].color }}>
+                <b>{i + 1}</b>
+                <span><strong>{s.place.name}</strong><small>{KINDS[s.place.kind].label} · {fmtMin(s.stay)} 머물기</small></span>
+              </li>
+            ))}
+          </ol>
+        </section>
+      )}
+
+      <div className="section-title"><h2>이렇게 써요</h2><small>세 걸음</small></div>
+      <ol className="steps">
+        {STEPS.map((s) => (
+          <li key={s.n}><i className={`bi bi-${s.icon}`} /><span><b>{s.n}. {s.title}</b><small>{s.sub}</small></span></li>
+        ))}
+      </ol>
 
       <div className="section-title"><h2>세 갈래 이야기</h2><small>신화·돌·역사</small></div>
       <section className="row g-3">

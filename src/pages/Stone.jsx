@@ -3,7 +3,7 @@ import { Accordion, ButtonGroup, ToggleButton } from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom'
 import RelicShelf from '../components/RelicShelf'
 import ThreeStage from '../components/ThreeStage'
-import { SaveButton } from '../components/ui'
+import { Cover, SaveButton } from '../components/ui'
 import { placesOf } from '../data/places'
 import { STONES } from '../data/stones'
 import { buildHarbang } from '../scenes/harbang'
@@ -67,7 +67,7 @@ export default function Stone() {
         {placesOf('stone').map((p) => (
           <div className="col" key={p.id}>
             <article className="stone-card place-card" style={{ '--k': '#6e7f86' }}>
-              <span className="mini-tag">{p.tag}</span>
+              <Cover kind="stone" label={p.tag} />
               <h3>{p.name}</h3>
               <p>{p.summary}</p>
               <div className="d-flex gap-2">

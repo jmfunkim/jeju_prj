@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Modal, Nav } from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom'
 import MythArchive from '../components/MythArchive'
-import { KindBadge, PlaceBody, SaveButton } from '../components/ui'
+import { Cover, KindBadge, PlaceBody, SaveButton } from '../components/ui'
 import { placesOf } from '../data/places'
 import { useAppStore } from '../store/useAppStore'
 
@@ -33,10 +33,8 @@ export default function Myth() {
           <div className="col" key={m.id}>
             <article className="stone-card myth-card" style={{ '--tilt': `${(i % 3 - 1) * 0.6}deg` }} onClick={() => setOpen(m)} role="button" tabIndex={0}
               onKeyDown={(e) => e.key === 'Enter' && setOpen(m)}>
-              <div className="d-flex justify-content-between align-items-start mb-2">
-                <KindBadge kind="myth">{m.tag}</KindBadge>
-                <SaveButton id={m.id} compact />
-              </div>
+              <Cover kind="myth" label={m.tag} />
+              <SaveButton id={m.id} compact className="cover-save" />
               <h2>{m.title}</h2>
               <p>{m.summary}</p>
               <small className="text-muted"><i className="bi bi-geo-alt me-1" />{m.name} · {m.spot}</small>

@@ -15,6 +15,17 @@ export function KindBadge({ kind, children }) {
   )
 }
 
+// 갈래별 무늬 머리띠 — 사진이 없는 카드의 얼굴 (신화=별빛, 돌=현무암, 역사=기와)
+export function Cover({ kind, label }) {
+  const k = KINDS[kind]
+  return (
+    <div className={`cover cover--${kind}`} style={{ '--k': k.color }}>
+      <i className={`bi bi-${k.icon} cover__icon`} aria-hidden="true" />
+      <span className="cover__tag">{label ?? k.label}</span>
+    </div>
+  )
+}
+
 // 수첩에 담기/빼기
 export function SaveButton({ id, compact = false, className = '' }) {
   const on = useAppStore((s) => s.saved.includes(id))

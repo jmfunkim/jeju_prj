@@ -1,6 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom'
 import { ProgressBar } from 'react-bootstrap'
-import { KindBadge, SaveButton, distanceLabel } from '../components/ui'
+import { Cover, SaveButton, distanceLabel } from '../components/ui'
 import { KINDS, KIND_KEYS, PLACES, placeById, placesOf } from '../data/places'
 import { useAppStore } from '../store/useAppStore'
 import { useAuthStore } from '../store/useAuthStore'
@@ -67,10 +67,8 @@ export default function Notebook() {
           {items.map((p) => (
             <div className="col" key={p.id}>
               <article className="stone-card place-card" style={{ '--k': KINDS[p.kind].color }}>
-                <div className="d-flex justify-content-between align-items-start">
-                  <KindBadge kind={p.kind}>{p.tag}</KindBadge>
-                  <SaveButton id={p.id} compact />
-                </div>
+                <Cover kind={p.kind} label={p.tag} />
+                <SaveButton id={p.id} compact className="cover-save" />
                 <h3>{p.name}</h3>
                 <p>{p.summary}</p>
                 <div className="d-flex align-items-center justify-content-between">
