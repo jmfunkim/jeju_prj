@@ -48,5 +48,8 @@ export const fetchPlacePhotos = () => get('/api/placephoto')
 // ⑥ 공공데이터포털 제주역사문화위치정보 (DATA_GO_KR_KEY 필요)
 export const fetchHistoryPlaces = (page = 1, perPage = 300) => get(`/api/history?page=${page}&perPage=${perPage}`)
 
+// 제주역사문화일반정보 — 장소별 설명 글 (DATA_GO_KR_KEY 필요)
+export const fetchHistoryInfo = () => get('/api/historyinfo')
+
 // ③ 기상청 단기예보
 export const fetchWeather = (place = '제주시') => get(`/api/weather?place=${encodeURIComponent(place)}`)

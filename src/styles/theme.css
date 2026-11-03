@@ -492,3 +492,9 @@ a.stone-card:hover, .myth-card:hover, .kind-card:hover { transform: translateY(-
 .hist-item__text small { display: block; font-size: 12.5px; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .hist-items em { flex: none; font-style: normal; font-size: 12.5px; font-weight: 700; color: var(--sea-d); }
 @media (max-width: 575.98px) { .hist-tools .form-control, .hist-tools .form-select { width: 100%; } }
+
+/* 역사문화 — 제주역사문화일반정보의 설명 글 */
+.hist-info { margin: .25rem 0 .5rem; padding: .75rem .9rem; background: #f4f8fa; border-radius: 12px; }
+.hist-info h4 { font-size: .98rem; font-weight: 700; margin: 0 0 .35rem; }
+.hist-info p { font-size: .9rem; line-height: 1.65; margin: 0 0 .5rem; }
+.hist-info__more { white-space: pre-line; max-height: 14rem; overflow-y: auto; }
