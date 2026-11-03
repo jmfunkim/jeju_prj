@@ -3,6 +3,7 @@ import { Form, Nav } from 'react-bootstrap'
 import { fetchMyth } from '../api/client'
 import { FEATURED, matchFeatured } from '../data/bonpuri'
 import { mediaKey } from '../data/mythMedia'
+import MYTH_SUMMARY from '../data/mythSummary.json'
 import { useMythMedia } from '../lib/photos'
 import { ApiState } from './ui'
 
@@ -10,6 +11,9 @@ const TYPE_COLOR = { 원문: '#f08a1c', 해제: '#3d5fa8', 현지조사: '#1e8a9
 const TYPE_HELP = { 원문: '채록한 본풀이 원본', 해제: '자료를 설명하는 글', 현지조사: '현장에서 조사한 자료' }
 // 같은 이야기의 원문·해제·현지조사 판본을 한 이름으로 묶기 위한 이름 정리
 const baseName = (t) => t.replace(/[\s()*]/g, '').replace(/\d+$/, '')
+// 줄거리: 제주도청 '해제' 자료의 개요(scripts/build-myth-summary.mjs 로 뽑음). 같은 이름의 원문·현지조사 카드에도 붙여요.
+const SUMMARY = new Map(MYTH_SUMMARY.map((s) => [s.key, s]))
+const summaryOf = (title) => SUMMARY.get(baseName(title).replace(/본푸리/g, '본풀이'))
 
 // 제주도청 '제주 신화 콘텐츠' 자료(182건)로 만든 본풀이 마당:
 // 널리 알려진 8편은 자료 수·판본·태그를 자료에서 세어 카드로, 전체는 아래 자료실에서 찾아봅니다.
@@ -19,6 +23,8 @@ export default function Bonpuri() {
   const [type, setType] = useState('')
   const [tag, setTag] = useState('')
   const [limit, setLimit] = useState(24)
+  const [open, setOpen] = useState(() => new Set())   // 줄거리를 펼친 카드
+  const toggle = (code) => setOpen((s) => { const n = new Set(s); n.has(code) ? n.delete(code) : n.add(code); return n })
   const shelf = useRef(null)
   const media = useMythMedia()
 
@@ -103,6 +109,8 @@ export default function Bonpuri() {
             <div className="row g-2 row-cols-1 row-cols-md-2 row-cols-xl-3">
               {list.slice(0, limit).map((m) => {
                 const n = versions[baseName(m.title)]
+                const sum = summaryOf(m.title)
+                const isOpen = open.has(m.code)
                 return (
                   <div className="col" key={m.code}>
                     <article className="stone-card bp-card" style={{ '--c': TYPE_COLOR[m.type] ?? '#6e7f86' }}>
@@ -121,6 +129,12 @@ export default function Bonpuri() {
                           <i className="bi bi-search" />
                         </a>
                       </div>
+                      {sum && (
+                        <div className="bp-card__sum">
+                          <p className={isOpen ? '' : 'clamp'}>{sum.summary}</p>
+                          <button type="button" onClick={() => toggle(m.code)} aria-expanded={isOpen}>{isOpen ? '접기' : '줄거리 더 보기'}</button>
+                        </div>
+                      )}
                     </article>
                   </div>
                 )
@@ -131,7 +145,7 @@ export default function Bonpuri() {
               {limit < list.length && <button className="btn btn-sm btn-dol" onClick={() => setLimit(limit + 24)}>더 보기</button>}
             </div>
           </div>
-          <p className="small text-muted mt-3 mb-0">출처: 제주특별자치도 제주 신화 콘텐츠(제목·구분·태그). PDF 는 제주도청 문서뷰어로 열려요. 돋보기를 누르면 검색으로도 이어 줘요.</p>
+          <p className="small text-muted mt-3 mb-0">출처: 제주특별자치도 제주 신화 콘텐츠(제목·구분·태그). 줄거리는 '해제' 자료의 개요를 줄이지 않고 옮긴 것이고(같은 이름의 원문·현지조사 카드에도 붙였어요), PDF 는 제주도청 문서뷰어로 열려요. 돋보기를 누르면 검색으로도 이어 줘요.</p>
         </>
       )}
     </section>
