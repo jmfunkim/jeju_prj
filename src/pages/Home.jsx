@@ -60,7 +60,7 @@ export default function Home() {
             <div className="today__head">
               <p className="stamp">오늘의 코스</p>
               <h2>{real ? '내 위치에서' : '제주시청에서'} 2시간, {today.stops.length}곳</h2>
-              <p>이동 {fmtMin(today.travel)} + 머묾 {fmtMin(today.stay)}. 바로 걸어 볼 수 있는 코스예요.</p>
+              <p>이동 약 {fmtMin(today.travel)} + 머묾 약 {fmtMin(today.stay)}. 바로 걸어 볼 수 있는 코스예요.</p>
               <Link to={`/walk?ids=${today.stops.map((s) => s.place.id).join(',')}&mode=car`} className="btn btn-dol btn-lg px-4">이 코스로 걷기</Link>
             </div>
             <ol className="today__stops">

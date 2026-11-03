@@ -4,6 +4,7 @@ import { fetchNearby } from '../api/client'
 import { KINDS } from '../data/places'
 import { copyrightLabel, useMythMedia, usePlacePhotos } from '../lib/photos'
 import { relatedMedia } from '../data/mythMedia'
+import { walkInfo } from '../data/walk'
 import { useDataKey } from '../lib/info'
 import MythArt, { hasMythArt } from './MythArt'
 import { DEMO_ME, distanceKm, fmtKm } from '../lib/geo'
@@ -110,6 +111,17 @@ export function SaveButton({ id, compact = false, className = '' }) {
   )
 }
 
+// 전시·기념관처럼 운영 시간·휴관일이 있는 곳에 붙이는 안내 (시간을 지어내지 않고 확인 링크만 줘요)
+export function VisitNote({ place }) {
+  if (!walkInfo(place.id).visit) return null
+  return (
+    <p className="visit-note">
+      <i className="bi bi-calendar-check me-1" />운영 시간·휴관일은 방문 전에 확인하세요.{' '}
+      <a href={`https://map.kakao.com/link/search/${encodeURIComponent(place.name)}`} target="_blank" rel="noreferrer">카카오맵에서 확인</a>
+    </p>
+  )
+}
+
 // 내 위치 찾기 (+ 권한이 없을 때 체험용 위치)
 export function LocateBar({ className = '' }) {
   const { me, locating, locError, locate, setMe } = useAppStore()
@@ -189,6 +201,7 @@ export function PlaceBody({ place, me }) {
       <h2 className="place-title">{place.title}</h2>
       <p className="place-spot"><i className="bi bi-geo-alt-fill me-1" />{place.name} · {place.spot}</p>
       <p className="place-sum">{place.summary}</p>
+      <VisitNote place={place} />
       {place.story.map((p, i) => <p key={i}>{p}</p>)}
       <RelatedMedia id={place.id} />
       <div className="d-flex flex-wrap gap-1 mb-3">

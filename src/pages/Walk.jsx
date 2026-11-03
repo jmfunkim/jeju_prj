@@ -3,7 +3,7 @@ import { Form, ToggleButton, ToggleButtonGroup } from 'react-bootstrap'
 import { Link, useSearchParams } from 'react-router-dom'
 import RealMap from '../components/RealMap'
 import { DoliSay } from '../components/Doli'
-import { KindBadge, LocateBar, NearbyTour, PlacePhoto, SaveButton, routeUrl } from '../components/ui'
+import { KindBadge, LocateBar, NearbyTour, PlacePhoto, SaveButton, VisitNote, routeUrl } from '../components/ui'
 import { KINDS, KIND_KEYS, PLACES, placeById } from '../data/places'
 import { MODES, TIME_OPTIONS, buildCourse, fmtMin, planFromIds } from '../lib/course'
 import { doliSays, doliStamped } from '../data/world'
@@ -25,6 +25,7 @@ function StopCard({ n, s, me }) {
       <div className="stop__leg">
         <i className="bi bi-arrow-down-short" />
         {n === 1 ? '출발지에서' : '앞 장소에서'} {fmtKm(s.km)} · {s.legMode} 약 {fmtMin(s.leg)}
+        <small className="stop__approx" title="직선거리에 우회 계수를 곱한 어림값이에요. 실제 길찾기는 아래 길찾기 버튼을 쓰세요.">어림값</small>
       </div>
       <PlacePhoto id={place.id} name={place.name} />
       <div className="d-flex flex-wrap align-items-center gap-2 mb-1">
@@ -35,6 +36,7 @@ function StopCard({ n, s, me }) {
       <p className="place-sum">{place.summary}</p>
       {info.look && <p className="stop__look"><b>현장에서 볼 것</b> {info.look}</p>}
       {info.tip && <p className="stop__tip"><i className="bi bi-lightbulb me-1" />{info.tip}</p>}
+      <VisitNote place={place} />
       <DoliSay mood={stamp ? 'happy' : 'hi'} glow={stamp ? 1 : 0.5} className="mb-2">{stamp ? doliStamped(place) : doliSays(place)}</DoliSay>
       <details className="stop__story">
         <summary>이야기 전문 읽기</summary>
@@ -161,7 +163,7 @@ export default function Walk() {
               <RealMap places={stops.map((s) => s.place)} numbers={numbers} me={start} route={stops.map((s) => s.place)} />
               <ul className="walk-sum">
                 <li><b>{stops.length}곳</b>코스</li>
-                <li><b>{fmtMin(plan.total)}</b>이동 {fmtMin(plan.travel)} + 머묾 {fmtMin(plan.stay)}</li>
+                <li><b>{fmtMin(plan.total)}</b>이동 약 {fmtMin(plan.travel)} + 머묾 약 {fmtMin(plan.stay)}</li>
                 <li><b>{fmtKm(plan.km)}</b>직선거리 합</li>
               </ul>
               {plan.over && <p className="small text-danger px-2">정한 시간 안에는 한 곳도 다 못 봐서 가장 가까운 곳 하나만 골랐어요.</p>}
