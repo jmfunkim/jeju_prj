@@ -19,11 +19,15 @@ export function KindBadge({ kind, children }) {
   )
 }
 
-// 사진 출처 표시 — 제주신화정보(제주도청), 한국관광공사 TourAPI, 위키미디어 커먼즈 사진 (link: 상세 화면에서 원본 페이지로 연결)
+// 사진 출처 표시 — 제주신화정보(제주도청), 한국관광공사 TourAPI, 국가유산청, 위키미디어 커먼즈 사진 (link: 상세 화면에서 원본 페이지로 연결)
 export function PhotoCredit({ photo, link = false }) {
   if (photo.source === 'jeju') {
     const kind = photo.form === '이미지' ? '삽화' : '사진'
     return <span className="photo-credit" title={`제주신화정보 · ${photo.title}`}>{kind} {photo.credit}</span>
+  }
+  if (photo.source === 'khs') {
+    const text = '사진 국가유산청 · 공공누리'
+    return <span className="photo-credit" title={`국가유산청 · ${photo.heritage} · ${photo.title}`}>{text}</span>
   }
   if (photo.source === 'web') {
     const text = `사진 ${photo.by} · ${photo.license}`
