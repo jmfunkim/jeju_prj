@@ -55,33 +55,57 @@ export async function listMyth({ keyword = '', type = '', limit = 40 } = {}) {
 }
 
 // ── 돌문화공원 소장유물 ─────────────────────────────────
-const RELIC_URL = 'https://www.jeju.go.kr/api/jejustonepark/have'
+// 끝에 / 가 없으면 307 로 한 번 되돌려 보내므로 처음부터 붙입니다
+const RELIC_URL = 'https://www.jeju.go.kr/api/jejustonepark/have/'
 
 async function relicPage(page) {
-  const text = await getText(`${RELIC_URL}?page=${page}`)
-  let data
-  try { data = JSON.parse(text) } catch { throw new Error('돌문화공원 API 응답이 JSON이 아니에요.') }
-  if (data.error) throw new Error(data.errorMsg || '돌문화공원 API 오류')
-  return data
+  // 한 번 실패하면(일시 오류·차단 응답) 잠깐 뒤 한 번 더 시도해요
+  for (let attempt = 0; ; attempt++) {
+    try {
+      const r = await fetch(`${RELIC_URL}?page=${page}`, {
+        headers: { 'user-agent': 'Mozilla/5.0 (compatible; dolbit-jeju)', accept: 'application/json' },
+        signal: AbortSignal.timeout(8000),
+      })
+      const text = await r.text()
+      let data
+      try { data = JSON.parse(text) } catch { throw new Error(`돌문화공원 API 응답이 JSON이 아니에요 (${r.status}).`) }
+      if (data.error) throw new Error(data.errorMsg || '돌문화공원 API 오류')
+      return data
+    } catch (e) {
+      if (attempt >= 1) throw e
+      await new Promise((ok) => setTimeout(ok, 400))
+    }
+  }
 }
 
+// 도청 API 를 읽지 못하면 저장본(server/data/relics.js)으로 대신 답해서 화면이 비지 않게 해요
 function loadRelics() {
   return cached('relics', async () => {
-    const first = await relicPage(1)
-    const pages = Math.ceil(first.total / (first.pageSize || 9))
-    const rest = await Promise.all(Array.from({ length: Math.max(0, pages - 1) }, (_, i) => relicPage(i + 2)))
-    return [first, ...rest].flatMap((p) => p.items).map((i) => ({
-      name: i.name, age: i.historicAge, material: i.material, source: i.source, desc: i.desc,
-    }))
+    try {
+      const first = await relicPage(1)
+      const pages = Math.ceil(first.total / (first.pageSize || 9))
+      const rest = []
+      for (let p = 2; p <= pages; p += 3) {   // 도청 서버에 한꺼번에 몰리지 않게 세 쪽씩
+        rest.push(...await Promise.all(Array.from({ length: Math.min(3, pages - p + 1) }, (_, i) => relicPage(p + i))))
+      }
+      const items = [first, ...rest].flatMap((p) => p.items).map((i) => ({
+        name: i.name, age: i.historicAge, material: i.material, source: i.source, desc: i.desc,
+      }))
+      return { items, snapshot: false }
+    } catch (e) {
+      console.warn('[stonepark] 도청 API 실패, 저장본 사용:', e.message)
+      const { default: items } = await import('./data/relics.js')
+      return { items, snapshot: true }
+    }
   })
 }
 
 export async function listRelics({ keyword = '', material = '', age = '' } = {}) {
-  const all = await loadRelics()
+  const { items: all, snapshot } = await loadRelics()
   const k = keyword.trim()
   const items = all.filter((r) => (!material || r.material === material) && (!age || r.age === age) && (!k || r.name.includes(k) || (r.desc ?? '').includes(k)))
   const uniq = (key) => [...new Set(all.map((r) => r[key]).filter(Boolean))]
-  return { total: all.length, matched: items.length, materials: uniq('material'), ages: uniq('age'), items }
+  return { total: all.length, matched: items.length, snapshot, materials: uniq('material'), ages: uniq('age'), items }
 }
 
 // ── 제주신화정보 이미지 자료 ─────────────────────────────

@@ -63,7 +63,7 @@ export default function RelicShelf() {
           {Array.from({ length: pages }, (_, i) => <Pagination.Item key={i} active={page === i + 1} onClick={() => setPage(i + 1)}>{i + 1}</Pagination.Item>)}
         </Pagination>
       )}
-      <p className="small text-muted mt-2">출처: 제주특별자치도 제주돌문화공원 소장 유물.</p>
+      <p className="small text-muted mt-2">출처: 제주특별자치도 제주돌문화공원 소장 유물.{d?.snapshot && ' (지금은 도청 연결이 어려워 미리 저장해 둔 자료를 보여 드려요.)'}</p>
     </section>
   )
 }
