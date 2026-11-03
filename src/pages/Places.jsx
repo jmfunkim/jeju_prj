@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Badge, Form, Nav, Table } from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom'
-import HistoryPlaces from '../components/HistoryPlaces'
 import { ApiState, KindBadge, LocateBar, SaveButton, distanceLabel } from '../components/ui'
 import { fetchHeritage, fetchNearby, fetchWeather } from '../api/client'
 import { KINDS, KIND_KEYS, PLACES } from '../data/places'
@@ -19,12 +18,10 @@ export default function Places() {
       </header>
       <Nav variant="pills" className="pill-nav mb-3" activeKey={tab} onSelect={setTab}>
         <Nav.Item><Nav.Link eventKey="curated">추천 장소 {PLACES.length}</Nav.Link></Nav.Item>
-        <Nav.Item><Nav.Link eventKey="history">역사문화 장소</Nav.Link></Nav.Item>
         <Nav.Item><Nav.Link eventKey="nearby">내 주변</Nav.Link></Nav.Item>
         <Nav.Item><Nav.Link eventKey="heritage">국가유산</Nav.Link></Nav.Item>
       </Nav>
       {tab === 'curated' && <Curated />}
-      {tab === 'history' && <HistoryPlaces />}
       {tab === 'nearby' && <Nearby />}
       {tab === 'heritage' && <Heritage />}
     </div>

@@ -15,7 +15,7 @@ const STEPS = [
   { n: 2, icon: 'clock', title: '시간 고르기', sub: '1시간부터 반나절까지, 비 오는 날·아이 동반' },
   { n: 3, icon: 'patch-check', title: '걷고 도장 받기', sub: '이야기를 읽고 장소마다 도장 찍기' },
 ]
-const LINKS = { myth: '/myth', stone: '/stone', history: '/places' }
+const LINKS = { myth: '/myth', stone: '/stone', history: '/history' }
 
 export default function Home() {
   const me = useAppStore((s) => s.me)
