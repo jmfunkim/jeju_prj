@@ -418,30 +418,25 @@ a.stone-card:hover, .myth-card:hover, .kind-card:hover { transform: translateY(-
 .bp-tag small { color: #8a9aa5; }
 .bp-tag:hover { color: var(--sea-d); border-color: var(--sea); }
 .bp-tag.on { color: #fff; background: var(--sea-d); }
-.bp-card { position: relative; display: flex; align-items: center; gap: 12px; height: 100%; padding: 12px 14px; box-shadow: none; }
-.bp-card:hover { border-color: var(--line-strong); }
-.bp-card__av { display: grid; place-items: center; flex: none; width: 46px; height: 46px; border-radius: 14px; font-size: 20px; font-weight: 800; color: #fff; background: var(--c); }
-.bp-card__body { flex: 1; min-width: 0; }
-.bp-card h4 { font-size: 16px; margin: 0 0 3px; line-height: 1.3; word-break: keep-all; }
-.bp-card__row { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
-.bp-card__row small { color: var(--muted); }
-.bp-pill { font-size: 11.5px; font-weight: 700; padding: 0 9px; border-radius: 99px; color: color-mix(in srgb, var(--c) 70%, black); background: color-mix(in srgb, var(--c) 14%, white); }
-.bp-card { flex-wrap: wrap; }
-.bp-card__body { flex: 1 1 0; }
-.bp-card__sum { flex: 1 0 100%; border-top: 1px dashed #dfe6e9; padding-top: 8px; }
-.bp-card__sum p { margin: 0 0 4px; font-size: 13.5px; line-height: 1.6; color: #3d4b52; word-break: keep-all; }
-.bp-card__sum p.clamp { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
-.bp-card__sum button { border: 0; background: none; padding: 0; font-size: 12.5px; font-weight: 700; color: var(--sea-d); cursor: pointer; }
-.bp-card__sum button:hover { text-decoration: underline; }
-.bp-card__row { flex-wrap: wrap; }
-.bp-card__row small, .bp-pill { white-space: nowrap; }
-.bp-card__links { display: flex; flex-direction: column; align-items: center; gap: 6px; flex: none; }
-.bp-card__links a { font-size: 12px; font-weight: 700; white-space: nowrap; padding: 1px 9px; border-radius: 99px; color: var(--sea-d); background: var(--sea-soft); text-decoration: none; }
-.bp-card__links a:hover { color: #fff; background: var(--sea); }
-.bp-card__go { display: grid; place-items: center; flex: none; width: 34px; height: 34px; border-radius: 50%; color: var(--muted); background: #f1f5f7; text-decoration: none; }
-.bp-card__go:hover { color: #fff; background: var(--sea); }
-.bp-card .kw { border: 0; cursor: pointer; }
-.bp-card .kw:hover { background: var(--sea-soft); color: var(--sea-d); }
+/* 본풀이 이야기 카드 — 설화 카드(.myth-card)와 같은 틀 */
+.bp-tale { cursor: default; display: flex; flex-direction: column; }
+.bp-tale:hover { transform: none; }
+.bp-tale h2 { margin-bottom: 6px; word-break: keep-all; }
+.bp-tale p { margin-bottom: 4px; font-size: 14.5px; line-height: 1.65; word-break: keep-all; }
+.bp-tale .bp-clamp { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.bp-tale .bp-none { color: #8a9aa5; }
+.bp-more { align-self: flex-start; border: 0; background: none; padding: 0; margin-bottom: 8px; font-size: 13px; font-weight: 700; color: var(--sea-d); cursor: pointer; }
+.bp-more:hover { text-decoration: underline; }
+.bp-mono { position: absolute; right: 16px; top: 4px; font-size: 92px; font-weight: 800; line-height: 1.1; color: #fff; opacity: .2; pointer-events: none; }
+.cover--photo .bp-mono { display: none; }
+.bp-vers { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: auto; padding-top: 8px; }
+.bp-vers a, .bp-vers span { font-size: 12.5px; font-weight: 700; white-space: nowrap; padding: 2px 10px; border-radius: 99px; text-decoration: none; color: color-mix(in srgb, var(--c) 70%, black); background: color-mix(in srgb, var(--c) 14%, white); }
+.bp-vers a:hover { color: #fff; background: var(--c); }
+.bp-vers span { opacity: .6; }
+.bp-vers .bp-vers__go { display: grid; place-items: center; margin-left: auto; width: 30px; height: 30px; padding: 0; color: var(--muted); background: #f1f5f7; border-radius: 50%; }
+.bp-vers .bp-vers__go:hover { color: #fff; background: var(--sea); }
+.bp-kw { border: 0; cursor: pointer; }
+.bp-kw:hover { background: var(--sea-soft); color: var(--sea-d); }
 
 /* 관련 사진·삽화 (제주신화정보) */
 .related-media { margin: 14px 0 10px; }
