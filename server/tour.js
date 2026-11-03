@@ -1,11 +1,13 @@
 // 한국관광공사 TourAPI (국문 관광정보 서비스 KorService2)
 // - nearbyTour : 위치기반 조회(locationBasedList2) — 내 좌표 주변의 관광지·문화시설
 // - searchTour : 키워드 검색(searchKeyword2) — 제주(areaCode 39) 안에서
+import { dataKey } from './key.js'
+
 const BASE = 'https://apis.data.go.kr/B551011/KorService2'
 
 function baseParams(rows) {
   return new URLSearchParams({
-    serviceKey: process.env.DATA_GO_KR_KEY, // ★ Decoding 키
+    serviceKey: dataKey(), // Decoding 키 (Encoding 값을 넣어도 key.js 가 풀어 줍니다)
     MobileOS: 'ETC',
     MobileApp: 'TamnaNotebook',
     _type: 'json',
@@ -18,7 +20,7 @@ function baseParams(rows) {
 const secure = (u) => (String(u ?? '').startsWith('http://') ? 'https://' + String(u).slice(7) : String(u ?? ''))
 
 async function call(op, params) {
-  if (!process.env.DATA_GO_KR_KEY) throw new Error('DATA_GO_KR_KEY 가 설정되지 않았어요 (.env.local 확인)')
+  if (!dataKey()) throw new Error('DATA_GO_KR_KEY 가 설정되지 않았어요 (.env.local 확인)')
   const r = await fetch(`${BASE}/${op}?${params}`)
   const text = await r.text()
   let data

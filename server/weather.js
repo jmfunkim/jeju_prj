@@ -13,11 +13,13 @@ function baseDateTime() {
   return { base_date: day.toISOString().slice(0, 10).replaceAll('-', ''), base_time: String(h).padStart(2, '0') + '00' }
 }
 
+import { dataKey } from './key.js'
+
 export async function getWeather({ place = '제주시' } = {}) {
-  if (!process.env.DATA_GO_KR_KEY) throw new Error('DATA_GO_KR_KEY 가 설정되지 않았어요 (.env.local 확인)')
+  if (!dataKey()) throw new Error('DATA_GO_KR_KEY 가 설정되지 않았어요 (.env.local 확인)')
   const [nx, ny] = GRID[place] ?? GRID['제주시']
   const params = new URLSearchParams({
-    serviceKey: process.env.DATA_GO_KR_KEY, dataType: 'JSON', numOfRows: '300', pageNo: '1',
+    serviceKey: dataKey(), dataType: 'JSON', numOfRows: '300', pageNo: '1',
     nx: String(nx), ny: String(ny), ...baseDateTime(),
   })
   const text = await (await fetch(`${BASE}?${params}`)).text()

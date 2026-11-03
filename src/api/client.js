@@ -13,7 +13,7 @@ async function get(path) {
   if (!r.ok) {
     console.warn('[api]', path, data.error)
     if (r.status === 400 && data.error) throw new Error(data.error)   // 질문이 비었어요 같은, 사용자가 고칠 수 있는 안내
-    throw new Error(/DATA_GO_KR_KEY|ANTHROPIC/.test(data.error ?? '') ? NOT_READY : GENERIC)
+    throw new Error(/DATA_GO_KR_KEY|ANTHROPIC|인증키/.test(data.error ?? '') ? NOT_READY : GENERIC)
   }
   return data
 }

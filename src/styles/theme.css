@@ -272,12 +272,6 @@ a.stone-card:hover, .myth-card:hover, .kind-card:hover { transform: translateY(-
 .archive-item h3 { font-size: 16.5px; margin: 4px 0 6px; line-height: 1.4; }
 .stone-pager .page-link { color: var(--ink); border: 1px solid var(--line-strong); background: #fff; margin: 0 2px; border-radius: 10px !important; font-weight: 600; }
 .stone-pager .page-item.active .page-link { background: var(--ink); color: #fff; border-color: var(--ink); }
-.hist-list { list-style: none; margin: 0; padding: 0; max-height: 440px; overflow-y: auto; display: grid; gap: 6px; }
-.hist-list li { display: grid; gap: 1px; padding: 9px 13px; cursor: pointer; background: #fff; border: 1px solid var(--line); border-radius: 12px; }
-.hist-list li.on { background: var(--citrus-soft); border-color: var(--citrus); }
-.hist-list small { color: var(--muted); }
-.hist-list span { display: flex; gap: 12px; font-size: 13px; font-weight: 600; }
-.hist-list em { font-style: normal; color: var(--sea-d); }
 
 @media (max-width: 991.98px) {
   .map-frame, .map-frame--tall { height: 400px; }
@@ -473,3 +467,28 @@ a.stone-card:hover, .myth-card:hover, .kind-card:hover { transform: translateY(-
 .saved-course__stops li i { width: 8px; height: 8px; border-radius: 50%; background: var(--k); }
 .icon-btn { flex: none; display: grid; place-items: center; width: 30px; height: 30px; border: 0; border-radius: 50%; background: #f1f5f7; color: var(--muted); }
 .icon-btn:hover { background: var(--sea-soft); color: var(--sea-d); }
+
+/* 역사문화 장소 탭 */
+.hist-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px 22px; margin-bottom: 14px; padding: 18px 22px; }
+.hist-head h2 { font-size: 21px; margin: 0 0 2px; }
+.hist-head p { margin: 0; font-size: 14px; color: var(--muted); }
+.hist-tools { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.hist-tools .form-control { width: 190px; }
+.hist-tools .form-select { width: 118px; }
+.hist-sel { margin-bottom: 12px; padding: 16px 18px; border-color: var(--sea); box-shadow: 0 0 0 3px rgba(15, 139, 157, .12); animation: rise .3s ease; }
+.hist-sel .place-photo { margin-bottom: 10px; }
+.hist-sel .place-photo svg, .hist-sel .place-photo img { height: 150px; }
+.hist-sel h3 { font-size: 20px; margin: 0 0 4px; }
+.hist-sel__addr { margin: 0 0 10px; font-size: 14px; color: var(--muted); }
+.hist-sel__addr b { margin-left: 8px; color: var(--sea-d); }
+.hist-items { list-style: none; margin: 0; padding: 0; max-height: 470px; overflow-y: auto; display: grid; gap: 6px; padding-right: 2px; }
+.hist-items button { display: flex; align-items: center; gap: 12px; width: 100%; padding: 9px 12px; text-align: left; color: var(--ink); background: #fff; border: 1px solid var(--line); border-radius: 14px; transition: .15s; }
+.hist-items button:hover { border-color: var(--sea); background: #f6fbfc; }
+.hist-items button.on { background: var(--citrus-soft); border-color: var(--citrus); }
+.hist-num { display: grid; place-items: center; flex: none; width: 28px; height: 28px; border-radius: 50%; font-size: 13px; font-weight: 800; color: #fff; background: #3d5fa8; }
+.hist-items button.on .hist-num { background: var(--citrus); }
+.hist-item__text { flex: 1; min-width: 0; }
+.hist-item__text b { display: block; font-size: 15px; line-height: 1.35; word-break: keep-all; }
+.hist-item__text small { display: block; font-size: 12.5px; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.hist-items em { flex: none; font-style: normal; font-size: 12.5px; font-weight: 700; color: var(--sea-d); }
+@media (max-width: 575.98px) { .hist-tools .form-control, .hist-tools .form-select { width: 100%; } }
