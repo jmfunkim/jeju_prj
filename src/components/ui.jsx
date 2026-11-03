@@ -30,11 +30,11 @@ export function PhotoCredit({ photo, link = false }) {
     return <span className="photo-credit" title={`국가유산청 · ${photo.heritage} · ${photo.title}`}>{text}</span>
   }
   if (photo.source === 'web') {
-    const text = `사진 ${photo.by} · ${photo.license}`
+    const text = `사진 ${photo.by}${photo.license ? ` · ${photo.license}` : ''}`
     return (
-      <span className="photo-credit" title={`위키미디어 커먼즈 · ${photo.title} · ${photo.by} · ${photo.license}`}>
+      <span className="photo-credit" title={`${photo.site ?? '위키미디어 커먼즈'} · ${photo.title} · ${photo.by}${photo.license ? ` · ${photo.license}` : ''}`}>
         {link
-          ? <a href={photo.page} target="_blank" rel="noreferrer">{text} · 위키미디어</a>
+          ? <a href={photo.page} target="_blank" rel="noreferrer">{text} · {photo.site ?? '위키미디어'}</a>
           : text}
       </span>
     )

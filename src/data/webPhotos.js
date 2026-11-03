@@ -1,7 +1,8 @@
 // 위키미디어 커먼즈의 자유 이용 사진 — 제주신화정보·한국관광공사 사진이 없는 장소의 마지막 대체용입니다.
 // 라이선스(CC0·CC BY-SA·공공누리 제1유형·퍼블릭 도메인)에 따라 작성자와 라이선스를 화면에 함께 표시합니다. 사진마다 원본 페이지 주소를 둡니다.
 // first: true 인 사진은 다른 출처보다 먼저 씁니다 (제주신화정보의 관덕정 사진이 건물이라 돌하르방 카드에 맞지 않음).
-// 이 목록에 없는 장소(불턱·추사관·김만덕기념관)는 맞는 사진을 못 찾아 그린 일러스트를 씁니다.
+// 김만덕기념관은 자유 이용 사진을 못 찾아 제주소리(제주 지역 신문) 보도 사진을 직접 골라 썼습니다 — 라이선스 표기가 없는 사진이라 출처만 밝힙니다.
+// 이 목록에 없는 장소(불턱·추사관)는 맞는 사진을 못 찾아 그린 일러스트를 씁니다.
 export const WEB_PHOTOS = {
   mulchang: { src: "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a9/%EC%A0%9C%EC%A3%BC_%EB%AC%BC%EC%9E%A5%EC%98%A4%EB%A6%AC_%EC%98%A4%EB%A6%84_%28%EC%B2%9C%EC%97%B0%EA%B8%B0%EB%85%90%EB%AC%BC_%EC%A0%9C517%ED%98%B8%29.jpg/960px-%EC%A0%9C%EC%A3%BC_%EB%AC%BC%EC%9E%A5%EC%98%A4%EB%A6%AC_%EC%98%A4%EB%A6%84_%28%EC%B2%9C%EC%97%B0%EA%B8%B0%EB%85%90%EB%AC%BC_%EC%A0%9C517%ED%98%B8%29.jpg", title: "물장오리 오름", by: "문화재청", license: "KOGL Type 1", page: "https://commons.wikimedia.org/wiki/File:%EC%A0%9C%EC%A3%BC_%EB%AC%BC%EC%9E%A5%EC%98%A4%EB%A6%AC_%EC%98%A4%EB%A6%84_(%EC%B2%9C%EC%97%B0%EA%B8%B0%EB%85%90%EB%AC%BC_%EC%A0%9C517%ED%98%B8).jpg" },
   seongsan: { src: "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fc/Seongsan_Ilchulbong_01.jpg/960px-Seongsan_Ilchulbong_01.jpg", title: "성산일출봉", by: "Bernard Gagnon", license: "CC0", page: "https://commons.wikimedia.org/wiki/File:Seongsan_Ilchulbong_01.jpg" },
@@ -14,5 +15,6 @@ export const WEB_PHOTOS = {
   alddreu: { src: "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/88/Alddreu_Airfield.JPG/960px-Alddreu_Airfield.JPG", title: "알뜨르 비행장", by: "Mztourist", license: "CC BY-SA 3.0", page: "https://commons.wikimedia.org/wiki/File:Alddreu_Airfield.JPG" },
   geomun: { src: "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c9/Geomunoreum.jpg/960px-Geomunoreum.jpg", title: "거문오름", by: "강동희", license: "Public domain", page: "https://commons.wikimedia.org/wiki/File:Geomunoreum.jpg" },
   haenyeo: { src: "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f2/Haenyeo_Museum.jpg/960px-Haenyeo_Museum.jpg", title: "제주해녀박물관", by: "Vanbasten 23", license: "CC BY-SA 3.0", page: "https://commons.wikimedia.org/wiki/File:Haenyeo_Museum.jpg" },
+  mandeok: { src: "https://cdn.jejusori.net/news/photo/202601/443306_476697_4849.jpg", title: "김만덕기념관", by: "제주소리", license: "", site: "제주소리", page: "https://www.jejusori.net", first: true },
   'gwandeok-harbang': { src: "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/57/Dol_Hareubangs_in_Jeju_Stone_Park_01.jpg/960px-Dol_Hareubangs_in_Jeju_Stone_Park_01.jpg", title: "돌하르방", by: "Bernard Gagnon", license: "CC0", page: "https://commons.wikimedia.org/wiki/File:Dol_Hareubangs_in_Jeju_Stone_Park_01.jpg", first: true },
 }
