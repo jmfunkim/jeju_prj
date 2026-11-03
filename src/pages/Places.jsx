@@ -164,7 +164,7 @@ function Heritage() {
             <article className="stone-card place-card" style={{ '--k': '#3d5fa8' }}>
               <span className="mini-tag">{h.kind}</span>
               <h3>{h.name}</h3>
-              <p className="text-muted mb-0"><i className="bi bi-geo-alt me-1" />{h.city}{h.lat && h.lng ? ` · ${h.lat.toFixed(3)}, ${h.lng.toFixed(3)}` : ''}</p>
+              <p className="text-muted mb-0"><i className="bi bi-geo-alt me-1" />{h.city}</p>
             </article>
           </div>
         ))}

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Alert, Form, Nav } from 'react-bootstrap'
-import { Link, Navigate, useNavigate } from 'react-router-dom'
+import { Navigate, useNavigate } from 'react-router-dom'
 import { AUTH_MODE } from '../lib/auth'
 import { useAuthStore } from '../store/useAuthStore'
 
@@ -69,7 +69,6 @@ export default function Login() {
           {AUTH_MODE === 'local' && (
             <p className="auth-note"><i className="bi bi-info-circle me-1" />지금은 이 기기에서만 쓰는 임시 계정이에요. 다른 기기에서는 같은 계정으로 로그인할 수 없어요.</p>
           )}
-          <p className="text-center mb-0 mt-3"><Link to="/">로그인 없이 둘러보기</Link></p>
         </div>
       </div>
     </div>
