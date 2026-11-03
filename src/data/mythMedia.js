@@ -30,6 +30,19 @@ export function mainMedia(id, items) {
   return null
 }
 
+// 같은 장소의 '사진'(형식이 사진인 자료). 대표 이미지가 삽화여도 지도·이야기 산책처럼 실제 모습을 보여 줄 곳에서는 이것을 먼저 써요.
+// 대표 후보(main) 중 사진 → 관련 자료 중 사진 순으로 찾고, 없으면 null 입니다.
+export function photoMedia(id, items) {
+  const cfg = PLACE_MEDIA[id]
+  if (!cfg) return null
+  for (const k of cfg.main) {
+    if (!k.startsWith('사진:')) continue
+    const hit = items.find((m) => mediaKey(m) === k)
+    if (hit) return hit
+  }
+  return relatedMedia(id, items).find((m) => m.form === '사진') ?? null
+}
+
 // 장소와 관련된 사진·삽화·장면 (대표 이미지는 빼고)
 export function relatedMedia(id, items) {
   const cfg = PLACE_MEDIA[id]

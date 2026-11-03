@@ -1,7 +1,7 @@
 import { useEffect, useSyncExternalStore } from 'react'
 import { fetchKhsPhotos, fetchMythMedia, fetchPlacePhotos } from '../api/client'
 import { PLACES } from '../data/places'
-import { mainMedia } from '../data/mythMedia'
+import { mainMedia, photoMedia } from '../data/mythMedia'
 import { WEB_PHOTOS } from '../data/webPhotos'
 
 // 장소 사진은 네 곳에서 모읍니다.
@@ -16,23 +16,29 @@ let khs = null
 let tour = null
 let media = null
 let merged = null            // null = 아직 모름
+let mergedPhoto = null       // 위와 같지만 제주신화정보의 삽화 대신 같은 장소의 사진을 쓴 것 (지도·이야기 산책용)
 let started = false
 const subs = new Set()
 
 function recompute() {
   const items = media ?? []
-  const out = {}
-  for (const p of PLACES) {
-    const m = mainMedia(p.id, items)
-    const jeju = m && { src: m.image, title: m.title, credit: m.credit, form: m.form, source: 'jeju' }
-    const t = tour?.[p.id] && { ...tour[p.id], source: 'tour' }
-    const k = khs?.[p.id] && { ...khs[p.id], source: 'khs' }
-    const w = WEB_PHOTOS[p.id] && { ...WEB_PHOTOS[p.id], source: 'web' }
-    const base = p.kind === 'myth' ? (jeju ?? t) : (t ?? jeju)
-    const pick = (k?.first ? k : null) ?? (w?.first ? w : null) ?? base ?? k ?? w
-    if (pick) out[p.id] = pick
+  // photoOnly: 지도·이야기 산책처럼 실제 모습을 보여 줄 곳 — 삽화가 대표여도 같은 장소의 사진이 있으면 그것을 씁니다 (없으면 삽화 그대로)
+  const build = (photoOnly) => {
+    const out = {}
+    for (const p of PLACES) {
+      const m = (photoOnly && photoMedia(p.id, items)) || mainMedia(p.id, items)
+      const jeju = m && { src: m.image, title: m.title, credit: m.credit, form: m.form, source: 'jeju' }
+      const t = tour?.[p.id] && { ...tour[p.id], source: 'tour' }
+      const k = khs?.[p.id] && { ...khs[p.id], source: 'khs' }
+      const w = WEB_PHOTOS[p.id] && { ...WEB_PHOTOS[p.id], source: 'web' }
+      const base = p.kind === 'myth' ? (jeju ?? t) : (t ?? jeju)
+      const pick = (k?.first ? k : null) ?? (w?.first ? w : null) ?? base ?? k ?? w
+      if (pick) out[p.id] = pick
+    }
+    return out
   }
-  merged = out
+  merged = build(false)
+  mergedPhoto = build(true)
   subs.forEach((f) => f())
 }
 
@@ -46,9 +52,10 @@ function load() {
 
 const subscribe = (f) => { subs.add(f); return () => subs.delete(f) }
 
-export function usePlacePhotos() {
+// photoOnly: 삽화 대신 사진을 우선 (지도·이야기 산책). 기본은 신화·설화 카드처럼 삽화도 그대로 써요.
+export function usePlacePhotos({ photoOnly = false } = {}) {
   useEffect(load, [])
-  return useSyncExternalStore(subscribe, () => merged) ?? {}
+  return useSyncExternalStore(subscribe, () => (photoOnly ? mergedPhoto : merged)) ?? {}
 }
 
 // 제주신화정보의 사진·삽화·장면 전체 목록(받기 전에는 빈 배열)

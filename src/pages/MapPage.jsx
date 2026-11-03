@@ -82,7 +82,7 @@ export default function MapPage() {
             <button type="button" className="btn btn-sm btn-outline-dark d-xl-none mb-2" onClick={() => mapRef.current?.scrollIntoView({ block: 'start' })}>
               <i className="bi bi-arrow-up me-1" />지도로 돌아가기
             </button>
-            <PlaceBody place={place} me={me} />
+            <PlaceBody place={place} me={me} photoOnly />
             <div className="d-flex flex-wrap gap-2">
               <SaveButton id={place.id} />
               <AddToCourseButton id={place.id} />

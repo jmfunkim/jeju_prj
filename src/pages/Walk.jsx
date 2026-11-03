@@ -27,7 +27,7 @@ function StopCard({ n, s, me }) {
         {n === 1 ? '출발지에서' : '앞 장소에서'} {fmtKm(s.km)} · {s.legMode} 약 {fmtMin(s.leg)}
         <small className="stop__approx" title="직선거리에 우회 계수를 곱한 어림값이에요. 실제 길찾기는 아래 길찾기 버튼을 쓰세요.">어림값</small>
       </div>
-      <PlacePhoto id={place.id} name={place.name} />
+      <PlacePhoto id={place.id} name={place.name} photoOnly />
       <div className="d-flex flex-wrap align-items-center gap-2 mb-1">
         <KindBadge kind={place.kind}>{place.tag}</KindBadge>
         <span className="stop__stay"><i className="bi bi-clock me-1" />머무는 시간 약 {fmtMin(s.stay)}</span>

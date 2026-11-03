@@ -66,8 +66,9 @@ export function Cover({ kind, label, id, tall = false }) {
 }
 
 // 상세 화면용 큰 사진 + 출처
-export function PlacePhoto({ id, name }) {
-  const photo = usePlacePhotos()[id]
+// photoOnly: 삽화 대신 같은 장소의 사진을 우선 보여 줘요 (지도·이야기 산책)
+export function PlacePhoto({ id, name, photoOnly = false }) {
+  const photo = usePlacePhotos({ photoOnly })[id]
   if (!photo) {
     // 사진이 없는 장소는 직접 그린 장면을 보여 줍니다
     return hasMythArt(id) ? <figure className="place-photo place-photo--art"><MythArt id={id} /></figure> : null
@@ -217,11 +218,11 @@ export function NearbyTour({ place }) {
 export const routeUrl = (p) => `https://map.kakao.com/link/to/${encodeURIComponent(p.name)},${p.lat},${p.lng}`
 
 // 장소 상세 본문 (지도 패널·모달 공용)
-export function PlaceBody({ place, me }) {
+export function PlaceBody({ place, me, photoOnly = false }) {
   const dist = distanceLabel(me, place)
   return (
     <>
-      <PlacePhoto id={place.id} name={place.name} />
+      <PlacePhoto id={place.id} name={place.name} photoOnly={photoOnly} />
       <div className="d-flex flex-wrap align-items-center gap-2 mb-2">
         <KindBadge kind={place.kind}>{place.tag}</KindBadge>
         {dist && <Badge bg="info" text="dark" pill><i className="bi bi-signpost-split me-1" />내 위치에서 {dist}</Badge>}
