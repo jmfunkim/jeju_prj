@@ -45,6 +45,9 @@ export const fetchMythMedia = () => get('/api/mythmedia')
 // 장소 사진 — 한국관광공사 TourAPI 의 대표 이미지
 export const fetchPlacePhotos = () => get('/api/placephoto')
 
+// 전시·기념관 이용 정보 — 한국관광공사 소개정보(쉬는 날·이용 시간)
+export const fetchPlaceInfo = () => get('/api/placeinfo')
+
 // 장소 사진 — 국가유산청 국가유산 이미지 (키 없음)
 export const fetchKhsPhotos = () => get('/api/khsphoto')
 

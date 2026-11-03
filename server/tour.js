@@ -19,14 +19,19 @@ function baseParams(rows) {
 // 관광공사 이미지 주소는 http 로 오는 경우가 있어, https 로 열리는 화면에서 막히지 않게 바꿔 둡니다.
 const secure = (u) => (String(u ?? '').startsWith('http://') ? 'https://' + String(u).slice(7) : String(u ?? ''))
 
-async function call(op, params) {
+// 응답의 항목을 가공하지 않고 배열로 돌려줍니다
+async function raw(op, params) {
   if (!dataKey()) throw new Error('DATA_GO_KR_KEY 가 설정되지 않았어요 (.env.local 확인)')
   const r = await fetch(`${BASE}/${op}?${params}`)
   const text = await r.text()
   let data
   try { data = JSON.parse(text) } catch { throw new Error('TourAPI 응답이 JSON이 아님: ' + text.slice(0, 120)) }
   const item = data?.response?.body?.items?.item
-  const list = !item ? [] : Array.isArray(item) ? item : [item]
+  return !item ? [] : Array.isArray(item) ? item : [item]
+}
+
+async function call(op, params) {
+  const list = await raw(op, params)
   return list.map((p) => ({
     id: p.contentid, title: p.title, addr: p.addr1, image: secure(p.firstimage || p.firstimage2),   // 대표 이미지가 비면 썸네일(firstimage2)이라도 copyright: p.cpyrhtDivCd || '',
     lng: Number(p.mapx), lat: Number(p.mapy), type: p.contenttypeid,
@@ -42,6 +47,15 @@ export function nearbyTour({ lat, lng, radius = 10000, contentTypeId = '', rows 
   params.set('radius', String(Math.min(20000, radius)))   // 최대 20km
   if (contentTypeId) params.set('contentTypeId', contentTypeId)
   return call('locationBasedList2', params)
+}
+
+// 소개정보 조회(detailIntro2) — 쉬는 날·이용 시간 같은 상세 소개. 필드 이름이 종류마다 달라서(관광지 restdate, 문화시설 restdateculture …) 가공 없이 그대로 줍니다.
+export async function introTour({ contentId, contentTypeId } = {}) {
+  if (!contentId || !contentTypeId) throw new Error('contentId, contentTypeId 가 필요해요')
+  const params = baseParams(1)
+  params.set('contentId', String(contentId))
+  params.set('contentTypeId', String(contentTypeId))
+  return (await raw('detailIntro2', params))[0] ?? null
 }
 
 export function searchTour({ keyword = '', contentTypeId = '', rows = 12 } = {}) {

@@ -111,6 +111,7 @@
 | API | 엔드포인트 | 화면 |
 |---|---|---|
 | 한국관광공사 국문 관광정보(KorService2) | `/api/tour?lat=&lng=&radius=` · `/api/placephoto` | 장소 사진, 장소 상세·산책 카드의 주변 정보, 위치정보 › 내 주변 |
+| 한국관광공사 소개정보 조회(`detailIntro2`) | `/api/placeinfo` | 전시·기념관 8곳의 쉬는 날·이용 시간·요금 (못 찾으면 "방문 전 확인" 안내만). `?debug=1` 로 못 찾은 곳과 응답 필드명을 봐요 |
 | 국가유산청 국가유산 검색 | `/api/heritage?keyword=` | 위치정보 › 국가유산 |
 | 국가유산청 국가유산 이미지검색 (키 없음) | `/api/khsphoto` ← `khs.go.kr/cha/SearchImageOpenapi.do` | 장소 사진 (국가유산인 14곳) |
 | 기상청 단기예보 | `/api/weather?place=` | 홈, AI 가이드(비 확인) |
@@ -174,7 +175,7 @@ npm run dev                    # http://localhost:5173
 ```
 project/
 ├─ api/                  서버 함수 (주소 = /api/파일이름) — 비밀 키는 여기서만
-│  ├─ hello · tour · placephoto · heritage · weather
+│  ├─ hello · tour · placephoto · placeinfo · heritage · weather
 │  ├─ myth · mythmedia · stonepark   제주도청 신화 콘텐츠 / 돌문화공원 유물
 │  ├─ history            제주역사문화위치정보 (odcloud)
 │  └─ guide              AI 가이드

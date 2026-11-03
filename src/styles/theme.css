@@ -230,6 +230,11 @@ a.stone-card:hover, .myth-card:hover, .kind-card:hover { transform: translateY(-
 .stop__tip { font-size: 14px; background: var(--citrus-soft); padding: 8px 12px; border-radius: 12px; }
 .stop__approx { margin-left: 6px; padding: 0 7px; font-size: 11px; font-weight: 700; color: var(--muted); background: #eef3f5; border-radius: 99px; cursor: help; }
 .visit-note { margin: 0 0 10px; padding: 7px 12px; font-size: 13.5px; color: #3d4b52; background: #f1f7f9; border: 1px solid var(--line); border-radius: 12px; }
+.visit-note p { margin: 0; }
+.visit-note__rows { margin: 0 0 6px; display: grid; gap: 3px; }
+.visit-note__rows div { display: flex; gap: 10px; }
+.visit-note__rows dt { flex: none; width: 4.6em; font-weight: 700; color: var(--sea-d); }
+.visit-note__rows dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
 .visit-note a { font-weight: 700; color: var(--sea-d); }
 .stop__story { margin-bottom: 12px; }
 .stop__story summary { cursor: pointer; font-weight: 700; color: var(--sea-d); }

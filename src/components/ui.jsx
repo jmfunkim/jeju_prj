@@ -5,6 +5,7 @@ import { KINDS } from '../data/places'
 import { copyrightLabel, useMythMedia, usePlacePhotos } from '../lib/photos'
 import { relatedMedia } from '../data/mythMedia'
 import { walkInfo } from '../data/walk'
+import { usePlaceInfo } from '../lib/placeinfo'
 import { useDataKey } from '../lib/info'
 import MythArt, { hasMythArt } from './MythArt'
 import { DEMO_ME, distanceKm, fmtKm } from '../lib/geo'
@@ -111,14 +112,26 @@ export function SaveButton({ id, compact = false, className = '' }) {
   )
 }
 
-// 전시·기념관처럼 운영 시간·휴관일이 있는 곳에 붙이는 안내 (시간을 지어내지 않고 확인 링크만 줘요)
+// 전시·기념관처럼 운영 시간·휴관일이 있는 곳에 붙이는 안내.
+// 한국관광공사 소개정보가 있으면 쉬는 날·이용 시간을 보여 주고(바뀔 수 있어 확인 링크도 함께), 없으면 링크만 줘요.
 export function VisitNote({ place }) {
-  if (!walkInfo(place.id).visit) return null
+  const visit = walkInfo(place.id).visit
+  const info = usePlaceInfo(visit ? place.id : null)
+  if (!visit) return null
+  const rows = info ? [['쉬는 날', info.rest], ['이용 시간', info.hours], ['요금', info.fee]].filter(([, v]) => v) : []
   return (
-    <p className="visit-note">
-      <i className="bi bi-calendar-check me-1" />운영 시간·휴관일은 방문 전에 확인하세요.{' '}
-      <a href={`https://map.kakao.com/link/search/${encodeURIComponent(place.name)}`} target="_blank" rel="noreferrer">카카오맵에서 확인</a>
-    </p>
+    <div className="visit-note">
+      {rows.length > 0 && (
+        <dl className="visit-note__rows">
+          {rows.map(([k, v]) => <div key={k}><dt>{k}</dt><dd>{v}</dd></div>)}
+        </dl>
+      )}
+      <p>
+        <i className="bi bi-calendar-check me-1" />
+        {rows.length > 0 ? '한국관광공사 정보예요. 바뀔 수 있으니 방문 전에 확인하세요.' : '운영 시간·휴관일은 방문 전에 확인하세요.'}{' '}
+        <a href={`https://map.kakao.com/link/search/${encodeURIComponent(place.name)}`} target="_blank" rel="noreferrer">카카오맵에서 확인</a>
+      </p>
+    </div>
   )
 }
 

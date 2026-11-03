@@ -16,13 +16,13 @@ let cache = null
 const norm = (s) => String(s ?? '').replace(/[\s·()[\]\-.]/g, '')
 
 // 후보 항목이 쓸 만한지: 종류·좌표·제목 조건. 이유를 돌려줘 진단에 씁니다.
-function judge(place, it, kws) {
+export function judge(place, it, kws, requireImage = true) {
   if (!TYPES.includes(String(it.type))) return 'type'
   if (!Number.isFinite(it.lat) || !Number.isFinite(it.lng)) return 'coord'
   const km = distanceKm(place, it)
   if (km > MAX_KM) return 'far'
   if (!kws.some((kw) => norm(it.title).includes(norm(kw)))) return 'title'
-  if (!it.image) return 'noimage'
+  if (requireImage && !it.image) return 'noimage'
   return { it, km }
 }
 
