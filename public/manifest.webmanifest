@@ -1,0 +1,14 @@
+{
+  "name": "돌빛 제주길 · 제주 신화·돌문화 이야기 산책",
+  "short_name": "돌빛 제주길",
+  "lang": "ko",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "theme_color": "#0f8b9d",
+  "background_color": "#f4f8fa",
+  "icons": [
+    { "src": "/images/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/images/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+  ]
+}
