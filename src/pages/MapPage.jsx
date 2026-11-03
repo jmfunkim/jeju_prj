@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { ToggleButton, ToggleButtonGroup } from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom'
 import JejuMapView from '../components/JejuMapView'
@@ -15,6 +15,22 @@ export default function MapPage() {
   const [labels, setLabels] = useState(false)
   const navigate = useNavigate()
   const place = placeById(selectedId) ?? PLACES[0]
+  const detailRef = useRef(null)
+  const mapRef = useRef(null)
+
+  // 폭이 좁으면(xl 미만) 상세가 지도 아래에 있어서, 장소를 누르면 상세로 내려가요
+  const wantScroll = useRef(false)
+  // 사진이 불러와지며 카드 높이가 바뀌어도 도착하도록 부드러운 이동 대신 바로 이동해요
+  const toDetail = () => detailRef.current?.scrollIntoView({ block: 'start' })
+  const pick = (id) => {
+    if (!window.matchMedia('(max-width: 1199.98px)').matches) return select(id)
+    if (id === selectedId) return toDetail()
+    wantScroll.current = true   // 상세 카드가 새로 그려진 다음에 내려가요
+    select(id)
+  }
+  useEffect(() => {
+    if (wantScroll.current) { wantScroll.current = false; toDetail() }
+  }, [selectedId])
 
   const visible = PLACES.filter((p) => layers.includes(p.kind))
   const list = me ? [...visible].sort((a, b) => distanceKm(me, a) - distanceKm(me, b)) : visible
@@ -29,7 +45,7 @@ export default function MapPage() {
 
       <div className="row g-3">
         <div className="col-xl-8">
-          <div className="stone-card p-2">
+          <div ref={mapRef} className="stone-card p-2" style={{ scrollMarginTop: 84 }}>
             <div className="d-flex flex-wrap gap-2 justify-content-between mb-2">
               <ToggleButtonGroup type="checkbox" value={layers} onChange={setLayers} size="sm">
                 {KIND_KEYS.map((k) => (
@@ -50,18 +66,21 @@ export default function MapPage() {
             </div>
             {is3d ? (
               <div className="map-frame">
-                <JejuMapView follow selectedId={selectedId} onPick={select} layers={layers} showOreum={showOreum}
+                <JejuMapView follow selectedId={selectedId} onPick={pick} layers={layers} showOreum={showOreum}
                   showLabels={labels} resetNonce={reset} me={me} />
               </div>
             ) : (
-              <RealMap places={visible} selectedId={selectedId} onPick={select} me={me} labels={labels} />
+              <RealMap places={visible} selectedId={selectedId} onPick={pick} me={me} labels={labels} />
             )}
             <LocateBar className="mt-2 px-1" />
           </div>
         </div>
 
         <div className="col-xl-4">
-          <article className="stone-card detail" key={place.id}>
+          <article ref={detailRef} className="stone-card detail" style={{ scrollMarginTop: 84 }} key={place.id}>
+            <button type="button" className="btn btn-sm btn-outline-dark d-xl-none mb-2" onClick={() => mapRef.current?.scrollIntoView({ block: 'start' })}>
+              <i className="bi bi-arrow-up me-1" />지도로 돌아가기
+            </button>
             <PlaceBody place={place} me={me} />
             <div className="d-flex flex-wrap gap-2">
               <SaveButton id={place.id} />
@@ -77,7 +96,7 @@ export default function MapPage() {
 
       <div className="place-chips">
         {list.map((p) => (
-          <button key={p.id} className={`chip ${p.id === selectedId ? 'on' : ''}`} style={{ '--k': KINDS[p.kind].color }} onClick={() => select(p.id)}>
+          <button key={p.id} className={`chip ${p.id === selectedId ? 'on' : ''}`} style={{ '--k': KINDS[p.kind].color }} onClick={() => pick(p.id)}>
             <i />{p.name}{me && <small>{distanceLabel(me, p)}</small>}
           </button>
         ))}
