@@ -22,7 +22,8 @@ export function KindBadge({ kind, children }) {
 // 사진 출처 표시 — 제주신화정보(제주도청)와 한국관광공사 TourAPI 사진
 export function PhotoCredit({ photo }) {
   if (photo.source === 'jeju') {
-    return <span className="photo-credit" title={`제주신화정보 · ${photo.title}`}>{photo.form === '이미지' ? '삽화' : '사진'} {photo.credit}</span>
+    const kind = photo.form === '이미지' ? '삽화' : '사진'
+    return <span className="photo-credit" title={`제주신화정보 · ${photo.title}`}>{kind} {photo.credit}</span>
   }
   const cr = copyrightLabel(photo.copyright)
   return (
@@ -36,7 +37,7 @@ export function PhotoCredit({ photo }) {
 export function Cover({ kind, label, id, tall = false }) {
   const k = KINDS[kind]
   const photo = usePlacePhotos()[id]
-  const art = kind === 'myth' && hasMythArt(id)
+  const art = hasMythArt(id)
   return (
     <div className={`cover cover--${kind} ${photo ? 'cover--photo' : ''} ${art ? 'cover--art' : ''} ${tall ? 'cover--tall' : ''}`} style={{ '--k': k.color }}>
       {art && <MythArt id={id} className="cover__art" />}
@@ -52,7 +53,7 @@ export function Cover({ kind, label, id, tall = false }) {
 export function PlacePhoto({ id, name }) {
   const photo = usePlacePhotos()[id]
   if (!photo) {
-    // 사진이 없는 신화·설화는 직접 그린 장면을 보여 줍니다
+    // 사진이 없는 장소는 직접 그린 장면을 보여 줍니다
     return hasMythArt(id) ? <figure className="place-photo place-photo--art"><MythArt id={id} /></figure> : null
   }
   return (

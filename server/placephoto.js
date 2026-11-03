@@ -24,7 +24,8 @@ async function findFor(place) {
         if (!it.image || !Number.isFinite(it.lat) || !Number.isFinite(it.lng)) continue
         const km = distanceKm(place, it)
         if (km > MAX_KM) continue
-        cands.push({ it, km, hit: norm(it.title).includes(norm(kw)) ? 0 : 1 })
+        if (!norm(it.title).includes(norm(kw))) continue   // 제목이 장소 이름과 맞는 항목만 — 근처의 다른 곳 사진은 쓰지 않아요
+        cands.push({ it, km, hit: 0 })
       }
     } catch (e) { lastErr = e }
   }

@@ -13,6 +13,8 @@ export const PLACE_MEDIA = {
   manjanggul: { main: ['사진:만장굴'], keys: ['만장굴'] },
   'gwandeok-harbang': { main: ['사진:관덕정전설'], keys: ['관덕정'] },
   hangpaduri: { main: ['사진:항파두리전설'], keys: ['항파두리'] },
+
+  // 제주신화정보에 그 장소의 사진이 없으면 이 목록에 넣지 않습니다. 비슷한 곳의 사진으로 때우지 않고, 그 장소를 그린 일러스트(MythArt)를 씁니다.
 }
 
 export const mediaKey = (m) => `${m.form}:${m.title}`
