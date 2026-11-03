@@ -166,10 +166,10 @@
 
 | API | 키 | 엔드포인트 | 화면 |
 |---|:---:|---|---|
-| 한국관광공사 국문 관광정보(KorService2) | 🔑 | `/api/tour` · `/api/placephoto` | 장소 사진, 주변 볼거리·맛집, 위치정보 › 내 주변 |
-| 한국관광공사 소개정보 조회(`detailIntro2`) | 🔑 | `/api/placeinfo` | 전시·기념관 8곳의 쉬는 날·이용 시간·요금 |
+| 한국관광공사 국문 관광정보(KorService2) | 🔑 | `/api/tour` · `/api/place?kind=photo` | 장소 사진, 주변 볼거리·맛집, 위치정보 › 내 주변 |
+| 한국관광공사 소개정보 조회(`detailIntro2`) | 🔑 | `/api/place?kind=info` | 전시·기념관 8곳의 쉬는 날·이용 시간·요금 |
 | 국가유산청 국가유산 검색·상세 | | `/api/heritage?keyword=` | 위치정보 › 국가유산(소재지에서 읍·면·동을 뽑아 표시) |
-| 국가유산청 국가유산 이미지검색 | | `/api/khsphoto` ← `khs.go.kr/cha/SearchImageOpenapi.do` | 장소 사진(국가유산인 14곳) |
+| 국가유산청 국가유산 이미지검색 | | `/api/place?kind=khs` ← `khs.go.kr/cha/SearchImageOpenapi.do` | 장소 사진(국가유산인 14곳) |
 | 기상청 단기예보 | 🔑 | `/api/weather?place=` | 홈, AI 가이드(비 확인) |
 | 제주 신화 콘텐츠 (제주도청) | | `/api/myth` ← `jeju.go.kr/rest/JejuMythContents/…` | 본풀이 자료실(제목·구분·태그·PDF), AI 가이드 |
 | 제주신화정보 이미지 (제주도청) | | `/api/mythmedia` ← `jeju.go.kr/tool/openapi/jejumythservice/jejumythlist/` | 설화 카드 사진·삽화, 전설의 사진과 그림, 본풀이 삽화 |
@@ -231,12 +231,15 @@ npm run preview    # 빌드 결과 미리보기
 
 ### ▲ 배포 (Vercel)
 
-`vercel.json`이 있어 SPA 주소가 동작합니다. Vercel 프로젝트 환경변수에 위 이름을 그대로 등록하세요. 배포 후에는 아래 주소로 연결 상태를 확인할 수 있습니다.
+`vercel.json`이 있어 SPA 주소가 동작합니다.
+
+> ⚠️ Vercel **무료(Hobby) 플랜은 서버 함수를 배포당 12개까지** 허용하고, `api/` 폴더의 파일 하나가 함수 하나입니다. 지금은 11개라 **새 API 파일을 추가하면 배포가 실패**할 수 있어요. 비슷한 것은 `api/place.js`처럼 `?kind=` 로 한 파일에 모으세요.
+ Vercel 프로젝트 환경변수에 위 이름을 그대로 등록하세요. 배포 후에는 아래 주소로 연결 상태를 확인할 수 있습니다.
 
 | 확인 주소 | 보는 것 |
 |---|---|
-| `/api/placephoto?debug=1` | 한국관광공사 사진을 못 찾은 장소와 그 이유 |
-| `/api/placeinfo?debug=1` | 이용 정보를 못 찾은 장소, 응답 필드 이름 |
+| `/api/place?kind=photo&debug=1` | 한국관광공사 사진을 못 찾은 장소와 그 이유 |
+| `/api/place?kind=info&debug=1` | 이용 정보를 못 찾은 장소, 응답 필드 이름 |
 | `/api/stonepark` | 응답의 `snapshot`이 `true`면 도청 연결이 막혀 저장본을 쓰는 중 |
 
 공개 배포 전에는 아래 [알아두기](#-알아두기)의 호출 제한과 지도 타일 정책을 먼저 확인하세요.
@@ -255,7 +258,7 @@ npm run preview    # 빌드 결과 미리보기
 ```
 project/
 ├─ api/                    서버 함수 (주소 = /api/파일이름) — 비밀 키는 여기서만
-│  ├─ tour · placephoto · placeinfo · heritage · khsphoto · weather   관광공사·국가유산청·기상청
+│  ├─ tour · place · heritage · weather                                관광공사·국가유산청·기상청  (place = 사진·이용 정보·국가유산 이미지, kind 로 구분)
 │  ├─ myth · mythmedia · stonepark                                   제주도청 (키 없음)
 │  ├─ history · historyinfo                                          제주역사문화 (odcloud)
 │  └─ guide · hello                                                  AI 가이드 · 상태 확인

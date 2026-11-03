@@ -43,13 +43,13 @@ export const fetchRelics = (keyword = '', material = '', age = '') =>
 export const fetchMythMedia = () => get('/api/mythmedia')
 
 // 장소 사진 — 한국관광공사 TourAPI 의 대표 이미지
-export const fetchPlacePhotos = () => get('/api/placephoto')
+export const fetchPlacePhotos = () => get('/api/place?kind=photo')
 
 // 전시·기념관 이용 정보 — 한국관광공사 소개정보(쉬는 날·이용 시간)
-export const fetchPlaceInfo = () => get('/api/placeinfo')
+export const fetchPlaceInfo = () => get('/api/place?kind=info')
 
 // 장소 사진 — 국가유산청 국가유산 이미지 (키 없음)
-export const fetchKhsPhotos = () => get('/api/khsphoto')
+export const fetchKhsPhotos = () => get('/api/place?kind=khs')
 
 // ⑥ 공공데이터포털 제주역사문화위치정보 (DATA_GO_KR_KEY 필요)
 export const fetchHistoryPlaces = (page = 1, perPage = 300) => get(`/api/history?page=${page}&perPage=${perPage}`)
