@@ -117,10 +117,10 @@ export default function Bonpuri() {
                       </div>
                       <div className="bp-card__links">
                         {m.pdf && <a href={m.pdf} target="_blank" rel="noreferrer" title="제주도청 문서뷰어로 원문 PDF 보기"><i className="bi bi-file-earmark-pdf" /> PDF</a>}
+                        <a className="bp-card__go" href={`https://search.naver.com/search.naver?query=${encodeURIComponent(`제주 ${m.title.replace(/\(.*\)/, '')} 본풀이`)}`} target="_blank" rel="noreferrer" aria-label={`${m.title} 더 알아보기`} title="더 알아보기(검색)">
+                          <i className="bi bi-search" />
+                        </a>
                       </div>
-                      <a className="bp-card__go" href={`https://search.naver.com/search.naver?query=${encodeURIComponent(`제주 ${m.title.replace(/\(.*\)/, '')} 본풀이`)}`} target="_blank" rel="noreferrer" aria-label={`${m.title} 더 알아보기`} title="더 알아보기(검색)">
-                        <i className="bi bi-search" />
-                      </a>
                     </article>
                   </div>
                 )
