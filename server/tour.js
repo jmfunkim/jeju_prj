@@ -28,7 +28,7 @@ async function call(op, params) {
   const item = data?.response?.body?.items?.item
   const list = !item ? [] : Array.isArray(item) ? item : [item]
   return list.map((p) => ({
-    id: p.contentid, title: p.title, addr: p.addr1, image: secure(p.firstimage), copyright: p.cpyrhtDivCd || '',
+    id: p.contentid, title: p.title, addr: p.addr1, image: secure(p.firstimage || p.firstimage2),   // 대표 이미지가 비면 썸네일(firstimage2)이라도 copyright: p.cpyrhtDivCd || '',
     lng: Number(p.mapx), lat: Number(p.mapy), type: p.contenttypeid,
     distM: p.dist ? Math.round(Number(p.dist)) : undefined,   // 위치기반 조회일 때만: 내 위치와의 거리(m)
   }))
