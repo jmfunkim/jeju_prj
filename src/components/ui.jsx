@@ -105,7 +105,7 @@ export function SaveButton({ id, compact = false, className = '' }) {
   const on = useAppStore((s) => s.saved.includes(id))
   const toggle = useAppStore((s) => s.toggleSaved)
   return (
-    <Button size="sm" variant={on ? 'dark' : 'outline-dark'} className={`save-btn ${className}`} aria-pressed={on}
+    <Button size="sm" variant={on ? 'dark' : 'outline-dark'} className={`save-btn ${on ? 'is-saved' : ''} ${className}`} aria-pressed={on}
       onClick={(e) => { e.stopPropagation(); toggle(id) }}>
       <i className={`bi bi-bookmark${on ? '-fill' : ''}`} />{!compact && <span className="ms-1">{on ? '수첩에 담김' : '수첩에 담기'}</span>}
     </Button>

@@ -297,6 +297,8 @@ a.stone-card:hover, .myth-card:hover, .kind-card:hover { transform: translateY(-
 .cover__icon { position: absolute; right: 14px; top: 8px; font-size: 54px; opacity: .22; }
 .cover__tag { position: relative; font-size: 13px; font-weight: 700; padding: 2px 12px; border-radius: 99px; background: rgba(255, 255, 255, .22); backdrop-filter: blur(4px); }
 .cover-save { position: absolute; top: 12px; right: 12px; background: rgba(255, 255, 255, .92); border-color: transparent; z-index: 2; }
+/* 담은 장소는 사진 위에서도 한눈에 보이게 감귤색으로 */
+.cover-save.is-saved, .cover-save.is-saved:hover, .cover-save.is-saved:active { color: #fff; background: var(--citrus); border-color: #fff; box-shadow: 0 2px 8px rgba(255, 138, 31, .55); }
 .myth-card::after { display: none; }
 
 .stamp-done { animation: stampPop .55s cubic-bezier(.2, 1.6, .4, 1) both; }
