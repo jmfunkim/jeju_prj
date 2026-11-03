@@ -3,6 +3,7 @@ import { Offcanvas } from 'react-bootstrap'
 import { NavLink, Outlet } from 'react-router-dom'
 import { NAV_ITEMS } from '../router'
 import { useAppStore } from '../store/useAppStore'
+import { useGuideStore } from '../store/useGuideStore'
 import { useAuthStore } from '../store/useAuthStore'
 import { useNotebookSync } from '../lib/sync'
 
@@ -39,7 +40,7 @@ function AccountLink({ onPick }) {
   return (
     <div className="account">
       <span className="account__name" title={user.email}><i className="bi bi-person-check" /> {user.name}</span>
-      <button type="button" className="account__out" onClick={async () => { await signOut(); useAppStore.getState().clearNotebook(); onPick?.() }}>로그아웃</button>
+      <button type="button" className="account__out" onClick={async () => { await signOut(); useAppStore.getState().clearNotebook(); useGuideStore.getState().clear(); onPick?.() }}>로그아웃</button>
     </div>
   )
 }

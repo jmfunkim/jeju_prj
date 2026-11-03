@@ -1,12 +1,11 @@
-import { useState } from 'react'
 import { Badge, Spinner } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import Doli from '../components/Doli'
 import { KindBadge, LocateBar } from '../components/ui'
 import { DOLI } from '../data/world'
 import { placeById } from '../data/places'
-import { askGuide } from '../api/client'
 import { useAppStore } from '../store/useAppStore'
+import { useGuideStore } from '../store/useGuideStore'
 
 const EXAMPLES = [
   '아이와 1시간, 비 오는 날 갈 만한 곳',
@@ -18,24 +17,14 @@ const TOOL_LABEL = { plan_course: '코스 짜기', get_weather: '날씨 확인',
 
 export default function Guide() {
   const me = useAppStore((s) => s.me)
-  const [q, setQ] = useState('')
-  const [log, setLog] = useState([])
-  const [busy, setBusy] = useState(false)
+  // 대화와 입력 중인 글은 전역 저장소(useGuideStore)에 있어서, 다른 메뉴에 갔다 와도 그대로예요
+  const { log, busy, draft: q, setDraft: setQ, ask: send, clear } = useGuideStore()
 
-  async function ask(text) {
+  function ask(text) {
     const question = (text ?? q).trim()
     if (!question || busy) return
     setQ('')
-    setBusy(true)
-    setLog((l) => [...l, { role: 'user', text: question }])
-    try {
-      const r = await askGuide(question, me)
-      setLog((l) => [...l, { role: 'guide', ...r }])
-    } catch (e) {
-      setLog((l) => [...l, { role: 'error', text: e.message }])
-    } finally {
-      setBusy(false)
-    }
+    send(question, me)
   }
 
   return (
@@ -60,6 +49,11 @@ export default function Guide() {
           {EXAMPLES.map((t) => <button key={t} type="button" className="chip" onClick={() => ask(t)}>{t}</button>)}
         </div>
 
+        {log.length > 0 && (
+          <div className="d-flex justify-content-end mb-2">
+            <button type="button" className="btn btn-sm btn-outline-dark" onClick={clear} disabled={busy}><i className="bi bi-trash3 me-1" />대화 지우기</button>
+          </div>
+        )}
         <div className="guide__log" aria-live="polite">
           {log.length === 0 && <p className="text-muted mb-0">예: “아이와 1시간, 비 오는 날 갈 만한 곳”</p>}
           {log.map((m, i) => (
