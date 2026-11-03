@@ -2,7 +2,9 @@ import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { KIND_KEYS } from '../data/places'
 
-// 여러 페이지가 함께 쓰는 상태. 수첩(saved)과 지도 설정은 localStorage 에 남습니다.
+export const DRAFT_MAX = 10   // 직접 짜는 코스에 담을 수 있는 장소 수
+
+// 여러 페이지가 함께 쓰는 상태. 수첩(saved)과 지도 설정, 작성 중인 코스(draft)는 localStorage 에 남습니다.
 export const useAppStore = create(
   persist(
     (set, get) => ({
@@ -20,6 +22,26 @@ export const useAppStore = create(
         const saved = get().saved
         set({ saved: saved.includes(id) ? saved.filter((k) => k !== id) : [...saved, id] })
       },
+
+      // 내가 짜고 있는 코스 (장소 id 를 순서대로) — 이야기 산책의 '직접 짜기'와 지도의 '코스에 추가'가 함께 써요
+      draft: [],
+      addToDraft: (id) => {
+        const d = get().draft
+        if (d.includes(id) || d.length >= DRAFT_MAX) return false
+        set({ draft: [...d, id] })
+        return true
+      },
+      removeFromDraft: (id) => set({ draft: get().draft.filter((k) => k !== id) }),
+      moveInDraft: (id, dir) => {
+        const d = [...get().draft]
+        const i = d.indexOf(id)
+        const j = i + dir
+        if (i < 0 || j < 0 || j >= d.length) return
+        ;[d[i], d[j]] = [d[j], d[i]]
+        set({ draft: d })
+      },
+      setDraft: (ids) => set({ draft: [...new Set(ids)].slice(0, DRAFT_MAX) }),
+      clearDraft: () => set({ draft: [] }),
 
       // 방문 도장 { 장소id: { at: ISO 시각, verified: 현장(500m 이내) 확인 여부 } }
       stamps: {},
@@ -39,7 +61,7 @@ export const useAppStore = create(
         const courses = [...(remote.courses ?? []), ...get().courses.filter((c) => !have.has(c.id))].slice(0, 20)
         set({ saved: [...new Set([...(remote.saved ?? []), ...get().saved])], stamps, courses })
       },
-      clearNotebook: () => set({ saved: [], stamps: {}, courses: [] }),
+      clearNotebook: () => set({ saved: [], stamps: {}, courses: [], draft: [] }),
 
       // 저장한 산책 코스 { id, name, ids(장소 순서), mode, at } — 최대 20개
       courses: [],
@@ -76,7 +98,7 @@ export const useAppStore = create(
     }),
     {
       name: 'tamna-notebook-v2',
-      partialize: (s) => ({ saved: s.saved, stamps: s.stamps, courses: s.courses, layers: s.layers, showOreum: s.showOreum, mapMode: s.mapMode }),
+      partialize: (s) => ({ saved: s.saved, stamps: s.stamps, courses: s.courses, draft: s.draft, layers: s.layers, showOreum: s.showOreum, mapMode: s.mapMode }),
     },
   ),
 )

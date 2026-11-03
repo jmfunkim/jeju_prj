@@ -9,7 +9,7 @@ import { usePlaceInfo } from '../lib/placeinfo'
 import { useDataKey } from '../lib/info'
 import MythArt, { hasMythArt } from './MythArt'
 import { DEMO_ME, distanceKm, fmtKm } from '../lib/geo'
-import { useAppStore } from '../store/useAppStore'
+import { DRAFT_MAX, useAppStore } from '../store/useAppStore'
 
 // 종류(신화·설화/돌문화/역사문화) 표시 뱃지
 export function KindBadge({ kind, children }) {
@@ -132,6 +132,21 @@ export function VisitNote({ place }) {
         <a href={`https://map.kakao.com/link/search/${encodeURIComponent(place.name)}`} target="_blank" rel="noreferrer">카카오맵에서 확인</a>
       </p>
     </div>
+  )
+}
+
+// 내가 짜는 코스에 담기/빼기 (이야기 산책 › 내가 직접 짜기와 같은 목록)
+export function AddToCourseButton({ id, className = '' }) {
+  const inDraft = useAppStore((s) => s.draft.includes(id))
+  const full = useAppStore((s) => s.draft.length >= DRAFT_MAX)
+  const add = useAppStore((s) => s.addToDraft)
+  const remove = useAppStore((s) => s.removeFromDraft)
+  return (
+    <Button size="sm" variant={inDraft ? 'dark' : 'outline-dark'} className={`course-add ${inDraft ? 'is-in' : ''} ${className}`} aria-pressed={inDraft}
+      disabled={!inDraft && full} title={!inDraft && full ? `코스에는 ${DRAFT_MAX}곳까지 담을 수 있어요` : undefined}
+      onClick={() => (inDraft ? remove(id) : add(id))}>
+      <i className={`bi bi-${inDraft ? 'check2-circle' : 'plus-circle'} me-1`} />{inDraft ? '코스에 담김' : '코스에 추가'}
+    </Button>
   )
 }
 

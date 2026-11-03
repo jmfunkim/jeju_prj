@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
 import { ToggleButton, ToggleButtonGroup } from 'react-bootstrap'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import JejuMapView from '../components/JejuMapView'
 import RealMap from '../components/RealMap'
-import { LocateBar, NearbyTour, PlaceBody, SaveButton, distanceLabel, routeUrl } from '../components/ui'
+import { AddToCourseButton, LocateBar, NearbyTour, PlaceBody, SaveButton, distanceLabel, routeUrl } from '../components/ui'
 import { KINDS, KIND_KEYS, PLACES, placeById } from '../data/places'
 import { distanceKm } from '../lib/geo'
 import { useAppStore } from '../store/useAppStore'
@@ -15,10 +15,11 @@ export default function MapPage() {
   const [labels, setLabels] = useState(false)
   const navigate = useNavigate()
   const place = placeById(selectedId) ?? PLACES[0]
+  const draft = useAppStore((s) => s.draft)
   const detailRef = useRef(null)
   const mapRef = useRef(null)
 
-  // 폭이 좁으면(xl 미만) 상세가 지도 아래에 있어서, 장소를 누르면 상세로 내려가요
+  // 폭이 좁으면(xl 미만) 상세가 지도 아래에 있어서, 장소를 누르면 상세로 내려가요.
   const wantScroll = useRef(false)
   // 사진이 불러와지며 카드 높이가 바뀌어도 도착하도록 부드러운 이동 대신 바로 이동해요
   const toDetail = () => detailRef.current?.scrollIntoView({ block: 'start' })
@@ -84,10 +85,16 @@ export default function MapPage() {
             <PlaceBody place={place} me={me} />
             <div className="d-flex flex-wrap gap-2">
               <SaveButton id={place.id} />
+              <AddToCourseButton id={place.id} />
               <a className="btn btn-sm btn-dol" href={routeUrl(place)} target="_blank" rel="noreferrer"><i className="bi bi-signpost-2 me-1" />길찾기</a>
               {place.kind === 'myth' && <button className="btn btn-sm btn-outline-dark" onClick={() => navigate('/myth')}>신화·설화 모아 보기</button>}
               {place.kind === 'stone' && <button className="btn btn-sm btn-outline-dark" onClick={() => navigate('/stone')}>돌문화 3D 보기</button>}
             </div>
+            {draft.length > 0 && (
+              <p className="small mt-2 mb-0">
+                <i className="bi bi-signpost-split me-1" />내 코스에 {draft.length}곳을 담았어요. <Link to="/walk?tab=mine">이야기 산책에서 보기 →</Link>
+              </p>
+            )}
             <hr />
             <NearbyTour place={place} />
           </article>
