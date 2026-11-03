@@ -498,3 +498,6 @@ a.stone-card:hover, .myth-card:hover, .kind-card:hover { transform: translateY(-
 .hist-info h4 { font-size: .98rem; font-weight: 700; margin: 0 0 .35rem; }
 .hist-info p { font-size: .9rem; line-height: 1.65; margin: 0 0 .5rem; }
 .hist-info__more { white-space: pre-line; max-height: 14rem; overflow-y: auto; }
+
+/* 위키미디어 사진 출처 링크 */
+.photo-credit a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }

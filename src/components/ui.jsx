@@ -19,11 +19,21 @@ export function KindBadge({ kind, children }) {
   )
 }
 
-// 사진 출처 표시 — 제주신화정보(제주도청)와 한국관광공사 TourAPI 사진
-export function PhotoCredit({ photo }) {
+// 사진 출처 표시 — 제주신화정보(제주도청), 한국관광공사 TourAPI, 위키미디어 커먼즈 사진 (link: 상세 화면에서 원본 페이지로 연결)
+export function PhotoCredit({ photo, link = false }) {
   if (photo.source === 'jeju') {
     const kind = photo.form === '이미지' ? '삽화' : '사진'
     return <span className="photo-credit" title={`제주신화정보 · ${photo.title}`}>{kind} {photo.credit}</span>
+  }
+  if (photo.source === 'web') {
+    const text = `사진 ${photo.by} · ${photo.license}`
+    return (
+      <span className="photo-credit" title={`위키미디어 커먼즈 · ${photo.title} · ${photo.by} · ${photo.license}`}>
+        {link
+          ? <a href={photo.page} target="_blank" rel="noreferrer">{text} · 위키미디어</a>
+          : text}
+      </span>
+    )
   }
   const cr = copyrightLabel(photo.copyright)
   return (
@@ -59,7 +69,7 @@ export function PlacePhoto({ id, name }) {
   return (
     <figure className="place-photo">
       <img src={photo.src} alt={name ? `${name} 사진` : photo.title} loading="lazy" onError={(e) => { e.currentTarget.closest('figure').style.display = 'none' }} />
-      <figcaption><PhotoCredit photo={photo} /></figcaption>
+      <figcaption><PhotoCredit photo={photo} link /></figcaption>
     </figure>
   )
 }

@@ -2,6 +2,7 @@ import { useEffect, useSyncExternalStore } from 'react'
 import { fetchMythMedia, fetchPlacePhotos } from '../api/client'
 import { PLACES } from '../data/places'
 import { mainMedia } from '../data/mythMedia'
+import { WEB_PHOTOS } from '../data/webPhotos'
 
 // 장소 사진은 두 곳에서 모읍니다.
 //  · 제주신화정보(제주도청) — 신화·설화 장소의 사진·삽화. 키가 필요 없어요.
@@ -22,7 +23,8 @@ function recompute() {
     const m = mainMedia(p.id, items)
     const jeju = m && { src: m.image, title: m.title, credit: m.credit, form: m.form, source: 'jeju' }
     const t = tour?.[p.id] && { ...tour[p.id], source: 'tour' }
-    const pick = p.kind === 'myth' ? (jeju ?? t) : (t ?? jeju)
+    const w = WEB_PHOTOS[p.id] && { ...WEB_PHOTOS[p.id], source: 'web' }   // 위키미디어 커먼즈 — 위 둘이 없을 때만
+    const pick = (p.kind === 'myth' ? (jeju ?? t) : (t ?? jeju)) ?? w
     if (pick) out[p.id] = pick
   }
   merged = out
