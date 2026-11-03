@@ -1,6 +1,6 @@
 // 제주특별자치도(jeju.go.kr) 공공 API 두 가지 — 둘 다 인증키가 필요 없습니다.
 //  · 제주 신화 콘텐츠  : XML  /rest/JejuMythContents/getJejuMythContentsList  (조건 파라미터를 무시하고 전체 182건을 줌 → 여기서 걸러요)
-//    응답의 ebookUrl·pdfUrl 은 모두 도청의 '페이지 없음' 화면으로 가서(364개 확인) 쓰지 않습니다.
+//    응답의 pdfUrl 은 직접 열면 404 라서 도청 문서뷰어 주소로 바꿔 쓰고, ebookUrl 은 모두 404 라 쓰지 않습니다.
 //  · 돌문화공원 소장유물: JSON /api/jejustonepark/have                          (한 페이지 9건 고정 → 전체 페이지를 모아요)
 import { XMLParser } from 'fast-xml-parser'
 
@@ -23,6 +23,14 @@ async function getText(url) {
 // ── 신화 ────────────────────────────────────────────────
 const MYTH_URL = 'https://www.jeju.go.kr/rest/JejuMythContents/getJejuMythContentsList?pageSize=500'
 
+// 응답의 pdfUrl(files/board/<uuid>.pdf)은 직접 열면 404 라서, 도청 문서뷰어로 엽니다.
+// 뷰어는 변환본을 /files/convert2020/201708/<uuid>.pdf.* 에서 읽어 와요 (182건 모두 201708 폴더에 있음을 확인).
+const VIEWER = 'https://www.jeju.go.kr/pub/skin/skin_2022.25.10.2/doc.html'
+const pdfView = (v) => {
+  const m = /\/([0-9a-f-]{36}\.pdf)$/i.exec(String(v ?? '').trim())
+  return m ? `${VIEWER}?fn=${m[1]}&rs=/files/convert2020/201708/` : ''
+}
+
 function loadMyth() {
   return cached('myth', async () => {
     const xml = await getText(MYTH_URL)
@@ -33,6 +41,7 @@ function loadMyth() {
     return list.map((i) => ({
       code: i.codeNo, type: i.type, title: String(i.title ?? '').trim(),
       tags: String(i.tag ?? '').split(',').map((t) => t.trim()).filter(Boolean),
+      pdf: pdfView(i.pdfUrl),
     }))
   })
 }

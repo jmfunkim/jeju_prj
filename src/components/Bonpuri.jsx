@@ -115,6 +115,9 @@ export default function Bonpuri() {
                         </div>
                         <div className="d-flex flex-wrap gap-1">{m.tags.slice(0, 3).map((t) => <button key={t} type="button" className="kw" onClick={() => { setTag(t); setLimit(24) }}>#{t}</button>)}</div>
                       </div>
+                      <div className="bp-card__links">
+                        {m.pdf && <a href={m.pdf} target="_blank" rel="noreferrer" title="제주도청 문서뷰어로 원문 PDF 보기"><i className="bi bi-file-earmark-pdf" /> PDF</a>}
+                      </div>
                       <a className="bp-card__go" href={`https://search.naver.com/search.naver?query=${encodeURIComponent(`제주 ${m.title.replace(/\(.*\)/, '')} 본풀이`)}`} target="_blank" rel="noreferrer" aria-label={`${m.title} 더 알아보기`} title="더 알아보기(검색)">
                         <i className="bi bi-search" />
                       </a>
@@ -128,7 +131,7 @@ export default function Bonpuri() {
               {limit < list.length && <button className="btn btn-sm btn-dol" onClick={() => setLimit(limit + 24)}>더 보기</button>}
             </div>
           </div>
-          <p className="small text-muted mt-3 mb-0">출처: 제주특별자치도 제주 신화 콘텐츠(제목·구분·태그). 원문 링크가 현재 열리지 않아, 대신 검색으로 이어 줘요.</p>
+          <p className="small text-muted mt-3 mb-0">출처: 제주특별자치도 제주 신화 콘텐츠(제목·구분·태그). PDF 는 제주도청 문서뷰어로 열려요. 돋보기를 누르면 검색으로도 이어 줘요.</p>
         </>
       )}
     </section>
