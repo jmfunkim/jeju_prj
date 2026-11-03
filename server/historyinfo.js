@@ -13,6 +13,10 @@ const clean = (s) => String(s ?? '')
   .replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#39;/g, "'")
   .replace(/[ \t]+/g, ' ').replace(/\n\s*\n+/g, '\n').trim()
 
+// 데이터 제작자가 빈 칸에 적어 둔 자리표시 값('해당없음' 등)은 빈 값으로 봅니다
+const EMPTY = /^(해당\s*없음|없음|미상|n\/?a|null|-+)$/i
+const text = (s) => { const v = clean(s); return EMPTY.test(v) ? '' : v }
+
 // 링크는 http(s) 로 시작하는 것만 — 다른 값(폴더 이름 등)이 들어 있어도 버튼으로 만들지 않습니다
 const url = (s) => (/^https?:\/\//i.test(String(s ?? '').trim()) ? String(s).trim() : '')
 
@@ -40,13 +44,13 @@ export async function historyInfo({ force = false } = {}) {
   }
   const items = rows
     .map((d) => ({
-      name: clean(d['장소명']),
-      title: clean(d['제목']),
-      subtitle: clean(d['부제목']),
-      category: clean(d['분류']),
-      summary: clean(d['초록']),
-      content: clean(d['내용']),
-      source: clean(d['출처']) || clean(d['발행자']),
+      name: text(d['장소명']),
+      title: text(d['제목']),
+      subtitle: text(d['부제목']),
+      category: text(d['분류']),
+      summary: text(d['초록']),
+      content: text(d['내용']),
+      source: text(d['출처']) || text(d['발행자']),
       link: url(d['링크']),
       lat: Number(d['위도']),
       lng: Number(d['경도']),
